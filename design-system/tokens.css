@@ -1,0 +1,97 @@
+/* Augusto Pinto — tokens (v7) transcritos de tokens.json */
+@font-face { font-family: "Geist"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/Geist-400.woff2") format("woff2"); }
+@font-face { font-family: "Geist"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/Geist-500.woff2") format("woff2"); }
+@font-face { font-family: "Geist"; font-weight: 600; font-style: normal; font-display: swap; src: url("fonts/Geist-600.woff2") format("woff2"); }
+@font-face { font-family: "Geist Mono"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/GeistMono-400.woff2") format("woff2"); }
+@font-face { font-family: "Geist Mono"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/GeistMono-500.woff2") format("woff2"); }
+
+:root {
+  --surface-canvas: #fbfbf9;
+  --surface-raised: #ffffff;
+  --surface-sunken: #f1f1ec;
+  --surface-inverse: #0e0f12;
+  --surface-float: rgba(255, 255, 255, 0.78);
+  --ink-primary: #0e0f12;
+  --ink-secondary: #4a4d57;
+  --ink-disabled: #9a9ca5;
+  --ink-on-dark: #ffffff;
+  --ink-on-dark-muted: #a8aab3;
+  --border-hairline: #d9d9d2;
+  --border-control: #6b6e78;
+  --border-strong: var(--ink-primary);
+  --border-on-dark: #3a3d46;
+  --action: var(--ink-primary);
+  --action-hover: #3a3d46;
+  --action-pressed: #000000;
+  --on-action: var(--ink-on-dark);
+  --focus-ring: var(--ink-primary);
+  --focus-ring-on-dark: var(--ink-on-dark);
+  --status-error: #a4161a;
+  --status-error-text: #8a1216;
+  --status-error-soft: #fbe9ea;
+  --status-success: #1b7a86;
+  --status-success-text: #0e5560;
+  --status-success-soft: #e4f3f5;
+  --scrim: rgba(14, 15, 18, 0.5);
+
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-text: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-section: 128px;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  --shadow-float: 0 12px 32px rgba(14, 15, 18, 0.12);
+  --shadow-none: none;
+  --blur-float: 16px;
+  --blur-hero: 14px;
+
+  --stroke-hairline: 1px;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --control-sm: 36px;
+  --target-min: 44px;
+  --target-lg: 56px;
+  --page-max: 1200px;
+  --icon-sm: 16px;
+  --icon-md: 20px;
+  --icon-lg: 24px;
+
+  --dur-press: 160ms;
+  --dur-enter: 240ms;
+  --dur-move: 280ms;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --scale-press: 0.97;
+  --scale-recede: 0.98;
+
+  --z-nav: 20;
+  --z-popover: 30;
+  --z-scrim: 40;
+  --z-modal: 50;
+}
+
+.wordmark { font-family: var(--font-display); font-size: 7rem; line-height: 0.86; font-weight: 700; letter-spacing: -0.045em; }
+.hero { font-family: var(--font-display); font-size: 4.5rem; line-height: 0.95; font-weight: 700; letter-spacing: -0.02em; }
+.display { font-family: var(--font-display); font-size: 3.5rem; line-height: 1; font-weight: 700; letter-spacing: -0.02em; }
+.heading { font-family: var(--font-display); font-size: 2rem; line-height: 1.05; font-weight: 700; letter-spacing: -0.01em; }
+.subheading { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.15; font-weight: 700; letter-spacing: 0; }
+.lead { font-family: var(--font-text); font-size: 1.25rem; line-height: 1.5; font-weight: 400; letter-spacing: 0; }
+.body { font-family: var(--font-text); font-size: 1rem; line-height: 1.6; font-weight: 400; letter-spacing: 0; }
+.body-sm { font-family: var(--font-text); font-size: 0.875rem; line-height: 1.5; font-weight: 400; letter-spacing: 0; }
+.meta { font-family: var(--font-text); font-size: 0.875rem; line-height: 1.5; font-weight: 500; letter-spacing: 0; }
+.label { font-family: var(--font-mono); font-size: 0.75rem; line-height: 1.2; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; }
+.code { font-family: var(--font-mono); font-size: 0.875rem; line-height: 1.6; font-weight: 400; letter-spacing: 0; }
