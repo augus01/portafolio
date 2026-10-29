@@ -38,9 +38,11 @@ html.lenis,html.lenis body{height:auto}
 .ap-navwrap .ap-pill{min-height:calc(var(--target-min) * var(--nav-scale, 1));padding-inline:calc(var(--space-4) * var(--nav-scale, 1));font-size:calc(0.875rem * var(--nav-scale, 1))}
 .ap-navwrap .ap-pill .ap-icon{width:calc(var(--icon-sm) * var(--nav-scale, 1));height:calc(var(--icon-sm) * var(--nav-scale, 1))}
 .ap-navwrap .ap-nav__group,.ap-navwrap .ap-nav__bar{gap:calc(var(--space-2) * var(--nav-scale, 1))}
+/* Botón de menú (v8: IconButton dentro de NavBar). Se dibuja como píldora para leerse sobre el hero y conserva el alto escalado. */
+.ap-navwrap .ap-nav__toggle{width:calc(var(--target-min) * var(--nav-scale, 1))}
 /* Barra superior del hero: el logo y el texto rol · lugar tienen cada uno su control (Logo / Rol y lugar). */
 .ap-hero__top .ap-logo{height:calc(28px * var(--top-scale, 1));width:calc(61.6px * var(--top-scale, 1))}
-.ap-hero__top .ap-hero__meta{font-size:calc(0.75rem * var(--meta-scale, 1))}
+.ap-hero__top .ap-hero__role{font-size:calc(0.75rem * var(--meta-scale, 1))}
 
 /* Titular sobre el escenario: abajo y ancho. El espectro sigue a sangre: solo un degradado suave (máx 35%) detrás del texto, más un halo en las letras. */
 .ap-overlay{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;box-sizing:border-box;padding:0 var(--space-8) var(--space-24);pointer-events:none;color:var(--ink-on-dark);
