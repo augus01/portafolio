@@ -11,3 +11,9 @@
 .ap-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-8)}
 .ap-columns > p{margin:0;color:var(--ink-secondary)}
 .ap-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--space-6)}
+
+/* InfoCard: material Lienzo (plano, borde hairline, sin sombra). */
+.ap-card{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-8);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-lg);background:var(--surface-raised);box-shadow:var(--shadow-none)}
+.ap-card__label,.ap-card__title,.ap-card__text{margin:0}
+.ap-card__label,.ap-card__text{color:var(--ink-secondary)}
+.ap-card__title{text-transform:uppercase}
