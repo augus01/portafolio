@@ -1,0 +1,1 @@
+export { SectionHeadline } from './SectionHeadline';
