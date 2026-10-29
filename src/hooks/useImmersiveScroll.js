@@ -1,0 +1,117 @@
+import { useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import Lenis from 'lenis';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+/**
+ * Paso guiado hero → página dentro de `rootRef`: Lenis + ScrollTrigger con todo ligado al scroll (scrub).
+ * Publica el timeline en `motionRef.current.tl` para que el fondo WebGL siga las mismas fases,
+ * y avisa con `onNavTone('dark' | 'light')` cuando la nav debe cambiar de estilo.
+ * Con `prefers-reduced-motion: reduce` no hay pin, paso guiado ni Lenis.
+ */
+export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const q = (s) => root.querySelector(s);
+
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: true });
+      lenis.on('scroll', ScrollTrigger.update);
+      const tick = (t) => lenis.raf(t * 1000);
+      gsap.ticker.add(tick);
+      gsap.ticker.lagSmoothing(0);
+
+      const track = q('.ap-track');
+      const stage = q('.ap-sticky');
+      const name = q('.ap-hero__name');
+      const overlay = q('.ap-overlay');
+      const overInner = q('.ap-overlay__inner');
+      const topKids = root.querySelectorAll('.ap-hero__top > *');
+      const exitEl = q('.ap-exit');
+      const after = q('.ap-after');
+      // Se mide la barra real (.ap-nav): el envoltorio del componente no tiene alto propio.
+      const navEl = q('.ap-navwrap .ap-nav');
+      // Si el titular está vacío, el velo de abajo no se muestra.
+      if (overInner && !overInner.textContent.trim()) gsap.set(overlay, { display: 'none' });
+
+      // Nav: abajo al cargar; se oculta durante el túnel y reaparece arriba (top 24px) al llegar a la página.
+      const pad = () => (stage.clientWidth >= 900 ? 32 : 24);
+      const navDown = () => stage.offsetHeight - pad() - navEl.getBoundingClientRect().height - 24;
+
+      let tone = 'dark';
+      gsap.set([name, overInner], { willChange: 'transform' });
+      const tl = gsap.timeline({
+        defaults: { ease: 'none' },
+        scrollTrigger: {
+          trigger: track, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            motionRef.current.progress = self.progress;
+            // La nav cambia a su estilo claro justo antes de reaparecer sobre la página, y vuelve al oscuro al regresar.
+            const want = self.progress > 0.85 ? 'light' : 'dark';
+            if (want !== tone) { tone = want; onNavTone(want); }
+          },
+          onLeave: () => { motionRef.current.progress = 1; gsap.set([name, overInner], { willChange: 'auto' }); },
+          onEnterBack: () => { gsap.set([name, overInner], { willChange: 'transform' }); },
+        },
+      });
+      motionRef.current.tl = tl;
+
+      // La página que sigue se monta justo bajo el final del pin (un viewport hacia arriba) y aparece cubriendo el hero.
+      after.style.setProperty('margin-top', 'calc(-1 * min(100svh, 900px))');
+      // El nombre no sube: viene hacia ti (crece) y se desvanece, como si lo dejaras atrás al avanzar por la luz.
+      tl.fromTo(name, { scale: 1, transformOrigin: '50% 50%' }, { scale: 3.4, duration: 0.24, ease: 'power2.in' }, 0)
+        .to(name, { autoAlpha: 0, duration: 0.14, ease: 'power1.in' }, 0.1)
+        .to(topKids, { autoAlpha: 0, duration: 0.1 }, 0)
+        .fromTo(navEl, { y: navDown, autoAlpha: 1 }, { y: navDown, autoAlpha: 0, duration: 0.08 }, 0)
+        .set(navEl, { y: 0 }, 0.09)
+        .fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0.05)
+        .fromTo(overInner, { y: 120 }, { y: 0, duration: 0.08, ease: 'power2.out' }, 0.05)
+        .to(overInner, { autoAlpha: 0, y: -60, duration: 0.05, ease: 'power1.in' }, 0.2)
+        .to(overlay, { autoAlpha: 0, duration: 0.05 }, 0.2)
+        .fromTo(exitEl, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 0.72)
+        .fromTo(after, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 0.72)
+        .to(navEl, { autoAlpha: 1, duration: 0.1 }, 0.88);
+
+      // Paso guiado: un gesto dentro del pin lo completa solo, a ritmo fijo (1,6 s), hacia la sección o de vuelta al hero.
+      let auto = false, safety = 0;
+      const pinStart = () => track.offsetTop;
+      const pinEnd = () => track.offsetTop + track.offsetHeight - window.innerHeight;
+      lenis.on('scroll', (l) => {
+        if (auto) return;
+        const y = l.scroll, a = pinStart(), b = pinEnd();
+        if (b - a < 4 || y <= a + 2 || y >= b - 2) return;
+        auto = true;
+        const done = () => { auto = false; clearTimeout(safety); };
+        safety = setTimeout(done, 2400);
+        l.scrollTo(l.direction < 0 ? a : b, { duration: 1.6, easing: ease, lock: true, force: true, onComplete: done });
+      });
+
+      // Reveals de las secciones siguientes, una sola vez.
+      root.querySelectorAll('.ap-reveal').forEach((el) => {
+        gsap.fromTo(el, { autoAlpha: 0, y: 60 }, {
+          autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 80%', once: true },
+        });
+      });
+
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+
+      return () => {
+        gsap.ticker.remove(tick);
+        clearTimeout(safety);
+        lenis.destroy();
+        after.style.removeProperty('margin-top');
+        motionRef.current.tl = null;
+        motionRef.current.progress = 0;
+      };
+    });
+
+    return () => mm.revert();
+  }, [rootRef, motionRef, onNavTone]);
+}

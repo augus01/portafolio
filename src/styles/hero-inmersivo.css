@@ -1,0 +1,87 @@
+/* Hero inmersivo · Augusto Pinto — estilos de la página (portados 1:1 desde el lienzo de Claude). */
+body{margin:0;background:#062a35}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+
+/* Paleta local del hero (no es del design system). El shader y el fallback la leen de aquí. */
+.ap-sticky{--hero-shadow:#062a35;--hero-teal:#0b4f63;--hero-cyan:#1fa3c4;--hero-cyan-light:#9fe3f0;--hero-lime:#d9d36a;--hero-ocre:#c9973f;--hero-rose:#d9a3a0}
+
+/* Pin corto: el escenario queda fijo (sticky) ~0,35 pantallas de scroll antes de soltar a la página. */
+.ap-track{position:relative;height:calc(1.35 * min(100svh, 900px))}
+/* Salida del túnel: la luz funde al fondo claro de la página antes de soltar el pin. */
+.ap-exit{position:absolute;inset:0;z-index:5;pointer-events:none;background:var(--surface-canvas);opacity:0;visibility:hidden}
+.ap-sticky{position:sticky;top:0;overflow:hidden;background:var(--hero-shadow)}
+.ap-hero__gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;animation:ap-bg-in 1600ms var(--ease-out) both}
+.ap-sticky .ap-hero{z-index:1}
+.ap-grain{position:absolute;inset:0;z-index:2;pointer-events:none;background:url(../assets/grain.png) repeat;background-size:256px 256px;opacity:.055;mix-blend-mode:overlay}
+
+/* Con WebGL activo, el Hero del sistema queda transparente y su fondo CSS se apaga. */
+.ap-sticky.is-gl .ap-hero{background:transparent}
+.ap-sticky.is-gl .ap-hero__bg{display:none}
+
+/* Wordmark: Archivo ancho 125, peso 800, de borde a borde. 10,75 = ancho medido de "AUGUSTO PINTO" en em, con margen. */
+.ap-hero__name.wordmark{font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:800;font-stretch:125%;font-variation-settings:"wdth" 125;letter-spacing:-0.02em;line-height:.86;
+  font-size:calc(clamp(32px, calc((100cqw - 48px) / 10.75), 420px) * var(--wm-scale, 1)) !important;
+  text-shadow:0 0 2px rgba(6,42,53,.35),0 4px 40px rgba(6,42,53,.5)}
+/* El nombre queda centrado en el ancho a cualquier tamaño del control Nombre. */
+.ap-hero__name.wordmark{width:100%;text-align:center;align-self:stretch}
+.ap-hero__name.wordmark .ap-hero__line{text-align:center}
+@container (min-width: 900px){.ap-hero__name.wordmark{font-size:calc(clamp(32px, calc((100cqw - 64px) / 10.75), 420px) * var(--wm-scale, 1)) !important}}
+@container (max-width: 599px){.ap-hero__name.wordmark{font-size:calc((100cqw - 48px) / 6.5 * var(--wm-scale, 1)) !important}}
+
+/* Navegación propia: pegada (sticky) al tope de toda la página, así no depende de contenedores con transform.
+   Ocupa 0 px de alto; sus pills cuelgan debajo. Empieza abajo (JS la baja) y sube a top 24px al empezar el scroll. */
+.ap-navwrap{position:sticky;top:24px;height:0;z-index:var(--z-nav);animation:ap-fade 700ms var(--ease-out) 900ms both}
+.ap-navwrap .ap-nav{position:absolute;top:0;left:var(--space-8);right:var(--space-8);width:auto}
+@media (max-width: 899px){.ap-navwrap .ap-nav{left:var(--space-6);right:var(--space-6)}}
+/* Tamaño de la navegación (control Navegación): altura, relleno, texto, iconos y separación de las pills. */
+.ap-navwrap .ap-pill{min-height:calc(var(--target-min) * var(--nav-scale, 1));padding-inline:calc(var(--space-4) * var(--nav-scale, 1));font-size:calc(0.875rem * var(--nav-scale, 1))}
+.ap-navwrap .ap-pill .ap-icon{width:calc(var(--icon-sm) * var(--nav-scale, 1));height:calc(var(--icon-sm) * var(--nav-scale, 1))}
+.ap-navwrap .ap-nav__group,.ap-navwrap .ap-nav__bar{gap:calc(var(--space-2) * var(--nav-scale, 1))}
+/* Barra superior del hero: el logo y el texto rol · lugar tienen cada uno su control (Logo / Rol y lugar). */
+.ap-hero__top .ap-logo{height:calc(28px * var(--top-scale, 1));width:calc(61.6px * var(--top-scale, 1))}
+.ap-hero__top .ap-hero__meta{font-size:calc(0.75rem * var(--meta-scale, 1))}
+
+/* Titular sobre el escenario: abajo y ancho. El espectro sigue a sangre: solo un degradado suave (máx 35%) detrás del texto, más un halo en las letras. */
+.ap-overlay{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;justify-content:flex-end;box-sizing:border-box;padding:0 var(--space-8) var(--space-24);pointer-events:none;color:var(--ink-on-dark);
+  background:linear-gradient(to top,rgba(6,42,53,.35) 0%,rgba(6,42,53,.3) 35%,rgba(6,42,53,0) 62%)}
+.ap-overlay__inner{display:flex;flex-direction:column;gap:var(--space-6);max-width:var(--page-max)}
+.ap-overlay__title{margin:0;font-family:"Archivo","Helvetica Neue",Arial,sans-serif;font-weight:700;font-stretch:125%;font-variation-settings:"wdth" 125;font-size:clamp(40px, 5.5vw, 88px);line-height:1.02;letter-spacing:-0.02em;
+  text-shadow:0 0 1px rgba(6,42,53,.55),0 0 14px rgba(6,42,53,.5),0 2px 36px rgba(6,42,53,.45)}
+.ap-overlay__lead{margin:0;max-width:760px;font-family:var(--font-text);font-size:1.6rem;line-height:1.55;font-weight:400;
+  text-shadow:0 0 1px rgba(6,42,53,.6),0 0 10px rgba(6,42,53,.55),0 1px 24px rgba(6,42,53,.5)}
+
+/* Pills sobre el hero: vidrio translúcido que se tiñe con el espectro. Sobre fondo claro queda el estilo del sistema. */
+.ap-navwrap .ap-nav--dark .ap-pill{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
+@media (hover: hover){.ap-navwrap .ap-nav--dark .ap-pill:hover{background:rgba(255,255,255,.75);border-color:rgba(255,255,255,.7)}}
+.ap-navwrap .ap-nav--dark .ap-pill.is-current{background:var(--ink-on-dark);color:var(--ink-primary);border-color:var(--ink-on-dark)}
+
+/* Entrada: fondo → nombre → nav. */
+@keyframes ap-bg-in{from{opacity:0;scale:1.25}to{opacity:1;scale:1}}
+@keyframes ap-rise{from{opacity:0;transform:translateY(0.18em)}to{opacity:1;transform:translateY(0)}}
+@keyframes ap-fade{from{opacity:0}to{opacity:1}}
+.ap-hero__line>span{animation:ap-rise 900ms var(--ease-out) 250ms both}
+.ap-hero__line:nth-child(2)>span{animation-delay:630ms}
+.ap-hero__top{animation:ap-fade 700ms var(--ease-out) 900ms both}
+
+/* Fallback sin WebGL: espectro CSS con la paleta del hero, núcleo luminoso, sin hueco central. */
+@keyframes ap-rays-turn{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes ap-rays-back{from{transform:rotate(0deg) scale(1.25)}to{transform:rotate(-360deg) scale(1.25)}}
+.ap-sticky:not(.is-gl) .ap-hero{background:var(--hero-shadow)}
+.ap-sticky:not(.is-gl) .ap-hero__vignette{display:none}
+.ap-sticky:not(.is-gl) .ap-hero__rays{inset:-80%;transform-origin:50% 50%;animation:ap-rays-turn 38s linear infinite;background:
+  radial-gradient(circle at 50% 50%,#eafbff 0,var(--hero-cyan-light) 4%,rgba(159,227,240,0) 14%),
+  conic-gradient(from 0deg at 50% 50%,var(--hero-teal) 0deg,var(--hero-cyan) 9deg,var(--hero-teal) 18deg,var(--hero-lime) 30deg,var(--hero-cyan) 41deg,var(--hero-shadow) 52deg,var(--hero-cyan-light) 63deg,var(--hero-teal) 77deg,var(--hero-ocre) 92deg,var(--hero-rose) 104deg,var(--hero-teal) 118deg,var(--hero-cyan) 131deg,var(--hero-lime) 147deg,var(--hero-teal) 160deg,var(--hero-cyan-light) 172deg,var(--hero-cyan) 186deg,var(--hero-shadow) 199deg,var(--hero-ocre) 214deg,var(--hero-lime) 228deg,var(--hero-teal) 242deg,var(--hero-cyan) 255deg,var(--hero-rose) 270deg,var(--hero-teal) 284deg,var(--hero-cyan-light) 299deg,var(--hero-cyan) 313deg,var(--hero-lime) 330deg,var(--hero-teal) 345deg,var(--hero-teal) 360deg)}
+.ap-sticky:not(.is-gl) .ap-hero__bg::before{content:"";position:absolute;inset:-80%;transform-origin:50% 50%;opacity:.55;filter:blur(var(--blur-hero));animation:ap-rays-back 55s linear infinite;
+  background:conic-gradient(from 90deg at 50% 50%,var(--hero-shadow) 0deg,var(--hero-cyan) 14deg,var(--hero-teal) 33deg,var(--hero-lime) 51deg,var(--hero-shadow) 70deg,var(--hero-rose) 96deg,var(--hero-teal) 121deg,var(--hero-cyan-light) 149deg,var(--hero-shadow) 176deg,var(--hero-ocre) 203deg,var(--hero-cyan) 231deg,var(--hero-teal) 262deg,var(--hero-lime) 290deg,var(--hero-cyan) 322deg,var(--hero-shadow) 360deg)}
+
+@media (prefers-reduced-motion: reduce){
+  .ap-track{height:auto}
+  .ap-sticky{position:relative}
+  .ap-hero__gl,.ap-hero__line>span,.ap-sticky .ap-hero__rays,.ap-sticky .ap-hero__bg::before{animation:none}
+  .ap-hero__top,.ap-navwrap{animation:ap-fade 400ms linear both}
+  .ap-navwrap{position:absolute;top:calc(min(100svh, 900px) - var(--space-8));left:0;right:0}
+  .ap-navwrap .ap-nav{transform:translateY(-100%)}
+  .ap-overlay{position:relative;inset:auto;padding-top:var(--space-16);background:var(--hero-shadow)}
+  .ap-exit{display:none}
+}
