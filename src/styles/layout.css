@@ -16,7 +16,10 @@
 .ap-card{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-8);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-lg);background:var(--surface-raised);box-shadow:var(--shadow-none)}
 .ap-card__label,.ap-card__title,.ap-card__text{margin:0}
 .ap-card__label,.ap-card__text{color:var(--ink-secondary)}
-.ap-card__title{text-transform:uppercase}
 
-/* Sin scroll horizontal desde 320px: una palabra más ancha que la columna se corta con guion en vez de desbordar. */
-.ap-section .ap-headline__title{hyphens:auto;overflow-wrap:break-word}
+/* Sin scroll horizontal desde 320px: solo una palabra más ancha que la columna se corta, en vez de desbordar. */
+.ap-section .ap-headline__title{overflow-wrap:break-word}
+
+/* NavBar: el botón de menú es una píldora con icono y texto (landing aprobado). Aparece solo bajo 600px de contenedor. */
+.ap-nav__toggle{display:none}
+@container (max-width: 599px){.ap-nav__toggle{display:inline-flex}}

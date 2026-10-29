@@ -28,7 +28,7 @@ Se implementa cada componente cuando la página lo usa; no se crean componentes 
 
 ### Compatibilidad con selectores de MUI
 
-Algunas reglas de `bundle.css` apuntan a clases de MUI (`.MuiButtonBase-root`, `.MuiInputBase-root`). Para reutilizarlas sin MUI, el componente React agrega esa clase a su elemento nativo (por ejemplo, el botón de menú de NavBar lleva `ap-iconbtn ap-nav__toggle MuiButtonBase-root`). No se edita `bundle.css`.
+Algunas reglas de `bundle.css` apuntan a clases de MUI (`.MuiButtonBase-root`, `.MuiInputBase-root`). Para reutilizarlas sin MUI, el componente React agrega esa clase a su elemento nativo cuando la necesita. No se edita `bundle.css`.
 
 ## Excepciones aprobadas (hero inmersivo)
 
@@ -40,6 +40,7 @@ El hero se aprobó aparte, en el artefacto "Hero inmersivo" (`hero-inmersivo.zip
 | Máximo tres familias | Nombre del hero en **Archivo** (Google Fonts), `wdth` 125, peso 800, mayúsculas | `.ap-hero__name.wordmark` |
 | Movimiento < 300 ms y solo por acción | Paso guiado hero → página de 1,6 s ligado al scroll (Lenis + GSAP), con `prefers-reduced-motion` completo | `src/hooks/useImmersiveScroll.js` |
 | Material flotante sólido en la nav | Píldoras de vidrio translúcido sobre el hero (`.ap-nav--dark`) | `hero-inmersivo.css` |
+| NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero | `NavBar.jsx`, `layout.css` |
 | — | Escalas de los Tweaks: `--wm-scale .65`, `--nav-scale 1.3`, `--top-scale 2.5`, `--meta-scale 1.35` | `.ap-page` |
 
 ## Pendientes contra el sistema

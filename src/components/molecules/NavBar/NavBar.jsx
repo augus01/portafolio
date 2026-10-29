@@ -37,19 +37,19 @@ export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'd
       <nav aria-label={label} className="ap-nav__bar">
         <ul className="ap-nav__group">{items.map(pill)}</ul>
         {actions.length > 0 && <ul className="ap-nav__group ap-nav__group--end">{actions.map(pill)}</ul>}
-        {/* MuiButtonBase-root: el sistema estiliza este botón con selectores de MUI (ver design-system/INTEGRACION.md). */}
+        {/* Píldora con icono y texto, como en el landing aprobado (ver design-system/INTEGRACION.md). */}
         <Pill
           as="button"
           ref={toggleRef}
-          className="ap-iconbtn ap-nav__toggle MuiButtonBase-root"
+          className="ap-nav__toggle"
           current={open}
           aria-current={undefined}
-          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={open}
           aria-controls={panelId}
           onClick={() => setOpen((v) => !v)}
         >
           <Icon name={open ? 'x' : 'menu'} size="sm" />
+          <span>{open ? 'Cerrar' : 'Menú'}</span>
         </Pill>
         <div id={panelId} className={`ap-nav__panel ap-nav__panel--${menuPlacement}`} hidden={!open}>
           <ul>
