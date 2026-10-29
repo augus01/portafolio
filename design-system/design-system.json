@@ -1,0 +1,32 @@
+{
+  "v": 3,
+  "assetGroups": {
+    "Logo": {
+      "name": "Logo",
+      "tile": "l",
+      "order": [
+        "apinto-logotipo-negro.svg",
+        "apinto-logotipo-blanco.svg",
+        "ap-monograma-negro.svg",
+        "ap-monograma-blanco.svg",
+        "ap-icono-app.svg",
+        "favicon.svg"
+      ]
+    }
+  },
+  "createdOnFiles": { "at": "2026-10-27T17:25:00Z", "v": 1 },
+  "groups": ["Logo"],
+  "lastChange": {
+    "at": "2026-10-28T13:05:00Z",
+    "by": "Augusto Pinto",
+    "via": "Claude",
+    "note": "Recorte a portafolio: sin Toast; StatusMessage, Input e IconButton internos; Button y Tag con menos variantes; sin tokens de modal; ProjectCard rediseñado (featured y compact); disponibilidad en el Hero."
+  },
+  "layout": "files",
+  "libraries": [
+    { "name": "react", "version": "18.3.1", "global": "React" },
+    { "name": "react-dom", "version": "18.3.1", "global": "ReactDOM" }
+  ],
+  "namespace": "AugustoPinto",
+  "title": "Augusto Pinto"
+}

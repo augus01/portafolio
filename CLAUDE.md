@@ -56,21 +56,29 @@ Un **portfolio personal** público, hosteado en **AWS Amplify Hosting**, con:
 - `npm run dev` · `npm run build` · `npm run preview`.
 
 ## Design system — USO OBLIGATORIO
-- La carpeta **`design-system/`** es el registro visual oficial ("Augusto Pinto"). Leer `design-system/README.md` antes de tocar UI.
-- **Toda** la UI usa sus tokens (`tokens.css`) y clases de componentes (`components/bundle.css`). Prohibido inventar colores, espacios, radios, fuentes o duraciones fuera de los tokens (única excepción: la paleta local del hero `--hero-*`).
-- Tipografía solo con las clases del sistema (`.wordmark`, `.display`, `.heading`, `.lead`, `.body`, `.label`, …).
-- `components/bundle.js` es **solo referencia** del marcado aprobado: no se importa. Los componentes se reimplementan en React respetando las clases `.ap-*`.
-- No modificar los archivos del design system para ajustar un caso puntual; si falta algo, se agrega como token/clase nueva y se documenta en su README.
+La carpeta **`design-system/`** es el registro visual oficial ("Augusto Pinto" v8, copiado del artefacto del design system). **Antes de tocar cualquier UI, leer:**
+1. `design-system/README.md` — fundamentos de contenido, color, tipografía, espacio, materiales y lo prohibido.
+2. `design-system/INTEGRACION.md` — cómo se usa en este repo y las **excepciones aprobadas del hero inmersivo**.
+3. `design-system/components/<Nombre>/README.md` e `index.d.ts` — props, teclado y uso del componente que se va a construir.
+4. `design-system/movimiento.md`, `inventario.md`, `contexto.md`, `tokens.json` según haga falta.
+
+Reglas:
+- **Toda** la UI usa los tokens de `tokens.css` y las clases `.ap-*` de `components/bundle.css`. Prohibido usar valores literales de color, tamaño, radio, fuente o duración: si falta un token, se detiene y se propone.
+- Tipografía solo con las clases del sistema (`.wordmark`, `.hero`, `.display`, `.heading`, `.subheading`, `.lead`, `.body`, `.body-sm`, `.meta`, `.label`, `.code`).
+- Monocromo, sin acentos ni degradados, salvo las excepciones del hero documentadas en `INTEGRACION.md`.
+- Contenido en español de Chile, sin Lorem ipsum, sin emojis, botones con verbos concretos.
+- No se modifican los archivos de `design-system/` para un caso puntual; los cambios del sistema se documentan ahí mismo.
+- Sin MUI: los componentes se reimplementan en React con el mismo marcado, clases y props del sistema.
 
 ## Arquitectura — Atomic Design OBLIGATORIO
-Todo componente vive en `src/components/` en su nivel:
-- `atoms/` — piezas indivisibles (Icon, Logo, Pill, GrainOverlay, HeroCanvas…)
-- `molecules/` — combinaciones simples de átomos (SectionHeadline, HeroTopBar, HeroWordmark, InfoCard…)
-- `organisms/` — bloques completos (NavBar, Hero, HeroStage, secciones…)
+Todo componente vive en `src/components/` en su capa, siguiendo las capas del design system:
+- `atoms/` — Icon, Logo, Tag, Link, Button, Divider, Pill, Wordmark, HeroCanvas, GrainOverlay…
+- `molecules/` — NavBar, FormField, SocialLinks, SkillGroup, InfoCard…
+- `organisms/` — Hero, SectionHeadline, ProjectCard, StoryTimeline, DiscoveryHint, ContactForm, Footer, HeroStage, secciones de la página…
 - `templates/` — estructura de página sin contenido (ImmersiveLandingTemplate)
-- `pages/` — templates con contenido real (HomePage)
+- `pages/` — plantillas con contenido real (HomePage)
 
-Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un nivel solo importa niveles inferiores; el contenido (textos, links) vive en `src/content/`; la lógica no visual en `src/hooks/` y `src/lib/`.
+Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un componente importa solo de su misma capa o de capas inferiores (nunca de una superior); el contenido (textos, links) vive en `src/content/`; la lógica no visual en `src/hooks/` y `src/lib/`.
 
 ## Commits
 - Commits pequeños y frecuentes a medida que se avanza, en español, con prefijo convencional (`feat:`, `chore:`, `docs:`…).

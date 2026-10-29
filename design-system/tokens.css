@@ -1,4 +1,4 @@
-/* Augusto Pinto — tokens (v7) transcritos de tokens.json */
+/* Augusto Pinto — tokens (v8) transcritos de tokens.json */
 @font-face { font-family: "Geist"; font-weight: 400; font-style: normal; font-display: swap; src: url("fonts/Geist-400.woff2") format("woff2"); }
 @font-face { font-family: "Geist"; font-weight: 500; font-style: normal; font-display: swap; src: url("fonts/Geist-500.woff2") format("woff2"); }
 @font-face { font-family: "Geist"; font-weight: 600; font-style: normal; font-display: swap; src: url("fonts/Geist-600.woff2") format("woff2"); }
@@ -32,7 +32,6 @@
   --status-success: #1b7a86;
   --status-success-text: #0e5560;
   --status-success-soft: #e4f3f5;
-  --scrim: rgba(14, 15, 18, 0.5);
 
   --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-text: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -76,12 +75,9 @@
   --ease-out: cubic-bezier(0, 0, 0.2, 1);
   --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
   --scale-press: 0.97;
-  --scale-recede: 0.98;
+  --scale-hover: 1.02;
 
   --z-nav: 20;
-  --z-popover: 30;
-  --z-scrim: 40;
-  --z-modal: 50;
 }
 
 .wordmark { font-family: var(--font-display); font-size: 7rem; line-height: 0.86; font-weight: 700; letter-spacing: -0.045em; }
