@@ -17,3 +17,6 @@
 .ap-card__label,.ap-card__title,.ap-card__text{margin:0}
 .ap-card__label,.ap-card__text{color:var(--ink-secondary)}
 .ap-card__title{text-transform:uppercase}
+
+/* Sin scroll horizontal desde 320px: una palabra más ancha que la columna se corta con guion en vez de desbordar. */
+.ap-section .ap-headline__title{hyphens:auto;overflow-wrap:break-word}
