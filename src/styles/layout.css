@@ -10,6 +10,18 @@
 
 .ap-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-8)}
 .ap-columns > p{margin:0;color:var(--ink-secondary)}
+
+/* Sobre mí (sección aprobada en el lienzo, 30 oct 2026). Los valores sin token del sistema son excepciones
+   documentadas en design-system/INTEGRACION.md y viven solo en estas variables locales. */
+.ap-about{gap:var(--space-16);
+  --about-statement-size:clamp(36px, 6.2vw, 92px);--about-statement-leading:1.08;--about-muted:#a3a3a8;
+  --about-text-font:"Oswald","Helvetica Neue",Arial,sans-serif;--about-text-size:22px}
+.ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--font-text);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);color:var(--ink-primary)}
+.ap-about__muted{color:var(--about-muted)}
+.ap-about__body{display:flex;justify-content:flex-end}
+/* Media columna, mínimo 300px; bajo 300px de ancho ocupa todo, sin scroll horizontal. */
+.ap-about__text{display:flex;flex-direction:column;gap:var(--space-6);width:clamp(min(300px, 100%), 50%, 100%)}
+.ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
 .ap-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--space-6)}
 
 /* InfoCard: material Lienzo (plano, borde hairline, sin sombra). */

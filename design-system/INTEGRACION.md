@@ -43,7 +43,19 @@ El hero se aprobó aparte, en el artefacto "Hero inmersivo" (`hero-inmersivo.zip
 | NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero | `NavBar.jsx`, `layout.css` |
 | — | Escalas de los Tweaks: `--wm-scale .65`, `--nav-scale 1.3`, `--top-scale 2.5`, `--meta-scale 1.35` | `.ap-page` |
 
+## Excepciones aprobadas (sección Sobre mí)
+
+La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó tal cual. Lo que no tiene token vive en variables locales `--about-*` de `.ap-about` (`src/styles/layout.css`):
+
+| Regla del sistema | Excepción de Sobre mí | Variable |
+| --- | --- | --- |
+| Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(36px, 6.2vw, 92px)`, interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
+| Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
+| Máximo tres familias | Párrafos en **Oswald** 400 (Google Fonts), 22px | `--about-text-font`, `--about-text-size` |
+
 ## Pendientes contra el sistema
+
+- **Contraste del gris de Sobre mí:** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
