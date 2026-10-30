@@ -51,11 +51,39 @@ export const about = {
 
 export const projects = {
   id: 'proyectos',
-  headline: { eyebrow: 'Lorem', title: 'IPSUM DOLOR SIT' },
+  // Cada proyecto: nombre y rol, descripción y sus cards (el número 01, 02… se genera en orden).
   items: [
-    { label: '01 · Lorem', title: 'LOREM IPSUM', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio, praesent libero, sed cursus ante dapibus diam.' },
-    { label: '02 · Ipsum', title: 'DOLOR SIT AMET', text: 'Sed nisi, nulla quis sem at nibh elementum imperdiet. Duis sagittis ipsum, praesent mauris, fusce nec tellus sed augue semper porta.' },
-    { label: '03 · Dolor', title: 'CONSECTETUR', text: 'Mauris massa, vestibulum lacinia arcu eget nulla. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.' },
+    {
+      name: 'Nombre del proyecto',
+      role: 'Rol en el proyecto',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      // Sin `image` se muestra el marco de relleno; `alt` describe la imagen.
+      cards: [
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+      ],
+    },
+    {
+      name: 'Nombre del proyecto',
+      role: 'Rol en el proyecto',
+      description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      cards: [
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+      ],
+    },
+    {
+      name: 'Nombre del proyecto',
+      role: 'Rol en el proyecto',
+      description: 'Curabitur pretium tincidunt lacus, nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.',
+      cards: [
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+      ],
+    },
   ],
 };
 

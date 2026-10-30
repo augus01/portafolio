@@ -2,8 +2,9 @@
 .ap-page{position:relative;width:100%;min-width:320px;background:var(--surface-canvas);color:var(--ink-primary);font-family:var(--font-text);
   /* Valores de los Tweaks del lienzo: nombre 65%, pills 130%, logo 250%, rol y lugar 135%. */
   --wm-scale:.65;--nav-scale:1.3;--top-scale:2.5;--meta-scale:1.35;
-  /* Oswald: familia de Sobre mí y del menú móvil (excepción documentada en design-system/INTEGRACION.md). */
-  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif}
+  /* Excepciones compartidas por Sobre mí, Proyectos y el menú móvil (documentadas en design-system/INTEGRACION.md):
+     la familia Oswald y el gris de los textos destacados. */
+  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8}
 .ap-after{position:relative;z-index:4;background:var(--surface-canvas)}
 
 .ap-section{padding:var(--space-section) var(--space-8);max-width:var(--page-max);margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--space-12)}
@@ -16,7 +17,7 @@
 /* Sobre mí (sección aprobada en el lienzo, 30 oct 2026). Los valores sin token del sistema son excepciones
    documentadas en design-system/INTEGRACION.md y viven solo en estas variables locales. */
 .ap-about{gap:var(--space-16);
-  --about-statement-font:var(--font-text);--about-statement-size:clamp(36px, 6.2vw, 92px);--about-statement-leading:1.08;--about-muted:#a3a3a8;
+  --about-statement-font:var(--font-text);--about-statement-size:clamp(36px, 6.2vw, 92px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
   --about-text-font:var(--font-oswald);--about-text-size:22px}
 .ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
@@ -24,12 +25,37 @@
 /* Media columna, mínimo 300px; bajo 300px de ancho ocupa todo, sin scroll horizontal. */
 .ap-about__text{display:flex;flex-direction:column;gap:var(--space-6);width:clamp(min(300px, 100%), 50%, 100%)}
 .ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
-.ap-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--space-6)}
 
-/* InfoCard: material Lienzo (plano, borde hairline, sin sombra). */
-.ap-card{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-8);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-lg);background:var(--surface-raised);box-shadow:var(--shadow-none)}
-.ap-card__label,.ap-card__title,.ap-card__text{margin:0}
-.ap-card__label,.ap-card__text{color:var(--ink-secondary)}
+/* Proyectos (lienzo aprobado, 30 oct 2026): cada proyecto es cabecera (nombre y rol | descripción) y cards con pie numerado.
+   Cabecera y cards comparten la rejilla 454 / 613 / 760 del lienzo para que alineen. Valores sin token: variables --proj-*. */
+.ap-projects{gap:var(--space-24);
+  --proj-gap:20px;--proj-columns:454fr 613fr 760fr;
+  --proj-title-size:28px;--proj-title-leading:1.15;--proj-text-size:22px;
+  --proj-card-gap:10px;--proj-media-height:clamp(320px, 31vw, 560px);--proj-media-fill:rgba(18,18,18,.06);
+  --proj-media-label:.6875rem;--proj-media-tracking:.08em;--proj-cap-size:15px;
+  --proj-bleed:var(--space-8)}
+.ap-proj{display:flex;flex-direction:column;gap:var(--proj-gap)}
+.ap-proj__grid{display:grid;grid-template-columns:var(--proj-columns);gap:var(--space-3)}
+.ap-proj__head{align-items:start}
+.ap-proj__who{grid-column:1;min-width:0}
+.ap-proj__title.subheading,.ap-proj__role.subheading{margin:0;font-family:var(--font-oswald);font-weight:500;font-size:var(--proj-title-size);line-height:var(--proj-title-leading);color:var(--ink-primary)}
+.ap-proj__role.subheading{color:var(--ink-highlight-muted)}
+.ap-proj__desc.lead{grid-column:2 / -1;margin:0;max-width:72ch;font-family:var(--font-oswald);font-size:var(--proj-text-size);color:var(--ink-primary)}
+.ap-proj__card{margin:0;display:flex;flex-direction:column;gap:var(--proj-card-gap);min-width:0}
+.ap-proj__media{display:flex;align-items:center;justify-content:center;width:100%;height:var(--proj-media-height);border-radius:var(--radius-md);background:var(--proj-media-fill);object-fit:cover}
+.ap-proj__media > .label{font-size:var(--proj-media-label);font-weight:400;letter-spacing:var(--proj-media-tracking);color:var(--ink-secondary)}
+.ap-proj__cap{display:flex;justify-content:space-between;gap:var(--space-3);font-family:var(--font-oswald);font-size:var(--proj-cap-size);font-weight:400;color:var(--ink-secondary)}
+/* Bajo 720px: cabecera en una columna y cards en carrusel horizontal con snap, a sangre hasta el borde de la sección. */
+@media (max-width: 719px){
+  .ap-projects{--proj-title-size:24px;--proj-text-size:20px}
+  .ap-proj{gap:var(--space-4)}
+  .ap-proj__head{grid-template-columns:1fr}
+  .ap-proj__who,.ap-proj__desc.lead{grid-column:1}
+  .ap-proj__cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--proj-bleed) * -1);padding:0 var(--proj-bleed);scroll-padding:0 var(--proj-bleed);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .ap-proj__cards::-webkit-scrollbar{display:none}
+  .ap-proj__card{flex:0 0 76%;scroll-snap-align:start}
+  .ap-proj__media{height:auto;aspect-ratio:4 / 5}
+}
 
 /* Sin scroll horizontal desde 320px: solo una palabra más ancha que la columna se corta, en vez de desbordar. */
 .ap-section .ap-headline__title{overflow-wrap:break-word}

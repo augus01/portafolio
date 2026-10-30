@@ -1,18 +1,10 @@
-import { InfoCard } from '../../molecules/InfoCard';
-import { SectionHeadline } from '../SectionHeadline';
+import { ProjectShowcase } from '../ProjectShowcase';
 
-// Proyectos: encabezado y grilla de cards.
-export function ProjectsSection({ id, headline, items }) {
+// Proyectos: sigue a Sobre mí sin encabezado propio; cada proyecto aparece al hacer scroll.
+export function ProjectsSection({ id, items }) {
   return (
-    <section id={id} className="ap-section ap-section--continued">
-      <SectionHeadline {...headline} className="ap-reveal" />
-      <div className="ap-cards">
-        {items.map((item) => (
-          <InfoCard key={item.title} label={item.label} title={item.title} className="ap-reveal">
-            {item.text}
-          </InfoCard>
-        ))}
-      </div>
+    <section id={id} className="ap-section ap-section--continued ap-projects">
+      {items.map((item) => <ProjectShowcase key={item.name + item.description} {...item} className="ap-reveal" />)}
     </section>
   );
 }

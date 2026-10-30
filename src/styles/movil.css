@@ -64,6 +64,9 @@
   .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);
     --about-statement-font:var(--font-oswald);--about-statement-size:clamp(30px, 8.6vw, 92px);--about-statement-leading:1.1}
   .ap-about__text{gap:var(--space-4);width:100%}
+
+  /* Proyectos: mismo relleno lateral que Sobre mí; el carrusel sangra hasta el borde de la pantalla. */
+  .ap-projects{gap:var(--space-12);padding:0 var(--space-4) var(--space-12);--proj-bleed:var(--space-4)}
 }
 
 @media (max-width: 599px) and (prefers-reduced-motion: reduce){

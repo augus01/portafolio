@@ -19,8 +19,8 @@ El sistema original se publica sobre MUI 7 (`window.AugustoPinto`). Aquí **no s
 | Capa del sistema | Carpeta | Componentes |
 | --- | --- | --- |
 | Átomos | `src/components/atoms/` | Icon, Logo, Tag, Link, Button, Divider · Pill (píldora de NavBar) · Wordmark (nombre ajustado del Hero) · HeroCanvas, GrainOverlay (propios del hero inmersivo) |
-| Moléculas | `src/components/molecules/` | NavBar, FormField, SocialLinks, SkillGroup · InfoCard |
-| Organismos | `src/components/organisms/` | Hero, SectionHeadline, ProjectCard, StoryTimeline, DiscoveryHint, ContactForm, Footer · HeroStage y las secciones de la página |
+| Moléculas | `src/components/molecules/` | NavBar, FormField, SocialLinks, SkillGroup · MobileNavBar (barra móvil), MediaCard (card de proyecto con pie numerado) |
+| Organismos | `src/components/organisms/` | Hero, SectionHeadline, ProjectCard, StoryTimeline, DiscoveryHint, ContactForm, Footer · HeroStage, MobileMenu, ProjectShowcase y las secciones de la página |
 | Plantillas | `src/components/templates/` | ImmersiveLandingTemplate (PortfolioPage del inventario) |
 | Páginas | `src/components/pages/` | HomePage |
 
@@ -53,6 +53,20 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
 | Máximo tres familias | Párrafos en **Oswald** 400 (Google Fonts), 22px | `--about-text-font`, `--about-text-size` |
 
+## Excepciones aprobadas (sección Proyectos)
+
+`#proyectos` se aprobó en el lienzo (30 oct 2026, vistas escritorio y móvil) y reemplaza a la grilla de InfoCard. Cada proyecto (`ProjectShowcase`) tiene cabecera —nombre y rol | descripción— y cards (`MediaCard`) con imagen y pie numerado. No usa `ProjectCard` del sistema: el lienzo pide otra composición. Lo que no tiene token está en variables `--proj-*` de `.ap-projects` (`src/styles/layout.css`):
+
+| Regla del sistema | Excepción de Proyectos | Variable |
+| --- | --- | --- |
+| Escala tipográfica fija | Nombre y rol en Oswald 500, 28px (24px bajo 720px); descripción en Oswald 22px (20px); pie de card en Oswald 15px | `--proj-title-size`, `--proj-text-size`, `--proj-cap-size` |
+| Monocromo con tintas del sistema | Rol en el gris destacado `#a3a3a8`, compartido con Sobre mí | `--ink-highlight-muted` (en `.ap-page`) |
+| Espaciado en escala de 4/8 | Rejilla 454fr / 613fr / 760fr; 20px entre cabecera y cards; 10px entre imagen y pie | `--proj-columns`, `--proj-gap`, `--proj-card-gap` |
+| Superficies del sistema | Marco de imagen de relleno `rgba(18,18,18,.06)`, alto `clamp(320px, 31vw, 560px)` (4:5 bajo 720px) | `--proj-media-fill`, `--proj-media-height` |
+| Breakpoint de 600px | Bajo **720px** las cards pasan a carrusel horizontal con snap (76% de ancho, a sangre hasta el borde) | `layout.css` |
+
+Oswald 500 no se descarga (solo 400, igual que en el lienzo), así que el navegador lo muestra en 400.
+
 ## Excepciones aprobadas (vista móvil)
 
 La vista móvil se aprobó en el lienzo "Movil" del mismo artefacto (30 oct 2026, vista previa 390 × 844) y se aplica **bajo 600px de ventana**, el mismo corte que usan NavBar y Hero. Vive en `src/styles/movil.css`; lo que no tiene token está en variables `--m-*` de `.ap-page`.
@@ -69,7 +83,7 @@ Los iconos del menú usan Lucide (`menu`, `x`) del átomo `Icon` con el trazo en
 
 ## Pendientes contra el sistema
 
-- **Contraste del gris de Sobre mí:** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
+- **Contraste del gris destacado (Sobre mí y rol de Proyectos):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
