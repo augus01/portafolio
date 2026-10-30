@@ -40,7 +40,7 @@ El hero se aprobó aparte, en el artefacto "Hero inmersivo" (`hero-inmersivo.zip
 | Máximo tres familias | Nombre del hero en **Archivo** (Google Fonts), `wdth` 125, peso 800, mayúsculas | `.ap-hero__name.wordmark` |
 | Movimiento < 300 ms y solo por acción | Paso guiado hero → página de 1,6 s ligado al scroll (Lenis + GSAP), con `prefers-reduced-motion` completo | `src/hooks/useImmersiveScroll.js` |
 | Material flotante sólido en la nav | Píldoras de vidrio translúcido sobre el hero (`.ap-nav--dark`) | `hero-inmersivo.css` |
-| NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero | `NavBar.jsx`, `layout.css` |
+| NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero. Bajo 600px de ventana la NavBar se oculta y manda la vista móvil (abajo) | `NavBar.jsx`, `layout.css` |
 | — | Escalas de los Tweaks: `--wm-scale .65`, `--nav-scale 1.3`, `--top-scale 2.5`, `--meta-scale 1.35` | `.ap-page` |
 
 ## Excepciones aprobadas (sección Sobre mí)
@@ -52,6 +52,20 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(36px, 6.2vw, 92px)`, interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
 | Máximo tres familias | Párrafos en **Oswald** 400 (Google Fonts), 22px | `--about-text-font`, `--about-text-size` |
+
+## Excepciones aprobadas (vista móvil)
+
+La vista móvil se aprobó en el lienzo "Movil" del mismo artefacto (30 oct 2026, vista previa 390 × 844) y se aplica **bajo 600px de ventana**, el mismo corte que usan NavBar y Hero. Vive en `src/styles/movil.css`; lo que no tiene token está en variables `--m-*` de `.ap-page`.
+
+| Regla del sistema | Excepción móvil | Dónde |
+| --- | --- | --- |
+| NavBar de píldoras con menú desplegable sólido | Barra propia (`MobileNavBar`): logo a la izquierda y botón de solo icono (52px, icono 30px, trazo 2,25) a la derecha; transparente sobre el hero, vidrio claro `rgba(255,255,255,.88)` con `blur(14px)` y línea inferior sobre la página | `molecules/MobileNavBar`, `--m-bar-*`, `--m-toggle-*` |
+| Menú en panel flotante | Menú a pantalla completa en `surface-raised` (`MobileMenu`): enlaces en Oswald mayúsculas `clamp(28px, 8.4vw, 34px)`, llamada "Hablemos" en píldora de 50px, enlace secundario y pie mono de 11px. Detiene el scroll, Esc cierra y devuelve el foco | `organisms/MobileMenu`, `hooks/useMobileMenu.js`, `--m-link-*`, `--m-cta-*` |
+| Hero: logo y rol arriba | El logo pasa a la barra; rol · lugar bajan al pie, centrados (máx. 30ch, 20px sobre el borde). Tweaks móviles: nombre 100%, rol y lugar 110% | `--wm-scale`, `--meta-scale`, `--m-hero-foot` |
+| Sobre mí | Frase en Oswald `clamp(30px, 8.6vw, 92px)`, interlineado 1,1; párrafos a todo el ancho; relleno 56 / 16 / 48px | `.ap-about` en `movil.css` |
+| Movimiento | Con animación, la barra solo se desvanece al entrar al túnel y reaparece arriba; no baja al pie del hero | `useImmersiveScroll.js` |
+
+Los iconos del menú usan Lucide (`menu`, `x`) del átomo `Icon` con el trazo engrosado por CSS, en vez de los trazados propios del lienzo.
 
 ## Pendientes contra el sistema
 

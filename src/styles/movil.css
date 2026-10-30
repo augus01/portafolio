@@ -1,0 +1,71 @@
+/* Vista móvil (bajo 600px), portada del lienzo aprobado "Movil" (30 oct 2026).
+   Solo tokens; lo que no tiene token vive en las variables --m-* de .ap-page y está documentado
+   como excepción en design-system/INTEGRACION.md. 600px es el mismo corte de NavBar y Hero en el sistema. */
+
+/* Fuera de móvil la barra y el menú no se muestran. */
+.ap-mnav,.ap-menu{display:none}
+
+@media (max-width: 599px){
+  .ap-page{
+    /* Tweaks del lienzo móvil: nombre 100%, rol y lugar 110%. */
+    --wm-scale:1;--meta-scale:1.1;
+    --m-bar-surface:rgba(255,255,255,.88);--m-bar-blur:14px;
+    --m-toggle-size:52px;--m-toggle-icon:30px;--m-toggle-nudge:-6px;--m-toggle-stroke:2.25;
+    --m-toggle-shadow:drop-shadow(0 1px 6px rgba(6,42,53,.45));
+    --m-close-size:48px;--m-close-icon:22px;--m-close-stroke:2;
+    --m-menu-shift:-12px;
+    --m-link-min:52px;--m-link-pad:6px;--m-link-size:clamp(28px, 8.4vw, 34px);--m-link-leading:1.15;
+    --m-cta-min:50px;--m-cta-size:1.0625rem;--m-cta-tracking:.04em;--m-meta-size:.6875rem;
+    --m-hero-foot:20px}
+
+  /* Barra: pegada al tope (sticky, alto 0). Reemplaza a la NavBar de píldoras. */
+  .ap-navwrap{top:0}
+  .ap-navwrap .ap-nav{display:none}
+  .ap-mnav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);box-sizing:border-box;padding:var(--space-2) var(--space-4);
+    transition:background var(--dur-enter) var(--ease-out),border-color var(--dur-enter) var(--ease-out)}
+  .ap-mnav[data-tone="light"]{background:var(--m-bar-surface);-webkit-backdrop-filter:blur(var(--m-bar-blur));backdrop-filter:blur(var(--m-bar-blur));border-bottom:var(--stroke-hairline) solid var(--border-hairline)}
+  .ap-mnav[data-tone="dark"]{border-bottom:var(--stroke-hairline) solid transparent}
+  /* Botón de solo icono, sin píldora: blanco sobre el hero, tinta oscura sobre la página clara. */
+  .ap-mnav__toggle{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:var(--m-toggle-size);height:var(--m-toggle-size);padding:0;margin-right:var(--m-toggle-nudge);border:0;border-radius:var(--radius-pill);background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .ap-mnav__toggle .ap-icon{width:var(--m-toggle-icon);height:var(--m-toggle-icon)}
+  .ap-mnav__toggle svg{stroke-width:var(--m-toggle-stroke)}
+  .ap-mnav[data-tone="dark"] .ap-mnav__toggle{color:var(--ink-on-dark);filter:var(--m-toggle-shadow)}
+  .ap-mnav[data-tone="light"] .ap-mnav__toggle{color:var(--ink-primary)}
+  .ap-mnav__toggle:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+  .ap-mnav[data-tone="dark"] .ap-mnav__toggle:focus-visible{outline-color:var(--focus-ring-on-dark)}
+
+  /* Menú: pantalla blanca completa. Logo y cerrar arriba, enlaces grandes al centro, llamada principal abajo. */
+  .ap-menu{position:absolute;top:0;left:0;width:100%;height:100svh;z-index:2;box-sizing:border-box;display:flex;flex-direction:column;background:var(--surface-raised);color:var(--ink-primary);
+    opacity:0;visibility:hidden;transform:translateY(var(--m-menu-shift));
+    transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out),visibility 0s linear var(--dur-enter)}
+  .ap-menu.is-open{opacity:1;visibility:visible;transform:none;transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out),visibility 0s}
+  .ap-menu__top{flex:none;display:flex;align-items:center;justify-content:space-between;padding:var(--space-2) var(--space-4)}
+  .ap-menu__close{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:var(--m-close-size);height:var(--m-close-size);padding:0;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--ink-primary);cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .ap-menu__close .ap-icon{width:var(--m-close-icon);height:var(--m-close-icon)}
+  .ap-menu__close svg{stroke-width:var(--m-close-stroke)}
+  .ap-menu__close:focus-visible,.ap-menu__link:focus-visible,.ap-menu__cta:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:calc(var(--focus-ring-offset) * -1)}
+  .ap-menu__nav{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 var(--space-4);overflow-y:auto;overscroll-behavior:contain}
+  .ap-menu__link{display:flex;align-items:center;min-height:var(--m-link-min);padding:var(--m-link-pad) 0;color:var(--ink-primary);text-decoration:none;-webkit-tap-highlight-color:transparent}
+  .ap-menu__txt.heading{font-family:var(--font-oswald);font-weight:400;font-size:var(--m-link-size);line-height:var(--m-link-leading);letter-spacing:0;text-transform:uppercase}
+  .ap-menu__foot{flex:none;display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom, 0px))}
+  .ap-menu__cta{display:flex;align-items:center;justify-content:center;gap:var(--space-2);min-height:var(--m-cta-min);border-radius:var(--radius-pill);background:var(--action);color:var(--on-action);text-decoration:none;-webkit-tap-highlight-color:transparent}
+  .ap-menu__cta.meta{font-family:var(--font-oswald);font-size:var(--m-cta-size);font-weight:400;letter-spacing:var(--m-cta-tracking);text-transform:uppercase}
+  .ap-menu__cta--ghost{min-height:var(--target-min);background:transparent;color:var(--ink-primary)}
+  .ap-menu__meta.label{margin:0;text-align:center;font-size:var(--m-meta-size);font-weight:400;color:var(--ink-secondary)}
+
+  /* Hero: el logo vive en la barra; rol y lugar bajan al pie del escenario; el nombre ocupa el ancho en dos líneas. */
+  .ap-hero__top .ap-logo{display:none}
+  .ap-hero__top{position:absolute;left:var(--space-4);right:var(--space-4);bottom:max(var(--m-hero-foot), env(safe-area-inset-bottom, 0px));justify-content:center}
+  .ap-hero__top .ap-hero__meta{justify-content:center;max-width:30ch}
+  .ap-hero__top .ap-hero__role{text-align:center}
+  .ap-sticky .ap-hero__inner{grid-template-rows:1fr;padding:var(--space-4)}
+
+  /* Sobre mí: la frase pasa a Oswald, los párrafos ocupan todo el ancho y el ritmo se aprieta. 56px arriba = space-12 + space-2. */
+  .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);
+    --about-statement-font:var(--font-oswald);--about-statement-size:clamp(30px, 8.6vw, 92px);--about-statement-leading:1.1}
+  .ap-about__text{gap:var(--space-4);width:100%}
+}
+
+@media (max-width: 599px) and (prefers-reduced-motion: reduce){
+  .ap-menu,.ap-menu.is-open,.ap-mnav{transition:none}
+}

@@ -13,6 +13,19 @@ export const nav = {
   ],
 };
 
+// Menú móvil a pantalla completa (bajo 600px): enlaces grandes, llamada principal, enlace secundario y pie.
+export const mobileMenu = {
+  links: [
+    { label: 'Sobre mí', href: '#sobre-mi' },
+    { label: 'Superpoderes', href: '#superpoderes' },
+    { label: 'Proyectos', href: '#proyectos' },
+    { label: 'Contacto', href: '#contacto' },
+  ],
+  cta: { label: 'Hablemos', href: '#contacto' },
+  secondary: { label: 'GitHub', href: '#' },
+  meta: 'Ingeniería Civil Informática · Chile',
+};
+
 export const hero = {
   name: 'AUGUSTO PINTO',
   uppercase: true,

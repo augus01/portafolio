@@ -80,8 +80,11 @@ html.lenis,html.lenis body{height:auto}
   .ap-sticky{position:relative}
   .ap-hero__gl,.ap-hero__line>span,.ap-sticky .ap-hero__rays,.ap-sticky .ap-hero__bg::before{animation:none}
   .ap-hero__top,.ap-navwrap{animation:ap-fade 400ms linear both}
-  .ap-navwrap{position:absolute;top:calc(min(100svh, 900px) - var(--space-8));left:0;right:0}
-  .ap-navwrap .ap-nav{transform:translateY(-100%)}
   .ap-overlay{position:relative;inset:auto;padding-top:var(--space-16);background:var(--hero-shadow)}
   .ap-exit{display:none}
+}
+/* Sin animación, en escritorio la nav queda fija al pie del hero; en móvil la barra sigue arriba (movil.css). */
+@media (prefers-reduced-motion: reduce) and (min-width: 600px){
+  .ap-navwrap{position:absolute;top:calc(min(100svh, 900px) - var(--space-8));left:0;right:0}
+  .ap-navwrap .ap-nav{transform:translateY(-100%)}
 }

@@ -12,6 +12,8 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
  * Publica el timeline en `motionRef.current.tl` para que el fondo WebGL siga las mismas fases,
  * y avisa con `onNavTone('dark' | 'light')` cuando la nav debe cambiar de estilo.
  * Con `prefers-reduced-motion: reduce` no hay pin, paso guiado ni Lenis.
+ * Bajo 600px anima la barra móvil (.ap-mnav), que vive arriba: solo se desvanece y reaparece, sin bajar al pie del hero.
+ * Expone Lenis en `motionRef.current.lenis`; con `motionRef.current.jump` activo el paso guiado no interviene.
  */
 export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
   useEffect(() => {
@@ -20,12 +22,15 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
     const q = (s) => root.querySelector(s);
 
     const mm = gsap.matchMedia();
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
+    mm.add({ motion: '(prefers-reduced-motion: no-preference)', mobile: '(max-width: 599px)' }, (ctx) => {
+      if (!ctx.conditions.motion) return undefined;
+      const { mobile } = ctx.conditions;
       const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: true });
       lenis.on('scroll', ScrollTrigger.update);
       const tick = (t) => lenis.raf(t * 1000);
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
+      motionRef.current.lenis = lenis;
 
       const track = q('.ap-track');
       const stage = q('.ap-sticky');
@@ -36,13 +41,14 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       const exitEl = q('.ap-exit');
       const after = q('.ap-after');
       // Se mide la barra real (.ap-nav): el envoltorio del componente no tiene alto propio.
-      const navEl = q('.ap-navwrap .ap-nav');
+      const navEl = q(mobile ? '.ap-navwrap .ap-mnav' : '.ap-navwrap .ap-nav');
       // Si el titular está vacío, el velo de abajo no se muestra.
       if (overInner && !overInner.textContent.trim()) gsap.set(overlay, { display: 'none' });
 
       // Nav: abajo al cargar; se oculta durante el túnel y reaparece arriba (top 24px) al llegar a la página.
       const pad = () => (stage.clientWidth >= 900 ? 32 : 24);
-      const navDown = () => stage.offsetHeight - pad() - navEl.getBoundingClientRect().height - 24;
+      // En móvil la barra ya está arriba: no baja.
+      const navDown = () => (mobile ? 0 : stage.offsetHeight - pad() - navEl.getBoundingClientRect().height - 24);
 
       let tone = 'dark';
       gsap.set([name, overInner], { willChange: 'transform' });
@@ -83,7 +89,7 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       const pinStart = () => track.offsetTop;
       const pinEnd = () => track.offsetTop + track.offsetHeight - window.innerHeight;
       lenis.on('scroll', (l) => {
-        if (auto) return;
+        if (auto || motionRef.current.jump) return;
         const y = l.scroll, a = pinStart(), b = pinEnd();
         if (b - a < 4 || y <= a + 2 || y >= b - 2) return;
         auto = true;
@@ -108,6 +114,7 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
         lenis.destroy();
         after.style.removeProperty('margin-top');
         motionRef.current.tl = null;
+        motionRef.current.lenis = null;
         motionRef.current.progress = 0;
       };
     });

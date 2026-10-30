@@ -1,5 +1,6 @@
-/* Orden: tokens del design system → componentes del design system → estilos de la página. */
+/* Orden: tokens del design system → componentes del design system → estilos de la página → vista móvil. */
 @import '../../design-system/tokens.css';
 @import '../../design-system/components/bundle.css';
 @import './hero-inmersivo.css';
 @import './layout.css';
+@import './movil.css';
