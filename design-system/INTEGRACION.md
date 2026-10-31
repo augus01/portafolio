@@ -65,7 +65,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Superficies del sistema | Marco de imagen de relleno `rgba(18,18,18,.06)`, alto `clamp(320px, 31vw, 560px)` (4:5 bajo 720px) | `--proj-media-fill`, `--proj-media-height` |
 | Breakpoint de 600px | Bajo **720px** las cards pasan a carrusel horizontal con snap (76% de ancho, a sangre hasta el borde) | `layout.css` |
 
-Oswald 500 no se descarga (solo 400, igual que en el lienzo), así que el navegador lo muestra en 400.
+Oswald se descarga en 400 y 500 (como en el lienzo actualizado), así que nombre y rol se ven en 500.
 
 ## Excepciones aprobadas (vista móvil)
 
@@ -81,10 +81,27 @@ La vista móvil se aprobó en el lienzo "Movil" del mismo artefacto (30 oct 2026
 
 Los iconos del menú usan Lucide (`menu`, `x`) del átomo `Icon` con el trazo engrosado por CSS, en vez de los trazados propios del lienzo.
 
+## Excepciones aprobadas (Visita mi oficina)
+
+La función creativa `#oficina` se aprobó en el artefacto "Landing · oficina", versión **"Original con más vida"** (31 oct 2026), y va después de Proyectos como en el lienzo "Hero". Es una maqueta 3D (Three.js r128, `three@0.128.0`) de la oficina con tres agentes: recepción (Sobre mí), arquitecto (Proyectos) y stack (Superpoderes técnicos). Arrastrar gira la vista, un clic en un agente o en su botón acerca la cámara y abre su panel, Esc lo cierra; el cajón del rack y el closet esconden dos agentes más. Three.js se descarga aparte, solo cuando el escenario se acerca a la pantalla.
+
+| Regla del sistema | Excepción de la oficina | Dónde |
+| --- | --- | --- |
+| Monocromo, sin acentos | La maqueta 3D usa la paleta viva del artefacto (muebles, alfombra, sofá, personajes). La UI encima (botones, etiquetas, panel) sigue en tokens monocromos | `src/lib/officeScene.js` |
+| Escala tipográfica fija | Título y pista en Oswald 28px (500 y 400); botones, etiquetas y pista del escenario en mono 11px; nombre del agente en Oswald 500 28px en minúsculas; preguntas en Geist 15px | `--off-*` de `.ap-office` |
+| Tintas del sistema | Pista bajo el título en gris `#6b6e78` (~5:1 sobre el lienzo) | `--off-subtitle` |
+| Trazo de 1px | Bordes de 2px en escenario, botones, panel y preguntas; foco de 3px | `--off-stroke`, `--off-focus-width` |
+| Radios del sistema | Panel 22px, preguntas 14px, escenario 18px bajo 720px | `--off-panel-radius`, `--off-q-radius`, `--off-radius` |
+| Breakpoint de 600px | Bajo **720px** el escenario baja a `min(78svh, 640px)` (mín. 520px) y se ocultan las etiquetas decorativas | `src/styles/oficina.css` |
+
+El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carácter ✕ del artefacto. Componentes: átomo `OfficeButton`, molécula `OfficeAgentPanel`, organismos `Office` y `OfficeSection`; lógica en `hooks/useOffice.js` y `lib/officeEngine.js`.
+
 ## Pendientes contra el sistema
 
 - **Contraste del gris destacado (Sobre mí y rol de Proyectos):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
-- Decisiones abiertas del sistema: ver `inventario.md` (función creativa, idioma, foto en el hero…).
+- **Oficina:** el panel de cada agente es un boceto ("aquí se abre el chat del agente"): falta definir si las preguntas abren un chat real.
+- **Nav sobre la oficina:** en escritorio la nav fija de píldoras queda encima de la barra de la oficina cuando el escenario llega al tope (igual que en el lienzo).
+- Decisiones abiertas del sistema: ver `inventario.md` (idioma, foto en el hero…).

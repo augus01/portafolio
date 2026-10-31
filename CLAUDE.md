@@ -52,7 +52,7 @@ Un **portfolio personal** público, hosteado en **AWS Amplify Hosting**, con:
 - Mantener el costo en Free Tier.
 
 ## Stack (definido)
-- **React + Vite**, sin plantilla de ejemplo. Dependencias de animación: `gsap@3.13.0` (+ ScrollTrigger) y `lenis@1.3.4`, versiones fijas.
+- **React + Vite**, sin plantilla de ejemplo. Dependencias de animación: `gsap@3.13.0` (+ ScrollTrigger) y `lenis@1.3.4`; 3D de la oficina: `three@0.128.0` (carga diferida). Versiones fijas.
 - `npm run dev` · `npm run build` · `npm run preview`.
 
 ## Design system — USO OBLIGATORIO
@@ -86,5 +86,5 @@ Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un compo
 - Repo: https://github.com/augus01/portafolio.git (rama `main`).
 
 ## Pendiente de definir
-- Idea de la feature creativa (basada en la historia personal del usuario)
+- Feature creativa: **"Visita mi oficina"** (maqueta 3D con agentes, sección `#oficina`). Falta definir qué hace cada agente al abrir su panel (hoy es un boceto).
 - Contenido real: historia, skills, proyectos (hoy hay lorem ipsum del artefacto aprobado)
