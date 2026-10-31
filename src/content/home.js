@@ -87,6 +87,36 @@ export const projects = {
   ],
 };
 
+// "Visita mi oficina" (función creativa): cada agente atiende una sección del portafolio.
+export const office = {
+  id: 'oficina',
+  title: 'Visita mi oficina',
+  subtitle: 'Gira la maqueta y haz clic en un agente',
+  office: {
+    viewsLabel: 'Vista',
+    views: [
+      { id: 'iso', label: 'Isométrica' },
+      { id: 'top', label: 'Planta' },
+    ],
+    agentsLabel: 'Agentes',
+    agents: [
+      { id: 'recepcion', name: 'recepción', section: 'Sobre mí',
+        role: 'Te recibe en la entrada y te cuenta quién soy.',
+        questions: ['¿Quién es Augusto?', '¿Qué estudia?', '¿Qué está buscando?'] },
+      { id: 'arquitecto', name: 'arquitecto', section: 'Proyectos',
+        role: 'Explica mis proyectos y cómo los construí, frente a la pizarra.',
+        questions: ['¿Qué es Helix?', '¿Qué hizo en Inkvibe?', '¿Cómo diseña una arquitectura?'] },
+      { id: 'stack', name: 'stack', section: 'Superpoderes técnicos',
+        role: 'Mis tecnologías, lo que sé de IA y cómo contactarme.',
+        questions: ['¿Qué tecnologías usa?', '¿Qué sabe de IA?', '¿Cómo lo contacto?'] },
+    ],
+    hint: 'Arrastra para girar · clic en un agente',
+    note: 'Boceto: aquí se abre el chat del agente',
+    closeLabel: 'Volver a la oficina',
+    fallback: 'No se pudo abrir la vista 3D en este navegador.',
+  },
+};
+
 export const contact = {
   id: 'contacto',
   headline: {

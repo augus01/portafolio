@@ -1,0 +1,75 @@
+/* "Visita mi oficina": oficina 3D del artefacto "Landing · oficina", versión "Original con más vida" (31 oct 2026),
+   dentro de la página como en el lienzo "Hero" (sección #oficina). Los colores de la UI salen de tokens;
+   lo que no tiene token vive en las variables --off-* de .ap-office (excepciones en design-system/INTEGRACION.md). */
+
+.ap-office{gap:var(--space-6);
+  --off-head-gap:6px;--off-head-size:28px;--off-head-leading:1.15;--off-subtitle:#6b6e78;
+  --off-stage-height:clamp(560px, 82svh, 860px);--off-stroke:2px;--off-radius:var(--radius-lg);
+  --off-ui-size:11px;--off-ui-tracking:.06em;--off-deco-size:10px;
+  --off-btn-pad:var(--space-4);--off-btn-lift:-2px;--off-focus-width:3px;
+  --off-tag-pad:7px 11px;--off-hint-pad:7px var(--space-3);--off-hint-tracking:.04em;
+  --off-panel-max:420px;--off-panel-radius:22px;--off-panel-pad:22px;--off-panel-shift:28px;
+  --off-name-size:28px;--off-name-leading:1.05;--off-role-size:var(--space-4);--off-q-size:15px;--off-q-radius:14px;--off-q-pad:10px 14px;
+  --off-note-size:10px}
+
+/* Cabecera: título y pista visible, ambos en Oswald 28px. */
+.ap-office__head{display:flex;flex-direction:column;gap:var(--off-head-gap)}
+.ap-office__title.subheading,.ap-office__subtitle.subheading{margin:0;font-family:var(--font-oswald);font-size:var(--off-head-size);line-height:var(--off-head-leading);letter-spacing:0}
+.ap-office__title.subheading{font-weight:500;color:var(--ink-primary)}
+.ap-office__subtitle.subheading{font-weight:400;color:var(--off-subtitle)}
+
+/* Escenario: lienzo Three.js a pantalla del contenedor, con barra, etiquetas, pista y panel encima. */
+.ap-off{display:flex;flex-direction:column;gap:20px}
+.ap-off__stage{position:relative;height:var(--off-stage-height);overflow:hidden;border:var(--off-stroke) solid var(--ink-primary);border-radius:var(--off-radius);background:var(--surface-canvas);touch-action:pan-y}
+.ap-off__canvas{position:absolute;inset:0}
+.ap-off__canvas canvas{display:block;cursor:grab;touch-action:pan-y}
+.ap-off__canvas canvas.dragging{cursor:grabbing}
+.ap-off__canvas canvas.hover{cursor:pointer}
+.ap-off__fallback.body{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;padding:var(--space-8);text-align:center;color:var(--ink-secondary)}
+.ap-off__labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+
+.ap-off__bar{position:absolute;z-index:5;top:14px;left:14px;right:14px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:var(--space-2);pointer-events:none}
+.ap-off__bar > *{pointer-events:auto}
+.ap-off__row{display:flex;gap:var(--space-2);flex-wrap:wrap}
+
+.ap-off__btn.label{display:inline-flex;align-items:center;justify-content:center;font:500 var(--off-ui-size)/1 var(--font-mono);letter-spacing:var(--off-ui-tracking);text-transform:uppercase;border:var(--off-stroke) solid var(--ink-primary);background:var(--surface-raised);color:var(--ink-primary);border-radius:var(--radius-pill);padding:0 var(--off-btn-pad);min-height:var(--target-min);cursor:pointer;transition:transform var(--dur-press) var(--ease-out)}
+@media (hover: hover){.ap-off__btn.label:hover{transform:translateY(var(--off-btn-lift))}}
+.ap-off__btn.label[aria-pressed="true"]{background:var(--action);color:var(--on-action)}
+.ap-off__btn.label:focus-visible{outline:var(--off-focus-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.ap-off__close.label{width:var(--target-min);padding:0}
+
+/* Etiquetas que siguen a los agentes en pantalla (las crea el motor). */
+.ap-off__tag{position:absolute;left:0;top:0;pointer-events:none;white-space:nowrap;font:500 var(--off-ui-size)/1 var(--font-mono);letter-spacing:var(--off-ui-tracking);text-transform:uppercase}
+.ap-off__tag--agent{background:var(--surface-inverse);color:var(--ink-on-dark);padding:var(--off-tag-pad);border-radius:var(--radius-pill);border:var(--off-stroke) solid var(--ink-primary)}
+.ap-off__tag--deco{background:var(--surface-canvas);color:var(--ink-secondary);padding:var(--space-1) 7px;border-radius:6px;font-size:var(--off-deco-size);border:var(--stroke-hairline) dashed var(--border-hairline)}
+
+.ap-off__hint.label{position:absolute;z-index:2;left:var(--space-4);bottom:14px;margin:0;font:500 var(--off-ui-size)/1.4 var(--font-mono);letter-spacing:var(--off-hint-tracking);text-transform:uppercase;background:var(--surface-canvas);color:var(--ink-secondary);padding:var(--off-hint-pad);border-radius:var(--radius-pill);pointer-events:none;transition:opacity 200ms}
+.ap-off__hint.is-hidden{opacity:0}
+
+/* Panel del agente: entra desde abajo al abrir un agente. */
+.ap-off__panel{z-index:6;position:absolute;right:14px;bottom:14px;left:14px;margin-left:auto;max-width:var(--off-panel-max);box-sizing:border-box;background:var(--surface-raised);color:var(--ink-primary);border:var(--off-stroke) solid var(--ink-primary);border-radius:var(--off-panel-radius);padding:var(--off-panel-pad);box-shadow:var(--shadow-float);
+  transform:translateY(calc(100% + var(--off-panel-shift)));transition:transform var(--dur-move) var(--ease-in-out)}
+.ap-off__panel.is-open{transform:none}
+.ap-off__ptop{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-3)}
+.ap-off__eyebrow.label{margin:0;font:500 var(--off-ui-size)/1.2 var(--font-mono);letter-spacing:var(--off-ui-tracking);text-transform:uppercase;color:var(--ink-secondary)}
+.ap-off__pname.heading{margin:var(--space-2) 0 6px;font-family:var(--font-oswald);font-weight:500;font-size:var(--off-name-size);line-height:var(--off-name-leading);letter-spacing:0;text-transform:lowercase;color:var(--ink-primary)}
+.ap-off__prole.body{margin:0;font-family:var(--font-text);font-size:var(--off-role-size);line-height:1.5;color:var(--ink-primary)}
+.ap-off__q{list-style:none;margin:var(--space-4) 0 0;padding:0;display:flex;flex-direction:column;gap:var(--space-2)}
+.ap-off__q > .body-sm{font-family:var(--font-text);font-size:var(--off-q-size);line-height:normal;color:var(--ink-primary);border:var(--off-stroke) solid var(--border-hairline);border-radius:var(--off-q-radius);padding:var(--off-q-pad);background:var(--surface-canvas)}
+.ap-off__note.label{margin:var(--space-4) 0 0;padding-top:var(--space-3);border-top:var(--off-stroke) dashed var(--border-hairline);font:500 var(--off-note-size)/1.4 var(--font-mono);letter-spacing:var(--off-ui-tracking);text-transform:uppercase;color:var(--ink-secondary)}
+
+@media (max-width: 719px){
+  .ap-office{--off-stage-height:min(78svh, 640px);--off-radius:18px}
+  .ap-off__stage{min-height:520px}
+  .ap-off__tag--deco{display:none !important}
+  .ap-off__panel{max-width:none;padding:var(--space-4)}
+}
+
+/* Vista móvil del lienzo: mismo relleno lateral que Sobre mí y Proyectos. */
+@media (max-width: 599px){
+  .ap-office{gap:var(--space-4);padding:0 var(--space-4) var(--space-12)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .ap-off__panel,.ap-off__btn.label{transition:none}
+}
