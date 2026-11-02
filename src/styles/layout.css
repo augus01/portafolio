@@ -8,12 +8,27 @@
   /* Espaciado común de los títulos de sección (Sobre mí, Superpoderes y Proyectos), como en el artefacto. */
   --section-title-tracking:-0.02em;
   /* Ancho máximo común de los párrafos de sección (bajada de Superpoderes y descripción de cada proyecto). */
-  --section-lead-max:46rem}
+  --section-lead-max:46rem;
+  /* Zona de la nav fija: la banda que ocupan las píldoras (24px arriba y abajo) y el espacio que dejan las anclas
+     (banda + 16px). En móvil movil.css la redefine con el alto de la barra. */
+  --nav-band:calc(var(--space-12) + var(--target-min) * var(--nav-scale));--nav-clearance:calc(var(--nav-band) + var(--space-4))}
 .ap-after{position:relative;z-index:4;background:var(--surface-canvas)}
 
 .ap-section{padding:var(--space-section) var(--space-8);max-width:var(--page-max);margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--space-12)}
 .ap-section--continued{padding-top:0}
 .ap-section--tight{gap:var(--space-8)}
+
+/* Anclas: al saltar a una sección (clic en la nav o hash en la URL) el título queda bajo la nav fija. Se descuenta el
+   relleno superior de cada sección (--anchor-pad), porque Sobre mí y Superpoderes ya traen aire propio. */
+.ap-after > section[id]{scroll-margin-top:max(0px, calc(var(--nav-clearance) - var(--anchor-pad, 0px)))}
+.ap-about{--anchor-pad:var(--space-section)}
+.hab-mq{--anchor-pad:var(--space-16)}
+/* Zona libre bajo las píldoras (escritorio, nav clara): el texto que pasa por debajo se vela con el mismo vidrio
+   del sistema (--surface-float) y las píldoras siguen flotando encima. En móvil la barra ya cumple este papel. */
+@media (min-width:600px){
+  .ap-navwrap:has(.ap-nav--light)::before{content:"";position:absolute;z-index:-1;top:calc(var(--space-6) * -1);left:0;right:0;height:var(--nav-band);pointer-events:none;box-sizing:border-box;
+    background:var(--surface-float);-webkit-backdrop-filter:blur(var(--blur-float));backdrop-filter:blur(var(--blur-float));border-bottom:var(--stroke-hairline) solid var(--border-hairline)}
+}
 
 .ap-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-8)}
 .ap-columns > p{margin:0;color:var(--ink-secondary)}
@@ -103,6 +118,18 @@
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
 .ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:400;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
 .ap-gal__role.meta{padding-top:var(--space-2);color:var(--gal-muted)}
+/* Composición para tres proyectos (container queries sobre .ap-gal-wrap):
+   960px o más: tres columnas iguales en una fila.
+   720 a 959px: dos columnas; el tercero ocupa la fila entera, con la card a la izquierda y el texto a la derecha.
+   Bajo 720px: una columna. */
+@container (min-width: 960px){
+  .ap-gal{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@container (min-width: 720px) and (max-width: 959px){
+  .ap-gal__item:last-child:nth-child(odd){grid-column:1 / -1;grid-row:auto;grid-template-columns:subgrid;grid-template-rows:auto auto auto 1fr;align-items:start}
+  .ap-gal__item:last-child:nth-child(odd) .ap-gal__tile{grid-column:1;grid-row:1 / -1;margin-bottom:0}
+  .ap-gal__item:last-child:nth-child(odd) > :not(.ap-gal__tile){grid-column:2}
+}
 @container (max-width: 719px){
   .ap-gal{grid-template-columns:1fr}
 }

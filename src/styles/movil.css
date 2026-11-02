@@ -16,7 +16,9 @@
     --m-menu-shift:-12px;
     --m-link-min:52px;--m-link-pad:6px;--m-link-size:clamp(28px, 8.4vw, 34px);--m-link-leading:1.15;
     --m-cta-min:50px;--m-cta-size:1.0625rem;--m-cta-tracking:.04em;--m-meta-size:.6875rem;
-    --m-hero-foot:20px}
+    --m-hero-foot:20px;
+    /* Barra móvil: su alto es el botón más 16px; las anclas dejan 16px más bajo ella (--nav-clearance en layout.css). */
+    --nav-band:calc(var(--m-toggle-size) + var(--space-4))}
 
   /* Barra: pegada al tope (sticky, alto 0). Reemplaza a la NavBar de píldoras. */
   .ap-navwrap{top:0}
@@ -61,12 +63,12 @@
   .ap-sticky .ap-hero__inner{grid-template-rows:1fr;padding:var(--space-4)}
 
   /* Sobre mí: la frase se achica, los párrafos ocupan todo el ancho y el ritmo se aprieta. 56px arriba = space-12 + space-2. */
-  .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);
+  .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);--anchor-pad:calc(var(--space-12) + var(--space-2));
     --about-statement-size:clamp(28px, 7.6vw, 48px);--about-statement-leading:1.1}
   .ap-about__text{gap:var(--space-4);width:100%}
 
   /* Superpoderes: el encabezado toma el relleno lateral de Sobre mí y el título se achica igual que su frase. */
-  .hab-mq{gap:var(--space-12);padding:var(--space-12) 0;
+  .hab-mq{gap:var(--space-12);padding:var(--space-12) 0;--anchor-pad:var(--space-12);
     --hab-title-size:clamp(28px, 7.6vw, 48px);--hab-title-leading:1.1}
   .hab-mq__head{padding:0 var(--space-4)}
 

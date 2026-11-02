@@ -61,7 +61,9 @@ export function useMobileMenu(motionRef) {
     motion.lenis.start();
     motion.jump = true;
     const release = () => { motion.jump = false; };
-    motion.lenis.scrollTo(target, { duration: 1.6, force: true, onComplete: release });
+    // Lenis ignora scroll-margin-top: se descuenta aquí para que el título quede bajo la barra, como en el salto nativo.
+    const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+    motion.lenis.scrollTo(target, { duration: 1.6, force: true, offset: -margin, onComplete: release });
     setTimeout(release, 2400);
   }, [closeMenu, motionRef]);
 
