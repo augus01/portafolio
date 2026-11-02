@@ -83,5 +83,8 @@ html.lenis,html.lenis body{height:auto}
   .ap-overlay{position:relative;inset:auto;padding-top:var(--space-16);background:var(--hero-shadow)}
   .ap-exit{display:none}
 }
-/* La nav no se muestra sobre el hero (useImmersiveScroll la revela al llegar a la página); arranca oculta para no parpadear. */
-.ap-navwrap .ap-nav,.ap-navwrap .ap-mnav{visibility:hidden}
+/* La nav no se ve sobre el hero (useImmersiveScroll la revela al llegar a la página); arranca transparente para no parpadear.
+   Nunca con visibility: sigue en el árbol de accesibilidad y en el orden de Tab, y al recibir foco (.is-focus) se muestra. */
+.ap-navwrap .ap-nav,.ap-navwrap .ap-mnav{opacity:0;pointer-events:none}
+.ap-navwrap.is-on-page .ap-nav,.ap-navwrap.is-on-page .ap-mnav{pointer-events:auto}
+.ap-navwrap.is-focus .ap-nav,.ap-navwrap.is-focus .ap-mnav{opacity:1 !important;pointer-events:auto}

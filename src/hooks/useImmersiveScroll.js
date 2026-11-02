@@ -13,6 +13,9 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
  * y avisa con `onNavTone('dark' | 'light')` cuando la nav debe cambiar de estilo.
  * La nav no se ve sobre el hero: aparece arriba recién al llegar a la página (con y sin animación).
  * Con `prefers-reduced-motion: reduce` no hay pin, paso guiado ni Lenis: la nav solo se muestra u oculta.
+ * Teclado: nada sale del árbol de accesibilidad ni del orden de Tab. Todo se anima solo con opacity y transform
+ * (nunca visibility): la nav oculta se revela al recibir foco (clase `is-focus` en .ap-navwrap) y cada `.ap-reveal`
+ * se completa al instante si recibe foco antes de que se haga scroll hasta él.
  * Bajo 600px se usa la barra móvil (.ap-mnav) en vez de la NavBar de píldoras.
  * Expone Lenis en `motionRef.current.lenis`; con `motionRef.current.jump` activo el paso guiado no interviene.
  */
@@ -27,16 +30,30 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       const { mobile } = ctx.conditions;
       // Se mide la barra real (.ap-nav): el envoltorio del componente no tiene alto propio.
       const navEl = q(mobile ? '.ap-navwrap .ap-mnav' : '.ap-navwrap .ap-nav');
+      const navWrap = q('.ap-navwrap');
+      // Cada limpieza que no es de GSAP (oyentes, clases) se registra aquí y corre al revertir.
+      const cleanups = [];
+      // Sobre el hero la nav es transparente pero sigue en el orden de Tab: al recibir foco se muestra (CSS: .is-focus).
+      const onFocusIn = () => navWrap.classList.add('is-focus');
+      const onFocusOut = (e) => { if (!navWrap.contains(e.relatedTarget)) navWrap.classList.remove('is-focus'); };
+      navWrap.addEventListener('focusin', onFocusIn);
+      navWrap.addEventListener('focusout', onFocusOut);
+      cleanups.push(() => {
+        navWrap.removeEventListener('focusin', onFocusIn);
+        navWrap.removeEventListener('focusout', onFocusOut);
+        navWrap.classList.remove('is-focus', 'is-on-page');
+      });
 
       // Sin animación: la nav se oculta mientras el hero está en pantalla y aparece de golpe al salir de él.
       if (!ctx.conditions.motion) {
         const toggle = (onHero) => {
-          gsap.set(navEl, { autoAlpha: onHero ? 0 : 1 });
+          gsap.set(navEl, { opacity: onHero ? 0 : 1 });
+          navWrap.classList.toggle('is-on-page', !onHero);
           onNavTone(onHero ? 'dark' : 'light');
         };
         const st = ScrollTrigger.create({ trigger: q('.ap-track'), start: 'top top', end: 'bottom top', onToggle: (self) => toggle(self.isActive) });
         toggle(st.isActive || window.scrollY < 1);
-        return () => st.kill();
+        return () => { st.kill(); cleanups.forEach((fn) => fn()); };
       }
 
       const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: true });
@@ -58,6 +75,13 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
 
       // Nav: oculta sobre el hero; aparece arriba (top 24px) al llegar a la página.
       let tone = 'dark';
+      // Con opacity 0 los elementos siguen recibiendo clics: mientras no se ven, la página y la nav no capturan el puntero.
+      const applyLayers = (p) => {
+        after.style.pointerEvents = p < 0.72 ? 'none' : '';
+        navWrap.classList.toggle('is-on-page', p > 0.88);
+      };
+      applyLayers(0);
+      cleanups.push(() => { after.style.removeProperty('pointer-events'); navWrap.classList.remove('is-on-page'); });
       gsap.set([name, overInner], { willChange: 'transform' });
       const tl = gsap.timeline({
         defaults: { ease: 'none' },
@@ -65,6 +89,7 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
           trigger: track, start: 'top top', end: 'bottom bottom', scrub: true, invalidateOnRefresh: true,
           onUpdate: (self) => {
             motionRef.current.progress = self.progress;
+            applyLayers(self.progress);
             // La nav cambia a su estilo claro justo antes de reaparecer sobre la página, y vuelve al oscuro al regresar.
             const want = self.progress > 0.85 ? 'light' : 'dark';
             if (want !== tone) { tone = want; onNavTone(want); }
@@ -79,16 +104,16 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       after.style.setProperty('margin-top', 'calc(-1 * min(100svh, 900px))');
       // El nombre no sube: viene hacia ti (crece) y se desvanece, como si lo dejaras atrás al avanzar por la luz.
       tl.fromTo(name, { scale: 1, transformOrigin: '50% 50%' }, { scale: 3.4, duration: 0.24, ease: 'power2.in' }, 0)
-        .to(name, { autoAlpha: 0, duration: 0.14, ease: 'power1.in' }, 0.1)
-        .to(topKids, { autoAlpha: 0, duration: 0.1 }, 0)
-        .fromTo(navEl, { autoAlpha: 0 }, { autoAlpha: 0, duration: 0.01 }, 0)
-        .fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0.05)
+        .to(name, { opacity: 0, duration: 0.14, ease: 'power1.in' }, 0.1)
+        .to(topKids, { opacity: 0, duration: 0.1 }, 0)
+        .fromTo(navEl, { opacity: 0 }, { opacity: 0, duration: 0.01 }, 0)
+        .fromTo(overlay, { opacity: 0 }, { opacity: 1, duration: 0.06 }, 0.05)
         .fromTo(overInner, { y: 120 }, { y: 0, duration: 0.08, ease: 'power2.out' }, 0.05)
-        .to(overInner, { autoAlpha: 0, y: -60, duration: 0.05, ease: 'power1.in' }, 0.2)
-        .to(overlay, { autoAlpha: 0, duration: 0.05 }, 0.2)
+        .to(overInner, { opacity: 0, y: -60, duration: 0.05, ease: 'power1.in' }, 0.2)
+        .to(overlay, { opacity: 0, duration: 0.05 }, 0.2)
         .fromTo(exitEl, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 0.72)
-        .fromTo(after, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.22 }, 0.72)
-        .to(navEl, { autoAlpha: 1, duration: 0.1 }, 0.88);
+        .fromTo(after, { opacity: 0 }, { opacity: 1, duration: 0.22 }, 0.72)
+        .to(navEl, { opacity: 1, duration: 0.1 }, 0.88);
 
       // Paso guiado: un gesto dentro del pin lo completa solo, a ritmo fijo (1,6 s), hacia la sección o de vuelta al hero.
       let auto = false, safety = 0;
@@ -104,17 +129,22 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
         l.scrollTo(l.direction < 0 ? a : b, { duration: 1.6, easing: ease, lock: true, force: true, onComplete: done });
       });
 
-      // Reveals de las secciones siguientes, una sola vez.
+      // Reveals de las secciones siguientes, una sola vez. Solo opacity y transform: el contenido siempre está en el
+      // árbol de accesibilidad y en el orden de Tab; si recibe foco antes de revelarse, se completa al instante.
       root.querySelectorAll('.ap-reveal').forEach((el) => {
-        gsap.fromTo(el, { autoAlpha: 0, y: 60 }, {
-          autoAlpha: 1, y: 0, duration: 0.9, ease: 'power3.out',
+        const tw = gsap.fromTo(el, { opacity: 0, y: 60 }, {
+          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
           scrollTrigger: { trigger: el, start: 'top 80%', once: true },
         });
+        const onFocus = () => { tw.scrollTrigger?.kill(); tw.progress(1); };
+        el.addEventListener('focusin', onFocus, { once: true });
+        cleanups.push(() => el.removeEventListener('focusin', onFocus));
       });
 
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
 
       return () => {
+        cleanups.forEach((fn) => fn());
         gsap.ticker.remove(tick);
         clearTimeout(safety);
         lenis.destroy();
