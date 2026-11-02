@@ -53,6 +53,20 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
 | Máximo tres familias | Párrafos en **Oswald** 400 (de Google Fonts, alojada en `public/fonts` y precargada), 22px | `--about-text-font`, `--about-text-size` |
 
+## Excepciones aprobadas (sección Superpoderes)
+
+`#superpoderes` sigue la sección **"Con qué construyo"** del artefacto "Hero" (2 nov 2026) y va entre Sobre mí y Proyectos. Es un encabezado (etiqueta "Habilidades" en `.label`, título con el último tramo en gris y bajada) y una cinta de 17 logos 3D en dos filas (`SkillsSection` + `TechMarqueeRow`). Cada fila lleva sus logos dos veces y avanza en bucle sin salto; la segunda va más lenta y desfasada. Pasar el cursor detiene la fila. Con `prefers-reduced-motion` la cinta se queda quieta como grilla centrada, sin la copia. La copia de cada fila tiene `aria-hidden`, y los logos usan `alt=""` porque el nombre va escrito debajo. Lo que no tiene token está en variables `--hab-*` de `.hab-mq` (`src/styles/layout.css`; móvil en `movil.css`):
+
+| Regla del sistema | Excepción de Superpoderes | Variable |
+| --- | --- | --- |
+| Escala tipográfica fija | Tipografía de Sobre mí: título en Oswald 400 `clamp(32px, 4.4vw, 64px)`, interlineado 1,08 (bajo 600px `clamp(28px, 7.6vw, 48px)`, 1,1), tramo final en `#a3a3a8`; bajada en Oswald 400 22px, ancho máximo 46rem | `--hab-title-*`, `--hab-muted`, `--hab-text-*`, `--hab-intro-max` |
+| Proporciones del sistema | Cada tecnología mide 208px de ancho, con el logo a 128px; la sección ocupa al menos el alto de la pantalla desde 900px | `--hab-item-width`, `--hab-logo-size` |
+| Duraciones del sistema (≤ 280ms) | Bucle lineal infinito de 46s (fila 1) y 54s con −17s de desfase (fila 2) | `--hab-speed-a`, `--hab-speed-b`, `--hab-offset-b` |
+| Sin degradados | Máscara `linear-gradient` que desvanece el 10% de cada borde de la fila (solo transparencia, no pinta color) | `--hab-fade` |
+| Monocromo | Sin excepción: los logos son 3D en negro (Vitrum, vista Angle, material Black) | — |
+
+Archivos de logo en `public/habilidades/<tecnología>.webp` (240×240, extraídos del artefacto). El contenido (tecnologías y orden de las filas) vive en `skills` de `src/content/home.js`.
+
 ## Excepciones aprobadas (sección Proyectos)
 
 `#proyectos` sigue el frame **Proyectos-logo** del artefacto "Hero" (2 nov 2026), sin fondos de color: reemplaza a la versión con capturas (`ProjectShowcase` + `MediaCard`). Es una galería de dos columnas (una bajo 720px de contenedor) con un encabezado "Lo que he construido" (el último tramo en gris) y el conteo. Cada proyecto (`ProjectTile`) es una card 5:4 en `--surface-raised` con `border-hairline`, `radius-lg`, número y el logo al centro, que crece al pasar el mouse. Debajo: nombre, descripción y rol, alineados entre cards con subgrid. La tipografía es la de Sobre mí (ajuste del 2 nov 2026). Las cards no son links mientras no exista una página de detalle. Lo que no tiene token está en variables `--gal-*` de `.ap-gal-wrap` (`src/styles/layout.css`):

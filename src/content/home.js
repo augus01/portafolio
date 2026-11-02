@@ -55,21 +55,37 @@ export const about = {
   ],
 };
 
-// Superpoderes: retoma el diferenciador de Sobre mí y lo baja a cómo construyo.
+// Superpoderes ("Con qué construyo", artefacto "Hero"): cinta de logos 3D en dos filas que avanzan en sentidos
+// de velocidad distinta; pasar el cursor detiene la fila. Cada tecnología usa /habilidades/<logo>.webp
+// (logos 3D de Vitrum, vista Angle, material Black).
 export const skills = {
   id: 'superpoderes',
-  headline: {
-    eyebrow: 'Superpoderes',
-    title: 'CÓMO CONSTRUYO',
-    lead: 'Quiero hacer el producto que más ayude a las personas. Por eso lo cubro de punta a punta: la interfaz, las funciones con IA y la arquitectura en la nube que lo sostiene.',
-  },
-  groups: [
-    { title: 'Interfaz', description: 'Interfaces que se entienden a la primera y se mueven con intención.',
-      items: ['React', 'Vite', 'JavaScript', 'GSAP', 'Three.js'] },
-    { title: 'Funcionalidad e IA', description: 'Funciones con IA aplicada a situaciones reales, con reglas que se pueden explicar.',
-      items: ['JavaScript', 'Amazon Bedrock'] },
-    { title: 'Arquitectura en la nube', description: 'Una base en AWS que sostiene el producto y lo entrega rápido.',
-      items: ['AWS Amplify', 'Amazon CloudFront', 'AWS Lambda'] },
+  eyebrow: 'Habilidades',
+  // La segunda parte del título va en gris.
+  title: ['Con qué', 'construyo'],
+  lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue. Pasa el cursor sobre una fila para detenerla.',
+  rows: [
+    [
+      { name: 'React', logo: 'react' },
+      { name: 'Python', logo: 'python' },
+      { name: 'AWS', logo: 'aws' },
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Node.js', logo: 'nodejs' },
+      { name: 'Cloudflare', logo: 'cloudflare' },
+      { name: 'TypeScript', logo: 'typescript' },
+      { name: 'PostgreSQL', logo: 'postgresql' },
+      { name: 'Railway', logo: 'railway' },
+    ],
+    [
+      { name: 'JavaScript', logo: 'javascript' },
+      { name: 'Prisma', logo: 'prisma' },
+      { name: 'Docker', logo: 'docker' },
+      { name: 'Vite', logo: 'vite' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'GitHub', logo: 'github' },
+      { name: 'Material UI', logo: 'material-ui' },
+      { name: 'Firebase', logo: 'firebase' },
+    ],
   ],
 };
 

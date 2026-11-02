@@ -65,6 +65,11 @@
     --about-statement-size:clamp(28px, 7.6vw, 48px);--about-statement-leading:1.1}
   .ap-about__text{gap:var(--space-4);width:100%}
 
+  /* Superpoderes: el encabezado toma el relleno lateral de Sobre mí y el título se achica igual que su frase. */
+  .hab-mq{gap:var(--space-12);padding:var(--space-12) 0;
+    --hab-title-size:clamp(28px, 7.6vw, 48px);--hab-title-leading:1.1}
+  .hab-mq__head{padding:0 var(--space-4)}
+
   /* Proyectos: mismo relleno lateral que Sobre mí y su título se achica como la frase de Sobre mí. */
   .ap-gal-wrap{gap:var(--space-12);padding:0 var(--space-4) var(--space-12);
     --gal-title-size:clamp(28px, 7.6vw, 48px);--gal-title-leading:1.1}
