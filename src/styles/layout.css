@@ -110,11 +110,11 @@
 .ap-gal__item--rumbo{--gal-cover:var(--gal-cover-rumbo)}
 .ap-gal__item--inkvibe{--gal-cover:var(--gal-cover-inkvibe)}
 .ap-gal__item--zam{--gal-cover:var(--gal-cover-zam)}
-/* Sello de la esquina (AWS Skill Builder en Rumbo a Casa): marca "aws" y nombre del programa en blanco, en Display
-   (Helvetica Bold, el respaldo de la fuente de su logo), con tamaños relativos al ancho de la portada. */
+/* Sello de la esquina (AWS Builder Center en Rumbo a Casa): marca "aws" y nombre en blanco, el nombre en mono como
+   en la imagen oficial de builder.aws.com; tamaños relativos al ancho de la portada. */
 .ap-gal__badge{position:absolute;z-index:3;left:var(--space-6);top:var(--space-6);display:flex;align-items:center;gap:2cqw;color:var(--ink-on-dark)}
 .ap-gal__badge-mark{display:block;width:8cqw;height:auto}
-.ap-gal__badge-label{font-family:var(--font-display);font-weight:700;font-size:4.2cqw;line-height:1;letter-spacing:-0.01em;white-space:nowrap}
+.ap-gal__badge-label{font-family:var(--font-mono);font-weight:400;font-size:3.8cqw;line-height:1;white-space:nowrap}
 /* Collage: tres capturas reales alrededor del logo, fuera de su franja central; la tercera se corta en el borde inferior. */
 .ap-gal__shot{position:absolute;z-index:1;display:block;height:auto;box-shadow:var(--gal-shot-shadow);transition:transform var(--dur-move) var(--ease-out)}
 .ap-gal__shot--1{width:25%;left:7%;top:14%;transform:rotate(-5deg)}
