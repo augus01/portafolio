@@ -31,7 +31,7 @@
 .ap-projects{gap:var(--space-24);
   --proj-gap:20px;--proj-columns:454fr 613fr 760fr;
   --proj-title-size:28px;--proj-title-leading:1.15;--proj-text-size:22px;
-  --proj-card-gap:10px;--proj-media-height:clamp(320px, 31vw, 560px);--proj-media-fill:rgba(18,18,18,.06);
+  --proj-card-gap:10px;--proj-media-height-mobile:min(62svh, 460px);--proj-media-fill:rgba(18,18,18,.06);
   --proj-media-label:.6875rem;--proj-media-tracking:.08em;--proj-cap-size:15px;
   --proj-bleed:var(--space-8)}
 .ap-proj{display:flex;flex-direction:column;gap:var(--proj-gap)}
@@ -41,8 +41,11 @@
 .ap-proj__title.subheading,.ap-proj__role.subheading{margin:0;font-family:var(--font-oswald);font-weight:500;font-size:var(--proj-title-size);line-height:var(--proj-title-leading);color:var(--ink-primary)}
 .ap-proj__role.subheading{color:var(--ink-highlight-muted)}
 .ap-proj__desc.lead{grid-column:2 / -1;margin:0;max-width:72ch;font-family:var(--font-oswald);font-size:var(--proj-text-size);color:var(--ink-primary)}
-.ap-proj__card{margin:0;display:flex;flex-direction:column;gap:var(--proj-card-gap);min-width:0}
-.ap-proj__media{display:flex;align-items:center;justify-content:center;width:100%;height:var(--proj-media-height);border-radius:var(--radius-md);background:var(--proj-media-fill);object-fit:cover}
+/* Cards en fila justificada: cada card crece en proporción a su imagen (--card-ratio = ancho / alto), así todas
+   comparten alto, llenan la fila y la imagen se ve entera, sin recortes. Sin imagen, la card es cuadrada. */
+.ap-proj__cards{display:flex;align-items:flex-start}
+.ap-proj__card{margin:0;display:flex;flex-direction:column;gap:var(--proj-card-gap);min-width:0;flex:var(--card-ratio, 1) 1 0}
+.ap-proj__media{display:flex;align-items:center;justify-content:center;width:100%;height:auto;aspect-ratio:var(--card-ratio, 1);border-radius:var(--radius-md);background:var(--proj-media-fill);object-fit:cover}
 .ap-proj__media > .label{font-size:var(--proj-media-label);font-weight:400;letter-spacing:var(--proj-media-tracking);color:var(--ink-secondary)}
 .ap-proj__cap{display:flex;justify-content:space-between;gap:var(--space-3);font-family:var(--font-oswald);font-size:var(--proj-cap-size);font-weight:400;color:var(--ink-secondary)}
 /* Bajo 720px: cabecera en una columna y cards en carrusel horizontal con snap, a sangre hasta el borde de la sección. */
@@ -53,8 +56,8 @@
   .ap-proj__who,.ap-proj__desc.lead{grid-column:1}
   .ap-proj__cards{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--proj-bleed) * -1);padding:0 var(--proj-bleed);scroll-padding:0 var(--proj-bleed);scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .ap-proj__cards::-webkit-scrollbar{display:none}
-  .ap-proj__card{flex:0 0 76%;scroll-snap-align:start}
-  .ap-proj__media{height:auto;aspect-ratio:4 / 5}
+  /* Mismo alto para todas; el ancho sale de la proporción, con tope para que asome la card siguiente. */
+  .ap-proj__card{flex:0 0 auto;width:min(calc(var(--proj-media-height-mobile) * var(--card-ratio, 1)), 86%);scroll-snap-align:start}
 }
 
 /* Sin scroll horizontal desde 320px: solo una palabra más ancha que la columna se corta, en vez de desbordar. */
