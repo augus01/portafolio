@@ -6,7 +6,9 @@
      la familia Oswald y el gris de los textos destacados. */
   --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8;
   /* Espaciado común de los títulos de sección (Sobre mí, Superpoderes y Proyectos), como en el artefacto. */
-  --section-title-tracking:-0.02em}
+  --section-title-tracking:-0.02em;
+  /* Ancho máximo común de los párrafos de sección (bajada de Superpoderes y descripción de cada proyecto). */
+  --section-lead-max:46rem}
 .ap-after{position:relative;z-index:4;background:var(--surface-canvas)}
 
 .ap-section{padding:var(--space-section) var(--space-8);max-width:var(--page-max);margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--space-12)}
@@ -34,7 +36,7 @@
    Excepciones sin token en variables --hab-* (design-system/INTEGRACION.md). */
 .hab-mq{box-sizing:border-box;width:100%;padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);overflow:hidden;color:var(--ink-primary);font-family:var(--font-text);
   --hab-title-font:var(--font-oswald);--hab-title-size:clamp(32px, 4.4vw, 64px);--hab-title-leading:1.08;--hab-muted:var(--ink-highlight-muted);
-  --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:46rem;
+  --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:var(--section-lead-max);
   --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%}
 @media (min-width:900px){.hab-mq{min-height:100vh}}
 /* Mismo ancho y relleno que .ap-section, para que el título arranque en la misma línea que Sobre mí y Proyectos. */
@@ -97,7 +99,8 @@
 .ap-gal__lockup--zam .ap-gal__symbol{width:32%}
 .ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:20cqw;color:var(--gal-ink-zam)}
 .ap-gal__name.subheading{margin:0;font-family:var(--gal-text-font);font-weight:500;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);color:var(--ink-primary)}
-.ap-gal__desc.lead{margin:0;max-width:640px;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
+/* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
+.ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:400;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
 .ap-gal__role.meta{padding-top:var(--space-2);color:var(--gal-muted)}
 @container (max-width: 719px){
   .ap-gal{grid-template-columns:1fr}
