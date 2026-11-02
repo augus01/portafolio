@@ -99,12 +99,12 @@ export const projects = {
     {
       name: 'Inkvibe',
       role: 'Interfaz visual',
-      description: 'Inkvibe necesitaba que su web llevara a las personas hacia la app móvil, el objetivo principal del equipo. Partí de una base existente y construí y mejoré la interfaz visual del cotizador de tatuajes, que guía al usuario paso a paso hasta unirse a Inkvibe. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
-      // Capturas del cotizador en vivo (inkvibe.app, vista móvil, datos de ejemplo), compuestas como las de Rumbo a Casa.
+      description: 'La web de Inkvibe debía llevar a las personas a descargar la app móvil, el objetivo principal del equipo. Partí de una base existente y construí y mejoré la interfaz visual del landing. El recorrido presenta la app por secciones y cierra en el llamado a descargarla, en escritorio y en móvil. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
+      // Capturas directas del landing en vivo (inkvibe.app), recortadas a la proporción de cada card para llenarla entera.
       cards: [
-        { title: 'Elige tu estilo', image: '/proyectos/inkvibe-estilo.jpg', alt: 'Inkvibe en un teléfono: el cotizador de tatuajes pregunta qué estilo buscas y tiene elegida la opción Blackwork, junto a Tradicional y Neotradicional' },
-        { title: 'Define zona y tamaño', image: '/proyectos/inkvibe-medidas.jpg', alt: 'Inkvibe en un teléfono: el cotizador pregunta en qué zona del cuerpo irá el tatuaje, con antebrazo interno elegido y un tamaño de 8 por 12 centímetros' },
-        { title: 'Únete a Inkvibe', image: '/proyectos/inkvibe-cuenta.jpg', alt: 'Inkvibe en un teléfono: para continuar la pantalla pide ser parte de Inkvibe, con inicio de sesión por correo, opción de Google y enlace para crear cuenta' },
+        { title: 'Landing en móvil', image: '/proyectos/inkvibe-movil.jpg', alt: 'Inkvibe en un teléfono: el inicio del landing con el titular contra los malos tatuajes, el botón Descarga la app y los botones de App Store y Google Play' },
+        { title: 'Descubre artistas', image: '/proyectos/inkvibe-descubre.jpg', alt: 'Inkvibe en un teléfono: la sección Descubre muestra una galería de tatuajes y un buscador de artistas, con un índice lateral de Descubre, Agenda, Tatúate y Confianza' },
+        { title: 'Landing en escritorio', image: '/proyectos/inkvibe-landing.jpg', alt: 'Inkvibe en escritorio: el mismo inicio del landing con el llamado a descargar la app y los botones de App Store y Google Play' },
       ],
     },
     {
