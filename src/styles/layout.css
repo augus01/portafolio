@@ -23,12 +23,6 @@
 .ap-after > section[id]{scroll-margin-top:max(0px, calc(var(--nav-clearance) - var(--anchor-pad, 0px)))}
 .ap-about{--anchor-pad:var(--space-section)}
 .hab-mq{--anchor-pad:var(--space-16)}
-/* Zona libre bajo las píldoras (escritorio, nav clara): el texto que pasa por debajo se vela con el mismo vidrio
-   del sistema (--surface-float) y las píldoras siguen flotando encima. En móvil la barra ya cumple este papel. */
-@media (min-width:600px){
-  .ap-navwrap:has(.ap-nav--light)::before{content:"";position:absolute;z-index:-1;top:calc(var(--space-6) * -1);left:0;right:0;height:var(--nav-band);pointer-events:none;box-sizing:border-box;
-    background:var(--surface-float);-webkit-backdrop-filter:blur(var(--blur-float));backdrop-filter:blur(var(--blur-float));border-bottom:var(--stroke-hairline) solid var(--border-hairline)}
-}
 
 .ap-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:var(--space-8)}
 .ap-columns > p{margin:0;color:var(--ink-secondary)}
@@ -153,6 +147,20 @@
 /* NavBar: el botón de menú es una píldora con icono y texto (landing aprobado). Aparece solo bajo 600px de contenedor. */
 .ap-nav__toggle{display:none}
 @container (max-width: 599px){.ap-nav__toggle{display:inline-flex}}
+/* NavBar de escritorio como una sola cápsula centrada (ajuste del 2 nov 2026): el material flotante del sistema
+   (--surface-float, --blur-float, --border-hairline, --shadow-float) lo lleva la cápsula, y los enlaces de adentro
+   son texto sin borde ni fondo; la sección actual se rellena en tinta. Una línea fina separa las secciones de las
+   acciones (GitHub, Contacto). Sobre el hero, la cápsula usa el vidrio claro del hero. */
+.ap-navwrap .ap-nav .ap-nav__bar{width:max-content;max-width:100%;margin-inline:auto;justify-content:center;gap:0;padding:var(--space-1);box-sizing:border-box;
+  border-radius:var(--radius-pill);border:var(--stroke-hairline) solid var(--border-hairline);background:var(--surface-float);
+  -webkit-backdrop-filter:blur(var(--blur-float));backdrop-filter:blur(var(--blur-float));box-shadow:var(--shadow-float)}
+.ap-navwrap .ap-nav .ap-nav__group{gap:0}
+.ap-navwrap .ap-nav .ap-nav__group--end{margin-left:var(--space-2);padding-left:var(--space-2);border-left:var(--stroke-hairline) solid var(--border-hairline)}
+.ap-navwrap .ap-nav .ap-nav__bar .ap-pill{border-color:transparent;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
+@media (hover: hover){.ap-navwrap .ap-nav .ap-nav__bar .ap-pill:hover{background:var(--surface-sunken);border-color:transparent}}
+.ap-navwrap .ap-nav .ap-nav__bar .ap-pill.is-current{background:var(--action);color:var(--on-action);border-color:var(--action)}
+.ap-navwrap .ap-nav--dark .ap-nav__bar{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
+.ap-navwrap .ap-nav--dark .ap-nav__group--end{border-left-color:rgba(255,255,255,.5)}
 /* Título de Contacto con el patrón común de Sobre mí, Superpoderes y Proyectos: Oswald 400, mismo tamaño, interlineado
    y espaciado (variables --section-title-*), con el último tramo en gris. Las palabras no se cortan: Oswald es
    condensada y "CONSTRUYAMOS" cabe entera desde 320px. La bajada toma la tipografía de las bajadas de las otras secciones. */

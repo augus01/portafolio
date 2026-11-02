@@ -40,6 +40,7 @@ El hero se aprobó aparte, en el artefacto "Hero inmersivo" (`hero-inmersivo.zip
 | Máximo tres familias | Nombre del hero en **Archivo** (de Google Fonts, alojada en `public/fonts` y precargada), `wdth` 125, peso 800, mayúsculas | `.ap-hero__name.wordmark` |
 | Movimiento < 300 ms y solo por acción | Paso guiado hero → página de 1,6 s ligado al scroll (Lenis + GSAP), con `prefers-reduced-motion` completo | `src/hooks/useImmersiveScroll.js` |
 | Material flotante sólido en la nav | Píldoras de vidrio translúcido sobre el hero (`.ap-nav--dark`) | `hero-inmersivo.css` |
+| NavBar v8: una píldora por enlace | En escritorio, todos los enlaces van en **una sola cápsula centrada** con el material flotante (`--surface-float`, `--blur-float`, `--border-hairline`, `--shadow-float`); los enlaces de adentro son texto sin borde ni fondo, la sección actual se rellena en tinta y una línea fina separa las secciones de GitHub y Contacto. Sin la franja de vidrio a todo el ancho (ajuste del 2 nov 2026) | `layout.css` (bloque NavBar) |
 | NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero. Bajo 600px de ventana la NavBar se oculta y manda la vista móvil (abajo) | `NavBar.jsx`, `layout.css` |
 | — | Escalas de los Tweaks: `--wm-scale .65`, `--nav-scale 1.3`, `--top-scale 2.5`, `--meta-scale 1.35` | `.ap-page` |
 
