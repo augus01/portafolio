@@ -6,9 +6,9 @@
      la familia Oswald y el gris de los textos destacados. */
   --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8;
   /* Espaciado común de los títulos de sección (Sobre mí, Superpoderes y Proyectos), como en el artefacto. */
-  --section-title-tracking:-0.02em;
+  --section-title-tracking:-0.02em;--section-title-size:clamp(32px, 4.4vw, 64px);--section-title-leading:1.08;
   /* Ancho máximo común de los párrafos de sección (bajada de Superpoderes y descripción de cada proyecto). */
-  --section-lead-max:46rem;
+  --section-lead-max:46rem;--section-lead-size:22px;
   /* Zona de la nav fija: la banda que ocupan las píldoras (24px arriba y abajo) y el espacio que dejan las anclas
      (banda + 16px). En móvil movil.css la redefine con el alto de la barra. */
   --nav-band:calc(var(--space-12) + var(--target-min) * var(--nav-scale));--nav-clearance:calc(var(--nav-band) + var(--space-4))}
@@ -36,7 +36,7 @@
 /* Sobre mí (sección aprobada en el lienzo, 30 oct 2026). Los valores sin token del sistema son excepciones
    documentadas en design-system/INTEGRACION.md y viven solo en estas variables locales. */
 .ap-about{gap:var(--space-16);
-  --about-statement-font:var(--font-oswald);--about-statement-size:clamp(32px, 4.4vw, 64px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
+  --about-statement-font:var(--font-oswald);--about-statement-size:var(--section-title-size);--about-statement-leading:var(--section-title-leading);--about-muted:var(--ink-highlight-muted);
   --about-text-font:var(--font-oswald);--about-text-size:22px}
 .ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
@@ -50,7 +50,7 @@
    (vista Angle, material Black). La cinta ocupa todo el ancho; el encabezado se alinea con el resto de las secciones.
    Excepciones sin token en variables --hab-* (design-system/INTEGRACION.md). */
 .hab-mq{box-sizing:border-box;width:100%;padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);overflow:hidden;color:var(--ink-primary);font-family:var(--font-text);
-  --hab-title-font:var(--font-oswald);--hab-title-size:clamp(32px, 4.4vw, 64px);--hab-title-leading:1.08;--hab-muted:var(--ink-highlight-muted);
+  --hab-title-font:var(--font-oswald);--hab-title-size:var(--section-title-size);--hab-title-leading:var(--section-title-leading);--hab-muted:var(--ink-highlight-muted);
   --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:var(--section-lead-max);
   --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%}
 @media (min-width:900px){.hab-mq{min-height:100vh}}
@@ -86,7 +86,7 @@
 .ap-gal-wrap{gap:var(--space-16);container-type:inline-size;
   --gal-ratio:5 / 4;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
   /* Tipografía de Sobre mí: título como su frase y todo en Oswald. */
-  --gal-title-font:var(--font-oswald);--gal-title-size:clamp(32px, 4.4vw, 64px);--gal-title-leading:1.08;--gal-muted:var(--ink-highlight-muted);
+  --gal-title-font:var(--font-oswald);--gal-title-size:var(--section-title-size);--gal-title-leading:var(--section-title-leading);--gal-muted:var(--ink-highlight-muted);
   --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-name-size:clamp(28px, 3vw, 40px);--gal-name-leading:1.1;--gal-meta-size:15px;
   --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
   --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
@@ -135,9 +135,13 @@
 }
 @media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup{transition:none}}
 
-/* Sin scroll horizontal desde 320px: solo una palabra más ancha que la columna se corta, en vez de desbordar. */
-.ap-section .ap-headline__title{overflow-wrap:break-word}
 
 /* NavBar: el botón de menú es una píldora con icono y texto (landing aprobado). Aparece solo bajo 600px de contenedor. */
 .ap-nav__toggle{display:none}
 @container (max-width: 599px){.ap-nav__toggle{display:inline-flex}}
+/* Título de Contacto con el patrón común de Sobre mí, Superpoderes y Proyectos: Oswald 400, mismo tamaño, interlineado
+   y espaciado (variables --section-title-*), con el último tramo en gris. Las palabras no se cortan: Oswald es
+   condensada y "CONSTRUYAMOS" cabe entera desde 320px. La bajada toma la tipografía de las bajadas de las otras secciones. */
+.ap-section .ap-headline__title.display{font-family:var(--font-oswald);font-weight:400;font-size:var(--section-title-size);line-height:var(--section-title-leading);letter-spacing:var(--section-title-tracking);text-transform:none;text-wrap:balance;overflow-wrap:normal;color:var(--ink-primary)}
+.ap-section .ap-headline__title span{color:var(--ink-highlight-muted)}
+.ap-section .ap-headline__lead.lead{max-width:var(--section-lead-max);font-family:var(--font-oswald);font-weight:400;font-size:var(--section-lead-size);color:var(--ink-primary)}
