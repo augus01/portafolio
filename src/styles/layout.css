@@ -80,62 +80,70 @@
   /* Sin animación no hay nada que pausar: se oculta el botón y la frase que lo explica. */
 }
 
-/* Proyectos: galería con logo (artefacto "Hero", frame Proyectos-logo, aprobado el 2 nov 2026, sin fondos de color).
-   Dos columnas de cards iguales 5:4; cada card es el logo del proyecto sobre --surface-raised con número arriba a la
-   izquierda. El pie (nombre, descripción, rol) usa subgrid para alinear filas entre cards. Bajo 720px, una columna.
+/* Proyectos (estilo Josephmark): dos columnas de portadas a sangre, sin card blanca. Cada portada es el color real de
+   la app (muestreado de sus capturas) con el logo en blanco a gran tamaño y, si hay capturas, un collage de tres
+   pantallas que se abre al pasar el mouse. Si el último proyecto queda solo en su fila, se centra con el ancho de una
+   columna. El pie (nombre, descripción, rol) usa subgrid para alinear filas entre proyectos. Bajo 720px, una columna.
    Excepciones sin token en variables --gal-* y en las fuentes de marca de cada logo (design-system/INTEGRACION.md). */
 .ap-gal-wrap{gap:var(--space-16);container-type:inline-size;
-  --gal-ratio:5 / 4;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
+  --gal-ratio:4 / 5;--gal-gap:var(--space-4);--gal-hover-scale:1.04;
   /* Tipografía de Sobre mí: título como su frase y todo en Oswald. */
   --gal-title-font:var(--font-oswald);--gal-title-size:var(--section-title-size);--gal-title-leading:var(--section-title-leading);--gal-muted:var(--ink-highlight-muted);
   --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-name-size:clamp(28px, 3vw, 40px);--gal-name-leading:1.1;--gal-meta-size:15px;
-  --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
-  --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
+  --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;
+  --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  /* Color de cada portada: el fondo real de cada app (encabezado de Rumbo a Casa, fondo de inkvibe.app); Zam, sin
+     color de marca todavía, va en tinta del sistema. */
+  --gal-cover-rumbo:#123b6b;--gal-cover-inkvibe:#242424;--gal-cover-zam:var(--surface-inverse);
+  /* Collage: sombra suave con desplazamiento, solo dentro de la portada (nunca en el lienzo). */
+  --gal-shot-radius:var(--radius-sm);--gal-shot-shadow:0 18px 40px rgba(0,0,0,.38)}
 .ap-gal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4) var(--space-8)}
 .ap-gal-title.display{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-gal-title span{color:var(--gal-muted)}
-.ap-gal-count.meta,.ap-gal__num.meta,.ap-gal__role.meta{margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-secondary)}
-.ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-4);row-gap:var(--space-12)}
+.ap-gal-count.meta,.ap-gal__role.meta{margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-secondary)}
+.ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gal-gap);row-gap:var(--space-16)}
 .ap-gal__item{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:var(--space-2);color:var(--ink-primary)}
+/* Último proyecto solo en su fila (impar): ocupa la fila entera pero con el ancho de una columna, al centro. */
+.ap-gal__item:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc((100% - var(--gal-gap)) / 2)}
 .ap-gal__tile{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:var(--gal-ratio);container-type:inline-size;margin-bottom:var(--space-4);box-sizing:border-box;
-  border-radius:var(--radius-lg);border:var(--stroke-hairline) solid var(--border-hairline);background:var(--surface-raised)}
-.ap-gal__num.meta{position:absolute;left:var(--space-6);top:var(--space-6);color:var(--ink-secondary)}
-.ap-gal__logo,.ap-gal__lockup{transition:transform var(--dur-move) var(--ease-out)}
+  border-radius:var(--radius-lg);background:var(--gal-cover, var(--surface-inverse));color:var(--ink-on-dark)}
+.ap-gal__item--rumbo{--gal-cover:var(--gal-cover-rumbo)}
+.ap-gal__item--inkvibe{--gal-cover:var(--gal-cover-inkvibe)}
+.ap-gal__item--zam{--gal-cover:var(--gal-cover-zam)}
+.ap-gal__num.meta{position:absolute;z-index:3;left:var(--space-6);top:var(--space-6);margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-on-dark)}
+/* Collage: tres capturas reales alrededor del logo, fuera de su franja central; la tercera se corta en el borde inferior. */
+.ap-gal__shot{position:absolute;z-index:1;display:block;height:auto;border-radius:var(--gal-shot-radius);box-shadow:var(--gal-shot-shadow);transition:transform var(--dur-move) var(--ease-out)}
+.ap-gal__shot--1{width:25%;left:7%;top:11%;transform:rotate(-5deg)}
+.ap-gal__shot--2{width:23%;right:8%;top:12%;transform:rotate(4deg)}
+.ap-gal__shot--3{width:32%;left:34%;top:71%;transform:rotate(-2deg)}
+.ap-gal__item:hover .ap-gal__shot--1{transform:translate(-4%,-3%) rotate(-8deg)}
+.ap-gal__item:hover .ap-gal__shot--2{transform:translate(5%,-3%) rotate(7deg)}
+.ap-gal__item:hover .ap-gal__shot--3{transform:translate(0,-6%) rotate(-1deg)}
+.ap-gal__logo,.ap-gal__lockup{position:relative;z-index:2;transition:transform var(--dur-move) var(--ease-out)}
 .ap-gal__item:hover .ap-gal__logo,.ap-gal__item:hover .ap-gal__lockup{transform:scale(var(--gal-hover-scale))}
-.ap-gal__logo{display:block;width:var(--gal-logo-width-ink);height:auto}
-.ap-gal__lockup{display:flex;align-items:center;justify-content:center;width:var(--gal-logo-width)}
+.ap-gal__logo{display:block;width:84%;height:auto}
+.ap-gal__lockup{display:flex;align-items:center;justify-content:center}
 .ap-gal__symbol{display:block;flex:none;height:auto}
-.ap-gal__wordmark{line-height:1;white-space:nowrap}
-/* Rumbo a Casa: símbolo y nombre como en su Logotipo (Bricolage Grotesque 700, -0.02em; tamaños en cqw, relativos al ancho de la card). */
-.ap-gal__lockup--rumbo{gap:3cqw}
-.ap-gal__lockup--rumbo .ap-gal__symbol{width:13%}
-.ap-gal__lockup--rumbo .ap-gal__wordmark{font-family:var(--gal-font-rumbo);font-weight:700;letter-spacing:-0.02em;font-size:8cqw;color:var(--gal-ink-rumbo)}
-/* Zam: isotipo negro y el nombre en Plus Jakarta Sans 500, la fuente de su marca. */
-.ap-gal__lockup--zam{gap:4cqw}
-.ap-gal__lockup--zam .ap-gal__symbol{width:32%}
-.ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:20cqw;color:var(--gal-ink-zam)}
+.ap-gal__wordmark{line-height:1;white-space:nowrap;color:var(--ink-on-dark)}
+/* Rumbo a Casa: símbolo y nombre como en su logotipo (Bricolage Grotesque 700, -0.02em; tamaños en cqw, relativos al ancho de la portada). */
+.ap-gal__lockup--rumbo{gap:3cqw;width:90%}
+.ap-gal__lockup--rumbo .ap-gal__symbol{width:16%}
+.ap-gal__lockup--rumbo .ap-gal__wordmark{font-family:var(--gal-font-rumbo);font-weight:700;letter-spacing:-0.02em;font-size:11cqw}
+/* Zam: isotipo y nombre en Plus Jakarta Sans 500, la fuente de su marca, a gran tamaño. */
+.ap-gal__lockup--zam{gap:5cqw;flex-direction:column}
+.ap-gal__lockup--zam .ap-gal__symbol{width:40cqw}
+.ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:30cqw}
 /* El nombre de cada proyecto toma la tipografía del título de la galería (fuente, peso y espaciado), a un tamaño menor. */
 .ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
 .ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:400;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
 .ap-gal__foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);padding-top:var(--space-2)}
-/* El rol es información, no un tramo de título: va en --ink-secondary (≈8:1, regla común de arriba) y no en el gris editorial (≈2,4:1). */
-/* Composición para tres proyectos (container queries sobre .ap-gal-wrap):
-   960px o más: tres columnas iguales en una fila.
-   720 a 959px: dos columnas; el tercero ocupa la fila entera, con la card a la izquierda y el texto a la derecha.
-   Bajo 720px: una columna. */
-@container (min-width: 960px){
-  .ap-gal{grid-template-columns:repeat(3,minmax(0,1fr))}
-}
-@container (min-width: 720px) and (max-width: 959px){
-  .ap-gal__item:last-child:nth-child(odd){grid-column:1 / -1;grid-row:auto;grid-template-columns:subgrid;grid-template-rows:auto auto auto 1fr;align-items:start}
-  .ap-gal__item:last-child:nth-child(odd) .ap-gal__tile{grid-column:1;grid-row:1 / -1;margin-bottom:0}
-  .ap-gal__item:last-child:nth-child(odd) > :not(.ap-gal__tile){grid-column:2}
-}
+/* El rol es información, no un tramo de título: va en --ink-secondary (≈8:1) y no en el gris editorial (≈2,4:1). */
 @container (max-width: 719px){
   .ap-gal{grid-template-columns:1fr}
+  .ap-gal__item:last-child:nth-child(odd){width:auto;justify-self:stretch}
 }
-@media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup{transition:none}}
+@media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup,.ap-gal__shot{transition:none}}
 
 
 /* NavBar: el botón de menú es una píldora con icono y texto (landing aprobado). Aparece solo bajo 600px de contenedor. */

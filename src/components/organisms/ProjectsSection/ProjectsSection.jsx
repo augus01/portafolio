@@ -1,6 +1,7 @@
 import { ProjectTile } from '../../molecules/ProjectTile';
 
-// Proyectos: galería de dos columnas (una bajo 720px) con el logo de cada proyecto sobre blanco.
+// Proyectos: galería de dos columnas (una bajo 720px) con portadas a sangre en el color de cada app; si el último
+// proyecto queda solo en su fila, se centra.
 export function ProjectsSection({ id, title, count, items }) {
   const [first, second] = title;
   return (

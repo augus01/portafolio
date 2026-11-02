@@ -93,7 +93,7 @@ export const projects = {
   // Encabezado de la galería: la segunda línea va en gris.
   title: ['Lo que he', 'construido'],
   count: '3 proyectos',
-  // Cada proyecto es una card con su logo sobre blanco (el número 01, 02… se genera en orden), y debajo
+  // Cada proyecto es una portada en el color de su app con el logo en blanco (el número 01, 02… se genera en orden), y debajo
   // nombre, descripción y rol. `logo.image` es un archivo con el nombre incluido; `logo.symbol` + `logo.wordmark`
   // compone el símbolo con el nombre escrito en la fuente de esa marca (`logo.brand` elige la fuente).
   // Las capturas de cada app siguen en /public/proyectos/ para una futura página de detalle.
@@ -103,23 +103,34 @@ export const projects = {
       description: 'A qué subsidio de vivienda puede postular tu familia, con la fuente de cada respuesta.',
       role: 'Co-creador',
       award: 'Ganador AWS Zero to Shipped',
-      // Símbolo y tipografía (Bricolage Grotesque 700) tomados del repositorio augus01/rumbo-a-casa.
-      logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
+      // Símbolo y tipografía (Bricolage Grotesque 700) tomados del repositorio augus01/rumbo-a-casa; en la portada
+      // azul van como en el encabezado de la app: barras blancas y casa óxido. Las capturas son de la app real.
+      logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo-claro.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
+      shots: [
+        { src: '/proyectos/portada-rumbo-resultado-movil.webp', width: 480, height: 780 },
+        { src: '/proyectos/portada-rumbo-conversacion.webp', width: 480, height: 640 },
+        { src: '/proyectos/portada-rumbo-documentos-movil.webp', width: 480, height: 780 },
+      ],
     },
     {
       name: 'Inkvibe',
       description: 'Marketplace del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar.',
       role: 'Desarrollador frontend',
-      // Logotipo horizontal de inkvibe.app con el nombre en negro para fondo claro.
-      logo: { brand: 'inkvibe', image: '/proyectos/inkvibe-logo.png', width: 1200, height: 281 },
+      // Logotipo horizontal de inkvibe.app con el nombre en blanco, como en su encabezado sobre fondo oscuro.
+      logo: { brand: 'inkvibe', image: '/proyectos/inkvibe-logo-claro.png', width: 1200, height: 281 },
+      shots: [
+        { src: '/proyectos/portada-inkvibe-movil.webp', width: 480, height: 862 },
+        { src: '/proyectos/portada-inkvibe-descubre.webp', width: 480, height: 690 },
+        { src: '/proyectos/portada-inkvibe-descarga-movil.webp', width: 480, height: 492 },
+      ],
     },
     {
       name: 'Zam',
       description: 'Caja, inventario y finanzas del minimarket de barrio: app para el cajero y panel web para el dueño.',
       role: 'Proyecto propio · En desarrollo',
       // Isotipo redibujado en SVG desde la galería aprobada (provisorio hasta tener el archivo original);
-      // el nombre va en Plus Jakarta Sans 500, la fuente de la marca.
-      logo: { brand: 'zam', symbol: '/proyectos/zam-isotipo.svg', symbolWidth: 88, symbolHeight: 88, wordmark: 'Zam' },
+      // el nombre va en Plus Jakarta Sans 500, la fuente de la marca. Sin capturas todavía: solo el logo en blanco.
+      logo: { brand: 'zam', symbol: '/proyectos/zam-isotipo-claro.svg', symbolWidth: 88, symbolHeight: 88, wordmark: 'Zam' },
     },
   ],
 };
