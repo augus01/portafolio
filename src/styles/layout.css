@@ -72,7 +72,7 @@
   --gal-ratio:5 / 4;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
   /* Tipografía de Sobre mí: título como su frase y todo en Oswald. */
   --gal-title-font:var(--font-oswald);--gal-title-size:clamp(32px, 4.4vw, 64px);--gal-title-leading:1.08;--gal-muted:var(--ink-highlight-muted);
-  --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-meta-size:15px;
+  --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-name-size:clamp(28px, 3vw, 40px);--gal-name-leading:1.1;--gal-meta-size:15px;
   --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
   --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
 .ap-gal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4) var(--space-8)}
@@ -98,8 +98,8 @@
 .ap-gal__lockup--zam{gap:4cqw}
 .ap-gal__lockup--zam .ap-gal__symbol{width:32%}
 .ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:20cqw;color:var(--gal-ink-zam)}
-/* El nombre de cada proyecto toma los estilos del título de la galería (fuente, peso, tamaño, interlineado y espaciado). */
-.ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
+/* El nombre de cada proyecto toma la tipografía del título de la galería (fuente, peso y espaciado), a un tamaño menor. */
+.ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
 .ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:400;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
 .ap-gal__role.meta{padding-top:var(--space-2);color:var(--gal-muted)}
