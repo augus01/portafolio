@@ -62,7 +62,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Escala tipográfica fija | Nombre y rol en Oswald 500, 28px (24px bajo 720px); descripción en Oswald 22px (20px); pie de card en Oswald 15px | `--proj-title-size`, `--proj-text-size`, `--proj-cap-size` |
 | Monocromo con tintas del sistema | Rol en el gris destacado `#a3a3a8`, compartido con Sobre mí | `--ink-highlight-muted` (en `.ap-page`) |
 | Espaciado en escala de 4/8 | Rejilla 454fr / 613fr / 760fr; 20px entre cabecera y cards; 10px entre imagen y pie | `--proj-columns`, `--proj-gap`, `--proj-card-gap` |
-| Superficies del sistema | Marco de imagen de relleno `rgba(18,18,18,.06)`, alto `clamp(320px, 31vw, 560px)` (4:5 bajo 720px) | `--proj-media-fill`, `--proj-media-height` |
+| Superficies del sistema | Marco de lienzo en `surface-sunken` con `border-hairline` y `radius-lg`, alto `clamp(320px, 31vw, 560px)` (4:5 bajo 720px). La captura va entera dentro (sin recorte), con margen `space-6` (`space-4` bajo 720px), borde `border-hairline`, `radius-md` y escala de grises como en ProjectCard. Bajo 720px se usa la captura móvil del paso si existe | `--proj-media-height`, `--proj-media-pad` |
 | Breakpoint de 600px | Bajo **720px** las cards pasan a carrusel horizontal con snap (76% de ancho, a sangre hasta el borde) | `layout.css` |
 
 Oswald se descarga en 400 y 500 (como en el lienzo actualizado), así que nombre y rol se ven en 500.

@@ -89,22 +89,32 @@ export const projects = {
       role: 'Frontend e interfaz',
       description: 'Las familias chilenas deben orientarse entre cuatro subsidios de vivienda del Estado. Construí un asistente que conversa en lenguaje simple, decide la elegibilidad con un motor de reglas que cita el decreto detrás de cada respuesta y arma la lista de documentos para postular. Es una app web en React, bilingüe y mobile-first, sobre CloudFront, Lambda y Bedrock. Ganó la categoría Social Good del hackathon AWS Zero to Shipped.',
       // Sin `image` se muestra el marco de relleno; `alt` describe la imagen; `width`/`height` son sus medidas reales.
-      // Capturas de la app en vivo (modo demo, familia ficticia), compuestas con la paleta de Rumbo a Casa.
+      // `mobile` es la captura del mismo paso en teléfono, para el carrusel bajo 720px.
+      // Capturas de la app en vivo en modo demo (familia ficticia).
       cards: [
-        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', width: 660, height: 1115, alt: 'Rumbo a Casa en un teléfono: la conversación con el asistente y el avance de cinco pasos, todos completos' },
-        { title: 'Elegibilidad con su fuente', image: '/proyectos/rumbo-resultado.jpg', width: 1020, height: 728, alt: 'Rumbo a Casa en escritorio: el resultado dice que la familia califica para 3 programas, cada uno con su sello y el decreto que lo respalda' },
-        { title: 'Papeles para postular', image: '/proyectos/rumbo-documentos.jpg', width: 1022, height: 759, alt: 'Rumbo a Casa en escritorio: la lista de documentos de DS49 con su barra de avance y casillas para marcar lo que ya está guardado' },
+        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', width: 780, height: 1267,
+          alt: 'Rumbo a Casa en un teléfono: el avance de cinco pasos completo y la conversación en la que la familia cuenta que quiere comprar su primera vivienda' },
+        { title: 'Elegibilidad con su fuente', image: '/proyectos/rumbo-resultado.jpg', width: 1400, height: 1294,
+          mobile: { image: '/proyectos/rumbo-resultado-movil.jpg', width: 780, height: 1267 },
+          alt: 'Rumbo a Casa: el resultado dice que la familia califica para 3 programas; cada programa muestra su sello, la razón y el decreto que lo respalda' },
+        { title: 'Papeles para postular', image: '/proyectos/rumbo-documentos.jpg', width: 1600, height: 1250,
+          mobile: { image: '/proyectos/rumbo-documentos-movil.jpg', width: 780, height: 1267 },
+          alt: 'Rumbo a Casa: la lista de documentos de DS49 abierta, con su barra de avance y los papeles que la familia ya marcó como guardados' },
       ],
     },
     {
       name: 'Inkvibe',
       role: 'Interfaz visual',
       description: 'La web de Inkvibe debía llevar a las personas a descargar la app móvil, el objetivo principal del equipo. Partí de una base existente y construí y mejoré la interfaz visual del landing. El recorrido presenta la app por secciones y cierra en el llamado a descargarla, en escritorio y en móvil. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
-      // Capturas directas del landing en vivo (inkvibe.app), en alta resolución; cada card toma la proporción de su imagen.
+      // Capturas del landing en vivo (inkvibe.app).
       cards: [
-        { title: 'Landing en móvil', image: '/proyectos/inkvibe-movil.jpg', width: 900, height: 1615, alt: 'Inkvibe en un teléfono: el inicio del landing con el titular contra los malos tatuajes, el botón Descarga la app y los botones de App Store y Google Play' },
-        { title: 'Descubre artistas', image: '/proyectos/inkvibe-descubre.jpg', width: 1000, height: 1438, alt: 'Inkvibe en un teléfono: la sección Descubre muestra una galería de tatuajes y un buscador de artistas, con un índice lateral de Descubre, Agenda, Tatúate y Confianza' },
-        { title: 'Descarga InkVibe', image: '/proyectos/inkvibe-descarga.jpg', width: 1200, height: 1230, alt: 'Inkvibe: la sección final del landing con el titular Encuentra a tu artista. Descarga InkVibe, los botones de App Store y Google Play y un teléfono con las notificaciones de la app' },
+        { title: 'Landing en móvil', image: '/proyectos/inkvibe-movil.jpg', width: 780, height: 1400,
+          alt: 'Inkvibe en un teléfono: el inicio del landing con el titular contra los malos tatuajes, el botón Descarga la app y los botones de App Store y Google Play' },
+        { title: 'Descubre artistas', image: '/proyectos/inkvibe-descubre.jpg', width: 780, height: 1122,
+          alt: 'Inkvibe: la sección Descubre, con una galería de tatuajes en el teléfono y el titular Encuentra a tu artista, no cualquiera' },
+        { title: 'Descarga InkVibe', image: '/proyectos/inkvibe-descarga.jpg', width: 1600, height: 1231,
+          mobile: { image: '/proyectos/inkvibe-descarga-movil.jpg', width: 900, height: 922 },
+          alt: 'Inkvibe: la sección final del landing con el titular Encuentra a tu artista. Descarga InkVibe, los botones de App Store y Google Play y un teléfono con las notificaciones de la app' },
       ],
     },
     {
