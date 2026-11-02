@@ -93,7 +93,7 @@ export const projects = {
   // Encabezado de la galería: la segunda línea va en gris.
   title: ['Lo que he', 'construido'],
   count: '3 proyectos',
-  // Cada proyecto es una portada en el color de su app con el logo en blanco (el número 01, 02… se genera en orden), y debajo
+  // Cada proyecto es una portada en el color de su app con el logo en blanco, y debajo
   // nombre, descripción y rol. `logo.image` es un archivo con el nombre incluido; `logo.symbol` + `logo.wordmark`
   // compone el símbolo con el nombre escrito en la fuente de esa marca (`logo.brand` elige la fuente).
   // Las capturas de cada app siguen en /public/proyectos/ para una futura página de detalle.
@@ -103,6 +103,9 @@ export const projects = {
       description: 'A qué subsidio de vivienda puede postular tu familia, con la fuente de cada respuesta.',
       role: 'Co-creador',
       award: 'Ganador AWS Zero to Shipped',
+      // Sello de AWS Skill Builder en la esquina de la portada: marca "aws" de Amazon Web Services (Wikimedia Commons,
+      // Apache 2.0, © AWS) en blanco y el nombre del programa, como en el encabezado de skillbuilder.aws.
+      badge: { mark: '/proyectos/aws-logo-claro.svg', markWidth: 304, markHeight: 182, label: 'Skill Builder' },
       // Símbolo y tipografía (Bricolage Grotesque 700) tomados del repositorio augus01/rumbo-a-casa; en la portada
       // azul van como en el encabezado de la app: barras blancas y casa óxido. Las capturas son de la app real.
       logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo-claro.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
