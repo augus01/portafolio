@@ -8,7 +8,7 @@ export const nav = {
     { label: 'Proyectos', href: '#proyectos' },
   ],
   actions: [
-    { label: 'GitHub', href: '#' },
+    { label: 'GitHub', href: 'https://github.com/augus01', external: true },
     { label: 'Contacto', href: '#contacto' },
   ],
 };
@@ -22,7 +22,7 @@ export const mobileMenu = {
     { label: 'Contacto', href: '#contacto' },
   ],
   cta: { label: 'Escribe un mensaje', href: '#contacto' },
-  secondary: { label: 'GitHub', href: '#' },
+  secondary: { label: 'GitHub', href: 'https://github.com/augus01', external: true },
   meta: 'Ingeniería Civil Informática · Santiago',
 };
 
@@ -166,4 +166,9 @@ export const contact = {
     title: ['CONSTRUYAMOS', 'ALGO JUNTOS'],
     lead: 'Recorriste mi historia, mis proyectos y mi oficina. Si tienes una idea o un problema real que resolver, escríbeme y lo conversamos.',
   },
+};
+
+export const footer = {
+  links: [{ label: 'Abrir repositorio', href: 'https://github.com/augus01/portafolio', external: true }],
+  note: 'Desplegado en AWS Amplify',
 };

@@ -2,6 +2,7 @@
 const PATHS = {
   menu: ['M4 12h16', 'M4 6h16', 'M4 18h16'],
   x: ['M18 6 6 18', 'm6 6 12 12'],
+  'arrow-up-right': ['M7 7h10v10', 'M7 17 17 7'],
 };
 
 export function Icon({ name, size = 'md', label, className }) {

@@ -3,6 +3,8 @@ import { Logo } from '../../atoms/Logo';
 
 // Menú móvil a pantalla completa: logo y botón cerrar arriba, enlaces grandes al centro, llamada principal y pie abajo.
 // Cerrado queda `inert` (fuera del foco y del lector de pantalla).
+const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener noreferrer' } : null);
+
 export function MobileMenu({ id, open, links, cta, secondary, meta, onClose, onNavigate, closeRef }) {
   const go = (href) => (e) => onNavigate(e, href);
   return (
@@ -22,7 +24,7 @@ export function MobileMenu({ id, open, links, cta, secondary, meta, onClose, onN
       </nav>
       <div className="ap-menu__foot">
         <a className="ap-menu__cta meta" href={cta.href} onClick={go(cta.href)}>{cta.label}</a>
-        {secondary && <a className="ap-menu__cta ap-menu__cta--ghost meta" href={secondary.href} onClick={go(secondary.href)}>{secondary.label}</a>}
+        {secondary && <a className="ap-menu__cta ap-menu__cta--ghost meta" href={secondary.href} onClick={go(secondary.href)} {...extProps(secondary)}>{secondary.label}</a>}
         {meta && <p className="ap-menu__meta label">{meta}</p>}
       </div>
     </div>

@@ -2,6 +2,9 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '../../atoms/Icon';
 import { Pill } from '../../atoms/Pill';
 
+// Un ítem `external` abre en otra pestaña.
+const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener noreferrer' } : null);
+
 // Navegación en píldoras flotantes; en contenedores de menos de 600px se pliega en un botón de menú.
 export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'down', label = 'Principal', className }) {
   const [open, setOpen] = useState(false);
@@ -28,7 +31,7 @@ export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'd
 
   const pill = (item) => (
     <li key={item.label}>
-      <Pill href={item.href} current={item.current}>{item.label}</Pill>
+      <Pill href={item.href} current={item.current} {...extProps(item)}>{item.label}</Pill>
     </li>
   );
 
@@ -60,6 +63,7 @@ export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'd
                   href={item.href}
                   aria-current={item.current ? 'page' : undefined}
                   onClick={() => setOpen(false)}
+                  {...extProps(item)}
                 >
                   {item.label}
                 </a>
