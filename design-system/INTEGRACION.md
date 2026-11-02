@@ -49,7 +49,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 | Regla del sistema | Excepción de Sobre mí | Variable |
 | --- | --- | --- |
-| Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(32px, 4.4vw, 64px)` (móvil: Oswald, `clamp(28px, 7.6vw, 48px)`), interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
+| Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Oswald 400, `clamp(32px, 4.4vw, 64px)` (móvil: `clamp(28px, 7.6vw, 48px)`), interlineado 1,08 (ajuste del 2 nov 2026: antes Geist en escritorio) | `--about-statement-font`, `--about-statement-size`, `--about-statement-leading` |
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
 | Máximo tres familias | Párrafos en **Oswald** 400 (de Google Fonts, alojada en `public/fonts` y precargada), 22px | `--about-text-font`, `--about-text-size` |
 
@@ -59,7 +59,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 | Regla del sistema | Excepción de Proyectos | Variable |
 | --- | --- | --- |
-| Escala tipográfica fija | Tipografía de Sobre mí: título como su frase (Geist 400, `clamp(32px, 4.4vw, 64px)`, interlineado 1,08; bajo 600px Oswald `clamp(28px, 7.6vw, 48px)`), tramo final en `#a3a3a8`; nombre en Oswald 500 `clamp(28px, 3vw, 40px)`; descripción en Oswald 400 22px; número, conteo y rol en Oswald 15px (el rol en `#a3a3a8`) | `--gal-title-*`, `--gal-muted`, `--gal-text-font`, `--gal-text-size`, `--gal-name-size`, `--gal-meta-size` |
+| Escala tipográfica fija | Tipografía de Sobre mí: título como su frase (Oswald 400, `clamp(32px, 4.4vw, 64px)`, interlineado 1,08; bajo 600px `clamp(28px, 7.6vw, 48px)`), tramo final en `#a3a3a8`; nombre en Oswald 500 `clamp(28px, 3vw, 40px)`; descripción en Oswald 400 22px; número, conteo y rol en Oswald 15px (el rol en `#a3a3a8`) | `--gal-title-*`, `--gal-muted`, `--gal-text-font`, `--gal-text-size`, `--gal-name-size`, `--gal-meta-size` |
 | Proporciones del sistema | Card 5:4; logo al 64% (imagen) o 76% (símbolo + nombre) del ancho; hover a escala 1,05 | `--gal-ratio`, `--gal-logo-width-ink`, `--gal-logo-width`, `--gal-hover-scale` |
 | Monocromo y fuentes del sistema | Los logos conservan su color y su fuente de marca: Rumbo a Casa en Bricolage Grotesque 700 (`#14181f`), Zam en Plus Jakarta Sans 500 (negro). Ambas están alojadas en `public/fonts` con solo las letras de sus nombres | `--gal-font-rumbo`, `--gal-ink-rumbo`, `--gal-font-zam`, `--gal-ink-zam` |
 

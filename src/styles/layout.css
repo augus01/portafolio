@@ -17,7 +17,7 @@
 /* Sobre mí (sección aprobada en el lienzo, 30 oct 2026). Los valores sin token del sistema son excepciones
    documentadas en design-system/INTEGRACION.md y viven solo en estas variables locales. */
 .ap-about{gap:var(--space-16);
-  --about-statement-font:var(--font-text);--about-statement-size:clamp(32px, 4.4vw, 64px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
+  --about-statement-font:var(--font-oswald);--about-statement-size:clamp(32px, 4.4vw, 64px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
   --about-text-font:var(--font-oswald);--about-text-size:22px}
 .ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
@@ -32,8 +32,8 @@
    Excepciones sin token en variables --gal-* y en las fuentes de marca de cada logo (design-system/INTEGRACION.md). */
 .ap-gal-wrap{gap:var(--space-16);container-type:inline-size;
   --gal-ratio:5 / 4;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
-  /* Tipografía de Sobre mí: título como su frase (Geist 400; en móvil, Oswald) y el resto en Oswald. */
-  --gal-title-font:var(--font-text);--gal-title-size:clamp(32px, 4.4vw, 64px);--gal-title-leading:1.08;--gal-muted:var(--ink-highlight-muted);
+  /* Tipografía de Sobre mí: título como su frase y todo en Oswald. */
+  --gal-title-font:var(--font-oswald);--gal-title-size:clamp(32px, 4.4vw, 64px);--gal-title-leading:1.08;--gal-muted:var(--ink-highlight-muted);
   --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-name-size:clamp(28px, 3vw, 40px);--gal-name-leading:1.1;--gal-meta-size:15px;
   --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
   --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
