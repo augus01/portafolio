@@ -67,6 +67,7 @@
   /* Sobre mí: la frase se achica, los párrafos ocupan todo el ancho y el ritmo se aprieta. 56px arriba = space-12 + space-2. */
   .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);--anchor-pad:calc(var(--space-12) + var(--space-2))}
   .ap-about__text{gap:var(--space-4);width:100%}
+  .ap-info{padding:var(--space-4);gap:var(--space-4)}
 
   /* Superpoderes: el encabezado toma el relleno lateral de Sobre mí y el título se achica igual que su frase. */
   .hab-mq{gap:var(--space-12);padding:var(--space-12) 0;--anchor-pad:var(--space-12)}

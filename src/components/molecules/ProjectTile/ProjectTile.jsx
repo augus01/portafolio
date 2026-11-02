@@ -1,5 +1,7 @@
+import { Tag } from '../../atoms/Tag';
+
 // Card de la galería de proyectos: el logo del proyecto sobre una superficie blanca con número, y debajo
-// nombre, descripción y rol. Las filas del pie usan subgrid para alinearse con la card vecina.
+// nombre, descripción y rol (con el premio como Tag propio, si lo hay). Las filas del pie usan subgrid para alinearse con la card vecina.
 // `logo.image` es un logotipo completo; `logo.symbol` + `logo.wordmark` compone símbolo y nombre en la
 // fuente de la marca (`logo.brand`). El logo es decorativo: el nombre del proyecto va en el h3.
 function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, wordmark }) {
@@ -14,7 +16,7 @@ function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, 
   );
 }
 
-export function ProjectTile({ index, name, description, role, logo, className }) {
+export function ProjectTile({ index, name, description, role, award, logo, className }) {
   return (
     <article className={['ap-gal__item', className].filter(Boolean).join(' ')}>
       <div className="ap-gal__tile">
@@ -23,7 +25,10 @@ export function ProjectTile({ index, name, description, role, logo, className })
       </div>
       <h3 className="ap-gal__name subheading">{name}</h3>
       <p className="ap-gal__desc lead">{description}</p>
-      <p className="ap-gal__role meta">{role}</p>
+      <div className="ap-gal__foot">
+        <p className="ap-gal__role meta">{role}</p>
+        {award && <Tag>{award}</Tag>}
+      </div>
     </article>
   );
 }
