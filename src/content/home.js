@@ -99,11 +99,12 @@ export const projects = {
     {
       name: 'Inkvibe',
       role: 'Interfaz visual',
-      description: 'Inkvibe necesitaba que su web llevara a las personas a descargar la app móvil, el objetivo principal del equipo. Partí de una base existente, construí y mejoré la interfaz visual y diseñé una experiencia que conduce al usuario hasta esa descarga. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
+      description: 'Inkvibe necesitaba que su web llevara a las personas hacia la app móvil, el objetivo principal del equipo. Partí de una base existente y construí y mejoré la interfaz visual del cotizador de tatuajes, que guía al usuario paso a paso hasta unirse a Inkvibe. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
+      // Capturas del cotizador en vivo (inkvibe.app, vista móvil, datos de ejemplo), compuestas como las de Rumbo a Casa.
       cards: [
-        { title: 'Interfaz renovada', alt: 'Inkvibe: la interfaz web renovada' },
-        { title: 'Camino a la descarga', alt: 'Inkvibe: el recorrido que lleva al usuario a descargar la app' },
-        { title: 'Objetivo de la web', alt: 'Inkvibe: el llamado a descargar la app móvil' },
+        { title: 'Elige tu estilo', image: '/proyectos/inkvibe-estilo.jpg', alt: 'Inkvibe en un teléfono: el cotizador de tatuajes pregunta qué estilo buscas y tiene elegida la opción Blackwork, junto a Tradicional y Neotradicional' },
+        { title: 'Define zona y tamaño', image: '/proyectos/inkvibe-medidas.jpg', alt: 'Inkvibe en un teléfono: el cotizador pregunta en qué zona del cuerpo irá el tatuaje, con antebrazo interno elegido y un tamaño de 8 por 12 centímetros' },
+        { title: 'Únete a Inkvibe', image: '/proyectos/inkvibe-cuenta.jpg', alt: 'Inkvibe en un teléfono: para continuar la pantalla pide ser parte de Inkvibe, con inicio de sesión por correo, opción de Google y enlace para crear cuenta' },
       ],
     },
     {
