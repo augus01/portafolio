@@ -163,7 +163,7 @@ export const contact = {
   id: 'contacto',
   headline: {
     eyebrow: 'Conversemos',
-    title: ['CONSTRUYAMOS', 'ALGO JUNTOS'],
+    title: ['Construyamos', 'algo juntos'],
     lead: 'Recorriste mi historia, mis proyectos y mi oficina. Si tienes una idea o un problema real que resolver, escríbeme y lo conversamos.',
   },
 };
