@@ -92,7 +92,7 @@ export const projects = {
       // `mobile` es la captura del mismo paso en teléfono, para el carrusel bajo 720px.
       // Capturas de la app en vivo en modo demo (familia ficticia).
       cards: [
-        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', width: 780, height: 1267,
+        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', width: 780, height: 1040,
           alt: 'Rumbo a Casa en un teléfono: el avance de cinco pasos completo y la conversación en la que la familia cuenta que quiere comprar su primera vivienda' },
         { title: 'Elegibilidad con su fuente', image: '/proyectos/rumbo-resultado.jpg', width: 1400, height: 1294,
           mobile: { image: '/proyectos/rumbo-resultado-movil.jpg', width: 780, height: 1267 },
