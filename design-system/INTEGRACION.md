@@ -37,7 +37,7 @@ El hero se aprobó aparte, en el artefacto "Hero inmersivo" (`hero-inmersivo.zip
 | Regla del sistema | Excepción del hero | Dónde |
 | --- | --- | --- |
 | Monocromo, sin color ni degradados | Fondo WebGL de rayos con la paleta local `--hero-*` (shadow, teal, cyan, cyan-light, lime, ocre, rose) y fallback con conic gradients | `src/styles/hero-inmersivo.css`, `src/lib/heroGL.js` |
-| Máximo tres familias | Nombre del hero en **Archivo** (Google Fonts), `wdth` 125, peso 800, mayúsculas | `.ap-hero__name.wordmark` |
+| Máximo tres familias | Nombre del hero en **Archivo** (de Google Fonts, alojada en `public/fonts` y precargada), `wdth` 125, peso 800, mayúsculas | `.ap-hero__name.wordmark` |
 | Movimiento < 300 ms y solo por acción | Paso guiado hero → página de 1,6 s ligado al scroll (Lenis + GSAP), con `prefers-reduced-motion` completo | `src/hooks/useImmersiveScroll.js` |
 | Material flotante sólido en la nav | Píldoras de vidrio translúcido sobre el hero (`.ap-nav--dark`) | `hero-inmersivo.css` |
 | NavBar v8: botón de menú de solo icono | Botón de menú como píldora con icono y texto ("Menú" / "Cerrar"), como en el landing aprobado; se abre hacia arriba sobre el hero. Bajo 600px de ventana la NavBar se oculta y manda la vista móvil (abajo) | `NavBar.jsx`, `layout.css` |
@@ -51,7 +51,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | --- | --- | --- |
 | Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(32px, 4.4vw, 64px)` (móvil: Oswald, `clamp(28px, 7.6vw, 48px)`), interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
-| Máximo tres familias | Párrafos en **Oswald** 400 (Google Fonts), 22px | `--about-text-font`, `--about-text-size` |
+| Máximo tres familias | Párrafos en **Oswald** 400 (de Google Fonts, alojada en `public/fonts` y precargada), 22px | `--about-text-font`, `--about-text-size` |
 
 ## Excepciones aprobadas (sección Proyectos)
 
@@ -61,7 +61,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | --- | --- | --- |
 | Escala tipográfica fija | Tipografía de Sobre mí: título como su frase (Geist 400, `clamp(32px, 4.4vw, 64px)`, interlineado 1,08; bajo 600px Oswald `clamp(28px, 7.6vw, 48px)`), tramo final en `#a3a3a8`; nombre en Oswald 500 `clamp(28px, 3vw, 40px)`; descripción en Oswald 400 22px; número, conteo y rol en Oswald 15px (el rol en `#a3a3a8`) | `--gal-title-*`, `--gal-muted`, `--gal-text-font`, `--gal-text-size`, `--gal-name-size`, `--gal-meta-size` |
 | Proporciones del sistema | Card 5:4; logo al 64% (imagen) o 76% (símbolo + nombre) del ancho; hover a escala 1,05 | `--gal-ratio`, `--gal-logo-width-ink`, `--gal-logo-width`, `--gal-hover-scale` |
-| Monocromo y fuentes del sistema | Los logos conservan su color y su fuente de marca: Rumbo a Casa en Bricolage Grotesque 700 (`#14181f`), Zam en Plus Jakarta Sans 500 (negro). Ambas se descargan solo con las letras de sus nombres | `--gal-font-rumbo`, `--gal-ink-rumbo`, `--gal-font-zam`, `--gal-ink-zam` |
+| Monocromo y fuentes del sistema | Los logos conservan su color y su fuente de marca: Rumbo a Casa en Bricolage Grotesque 700 (`#14181f`), Zam en Plus Jakarta Sans 500 (negro). Ambas están alojadas en `public/fonts` con solo las letras de sus nombres | `--gal-font-rumbo`, `--gal-ink-rumbo`, `--gal-font-zam`, `--gal-ink-zam` |
 
 Archivos de logo en `public/proyectos/`: `rumbo-simbolo.svg` (del repositorio augus01/rumbo-a-casa), `inkvibe-logo.png` (de inkvibe.app, nombre recoloreado a negro para fondo claro) y `zam-isotipo.svg` (**provisorio**: redibujado desde la galería aprobada; reemplazar por el archivo original).
 

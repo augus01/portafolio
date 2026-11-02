@@ -1,4 +1,5 @@
-/* Orden: tokens del design system → componentes del design system → estilos de la página → oficina 3D → vista móvil. */
+/* Orden: fuentes propias → tokens del design system → componentes del design system → estilos de la página → oficina 3D → vista móvil. */
+@import './fuentes.css';
 @import '../../design-system/tokens.css';
 @import '../../design-system/components/bundle.css';
 @import './hero-inmersivo.css';
