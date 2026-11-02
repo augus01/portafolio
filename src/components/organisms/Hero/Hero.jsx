@@ -2,7 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { Logo } from '../../atoms/Logo';
 import { Wordmark } from '../../atoms/Wordmark';
 
-// Apertura a pantalla completa: fondo de rayos, logo, rol · lugar y el nombre gigante.
+// Apertura a pantalla completa: fondo de rayos, logo, rol (· lugar, opcional) y el nombre gigante.
 // En contenedores de menos de 600px el nombre se parte en una línea por palabra.
 export function Hero({ name = 'augusto pinto', role, location, uppercase, height = '100svh', className }) {
   const ref = useRef(null);
@@ -31,8 +31,12 @@ export function Hero({ name = 'augusto pinto', role, location, uppercase, height
           <div className="ap-hero__meta">
             <p className="ap-hero__role label">
               <span>{role}</span>
-              <span aria-hidden="true"> · </span>
-              <span>{location}</span>
+              {location && (
+                <>
+                  <span aria-hidden="true"> · </span>
+                  <span>{location}</span>
+                </>
+              )}
             </p>
           </div>
         </header>

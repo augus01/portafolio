@@ -103,5 +103,6 @@ El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carác
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
 - **Oficina:** el panel de cada agente es un boceto ("aquí se abre el chat del agente"): falta definir si las preguntas abren un chat real.
+- **Nav fuera del hero:** la nav (píldoras en escritorio, barra en móvil) no se muestra sobre el hero; aparece arriba al llegar a la página, con y sin `prefers-reduced-motion`. El hero muestra solo el rol, sin ubicación.
 - **Nav sobre la oficina:** en escritorio la nav fija de píldoras queda encima de la barra de la oficina cuando el escenario llega al tope (igual que en el lienzo).
 - Decisiones abiertas del sistema: ver `inventario.md` (idioma, foto en el hero…).

@@ -30,7 +30,6 @@ export const hero = {
   name: 'AUGUSTO PINTO',
   uppercase: true,
   role: 'Menos promesas, más productos que ayudan cada día',
-  location: 'Santiago, Chile',
   height: 'min(100svh, 900px)',
 };
 

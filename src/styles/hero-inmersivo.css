@@ -83,8 +83,5 @@ html.lenis,html.lenis body{height:auto}
   .ap-overlay{position:relative;inset:auto;padding-top:var(--space-16);background:var(--hero-shadow)}
   .ap-exit{display:none}
 }
-/* Sin animación, en escritorio la nav queda fija al pie del hero; en móvil la barra sigue arriba (movil.css). */
-@media (prefers-reduced-motion: reduce) and (min-width: 600px){
-  .ap-navwrap{position:absolute;top:calc(min(100svh, 900px) - var(--space-8));left:0;right:0}
-  .ap-navwrap .ap-nav{transform:translateY(-100%)}
-}
+/* La nav no se muestra sobre el hero (useImmersiveScroll la revela al llegar a la página); arranca oculta para no parpadear. */
+.ap-navwrap .ap-nav,.ap-navwrap .ap-mnav{visibility:hidden}

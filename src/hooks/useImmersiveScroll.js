@@ -11,8 +11,9 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
  * Paso guiado hero → página dentro de `rootRef`: Lenis + ScrollTrigger con todo ligado al scroll (scrub).
  * Publica el timeline en `motionRef.current.tl` para que el fondo WebGL siga las mismas fases,
  * y avisa con `onNavTone('dark' | 'light')` cuando la nav debe cambiar de estilo.
- * Con `prefers-reduced-motion: reduce` no hay pin, paso guiado ni Lenis.
- * Bajo 600px anima la barra móvil (.ap-mnav), que vive arriba: solo se desvanece y reaparece, sin bajar al pie del hero.
+ * La nav no se ve sobre el hero: aparece arriba recién al llegar a la página (con y sin animación).
+ * Con `prefers-reduced-motion: reduce` no hay pin, paso guiado ni Lenis: la nav solo se muestra u oculta.
+ * Bajo 600px se usa la barra móvil (.ap-mnav) en vez de la NavBar de píldoras.
  * Expone Lenis en `motionRef.current.lenis`; con `motionRef.current.jump` activo el paso guiado no interviene.
  */
 export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
@@ -23,8 +24,21 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
 
     const mm = gsap.matchMedia();
     mm.add({ motion: '(prefers-reduced-motion: no-preference)', mobile: '(max-width: 599px)' }, (ctx) => {
-      if (!ctx.conditions.motion) return undefined;
       const { mobile } = ctx.conditions;
+      // Se mide la barra real (.ap-nav): el envoltorio del componente no tiene alto propio.
+      const navEl = q(mobile ? '.ap-navwrap .ap-mnav' : '.ap-navwrap .ap-nav');
+
+      // Sin animación: la nav se oculta mientras el hero está en pantalla y aparece de golpe al salir de él.
+      if (!ctx.conditions.motion) {
+        const toggle = (onHero) => {
+          gsap.set(navEl, { autoAlpha: onHero ? 0 : 1 });
+          onNavTone(onHero ? 'dark' : 'light');
+        };
+        const st = ScrollTrigger.create({ trigger: q('.ap-track'), start: 'top top', end: 'bottom top', onToggle: (self) => toggle(self.isActive) });
+        toggle(st.isActive || window.scrollY < 1);
+        return () => st.kill();
+      }
+
       const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: true });
       lenis.on('scroll', ScrollTrigger.update);
       const tick = (t) => lenis.raf(t * 1000);
@@ -33,23 +47,16 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       motionRef.current.lenis = lenis;
 
       const track = q('.ap-track');
-      const stage = q('.ap-sticky');
       const name = q('.ap-hero__name');
       const overlay = q('.ap-overlay');
       const overInner = q('.ap-overlay__inner');
       const topKids = root.querySelectorAll('.ap-hero__top > *');
       const exitEl = q('.ap-exit');
       const after = q('.ap-after');
-      // Se mide la barra real (.ap-nav): el envoltorio del componente no tiene alto propio.
-      const navEl = q(mobile ? '.ap-navwrap .ap-mnav' : '.ap-navwrap .ap-nav');
       // Si el titular está vacío, el velo de abajo no se muestra.
       if (overInner && !overInner.textContent.trim()) gsap.set(overlay, { display: 'none' });
 
-      // Nav: abajo al cargar; se oculta durante el túnel y reaparece arriba (top 24px) al llegar a la página.
-      const pad = () => (stage.clientWidth >= 900 ? 32 : 24);
-      // En móvil la barra ya está arriba: no baja.
-      const navDown = () => (mobile ? 0 : stage.offsetHeight - pad() - navEl.getBoundingClientRect().height - 24);
-
+      // Nav: oculta sobre el hero; aparece arriba (top 24px) al llegar a la página.
       let tone = 'dark';
       gsap.set([name, overInner], { willChange: 'transform' });
       const tl = gsap.timeline({
@@ -74,8 +81,7 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       tl.fromTo(name, { scale: 1, transformOrigin: '50% 50%' }, { scale: 3.4, duration: 0.24, ease: 'power2.in' }, 0)
         .to(name, { autoAlpha: 0, duration: 0.14, ease: 'power1.in' }, 0.1)
         .to(topKids, { autoAlpha: 0, duration: 0.1 }, 0)
-        .fromTo(navEl, { y: navDown, autoAlpha: 1 }, { y: navDown, autoAlpha: 0, duration: 0.08 }, 0)
-        .set(navEl, { y: 0 }, 0.09)
+        .fromTo(navEl, { autoAlpha: 0 }, { autoAlpha: 0, duration: 0.01 }, 0)
         .fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.06 }, 0.05)
         .fromTo(overInner, { y: 120 }, { y: 0, duration: 0.08, ease: 'power2.out' }, 0.05)
         .to(overInner, { autoAlpha: 0, y: -60, duration: 0.05, ease: 'power1.in' }, 0.2)
