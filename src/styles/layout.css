@@ -149,18 +149,17 @@
 @container (max-width: 599px){.ap-nav__toggle{display:inline-flex}}
 /* NavBar de escritorio como una sola cápsula centrada (ajuste del 2 nov 2026): el material flotante del sistema
    (--surface-float, --blur-float, --border-hairline, --shadow-float) lo lleva la cápsula, y los enlaces de adentro
-   son texto sin borde ni fondo; la sección actual se rellena en tinta. Una línea fina separa las secciones de las
-   acciones (GitHub, Contacto). Sobre el hero, la cápsula usa el vidrio claro del hero. */
+   son texto sin borde ni fondo; la sección actual se rellena en tinta. GitHub y Contacto siguen a las secciones con
+   el mismo espacio, sin separador. Sobre el hero, la cápsula usa el vidrio claro del hero. */
 .ap-navwrap .ap-nav .ap-nav__bar{width:max-content;max-width:100%;margin-inline:auto;justify-content:center;gap:0;padding:var(--space-1);box-sizing:border-box;
   border-radius:var(--radius-pill);border:var(--stroke-hairline) solid var(--border-hairline);background:var(--surface-float);
   -webkit-backdrop-filter:blur(var(--blur-float));backdrop-filter:blur(var(--blur-float));box-shadow:var(--shadow-float)}
 .ap-navwrap .ap-nav .ap-nav__group{gap:0}
-.ap-navwrap .ap-nav .ap-nav__group--end{margin-left:var(--space-2);padding-left:var(--space-2);border-left:var(--stroke-hairline) solid var(--border-hairline)}
 .ap-navwrap .ap-nav .ap-nav__bar .ap-pill{border-color:transparent;background:transparent;-webkit-backdrop-filter:none;backdrop-filter:none}
 @media (hover: hover){.ap-navwrap .ap-nav .ap-nav__bar .ap-pill:hover{background:var(--surface-sunken);border-color:transparent}}
 .ap-navwrap .ap-nav .ap-nav__bar .ap-pill.is-current{background:var(--action);color:var(--on-action);border-color:var(--action)}
 .ap-navwrap .ap-nav--dark .ap-nav__bar{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
-.ap-navwrap .ap-nav--dark .ap-nav__group--end{border-left-color:rgba(255,255,255,.5)}
+
 /* Título de Contacto con el patrón común de Sobre mí, Superpoderes y Proyectos: Oswald 400, mismo tamaño, interlineado
    y espaciado (variables --section-title-*), con el último tramo en gris. Las palabras no se cortan: Oswald es
    condensada y "CONSTRUYAMOS" cabe entera desde 320px. La bajada toma la tipografía de las bajadas de las otras secciones. */
