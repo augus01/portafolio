@@ -4,7 +4,9 @@
   --wm-scale:.65;--nav-scale:1.3;--top-scale:2.5;--meta-scale:1.35;
   /* Excepciones compartidas por Sobre mí, Proyectos y el menú móvil (documentadas en design-system/INTEGRACION.md):
      la familia Oswald y el gris de los textos destacados. */
-  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8}
+  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8;
+  /* Espaciado común de los títulos de sección (Sobre mí, Superpoderes y Proyectos), como en el artefacto. */
+  --section-title-tracking:-0.02em}
 .ap-after{position:relative;z-index:4;background:var(--surface-canvas)}
 
 .ap-section{padding:var(--space-section) var(--space-8);max-width:var(--page-max);margin:0 auto;box-sizing:border-box;display:flex;flex-direction:column;gap:var(--space-12)}
@@ -19,7 +21,7 @@
 .ap-about{gap:var(--space-16);
   --about-statement-font:var(--font-oswald);--about-statement-size:clamp(32px, 4.4vw, 64px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
   --about-text-font:var(--font-oswald);--about-text-size:22px}
-.ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);color:var(--ink-primary)}
+.ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
 .ap-about__body{display:flex;justify-content:flex-end}
 /* Media columna, mínimo 300px; bajo 300px de ancho ocupa todo, sin scroll horizontal. */
@@ -35,10 +37,10 @@
   --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:46rem;
   --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%}
 @media (min-width:900px){.hab-mq{min-height:100vh}}
-.hab-mq__head{box-sizing:border-box;width:100%;max-width:calc(var(--page-max) + 2 * var(--space-8));margin:0 auto;padding:0 var(--space-8)}
+/* Mismo ancho y relleno que .ap-section, para que el título arranque en la misma línea que Sobre mí y Proyectos. */
+.hab-mq__head{box-sizing:border-box;width:100%;max-width:var(--page-max);margin:0 auto;padding:0 var(--space-8)}
 .hab-mq__intro{display:flex;flex-direction:column;gap:var(--space-4);max-width:var(--hab-intro-max)}
-.hab-mq__eyebrow.label{margin:0;color:var(--ink-secondary)}
-.hab-mq__title.display{margin:0;font-family:var(--hab-title-font);font-weight:400;font-size:var(--hab-title-size);line-height:var(--hab-title-leading);letter-spacing:0;color:var(--ink-primary)}
+.hab-mq__title.display{margin:0;font-family:var(--hab-title-font);font-weight:400;font-size:var(--hab-title-size);line-height:var(--hab-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .hab-mq__title span{color:var(--hab-muted)}
 .hab-mq__lead.lead{margin:0;font-family:var(--hab-text-font);font-size:var(--hab-text-size);font-weight:400;color:var(--ink-primary)}
 .hab-mq__rows{display:flex;flex-direction:column;gap:var(--space-12)}
@@ -72,7 +74,7 @@
   --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
   --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
 .ap-gal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4) var(--space-8)}
-.ap-gal-title.display{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:0;color:var(--ink-primary)}
+.ap-gal-title.display{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-gal-title span{color:var(--gal-muted)}
 .ap-gal-count.meta,.ap-gal__num.meta,.ap-gal__role.meta{margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-secondary)}
 .ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-4);row-gap:var(--space-12)}

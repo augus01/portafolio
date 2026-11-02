@@ -60,7 +60,6 @@ export const about = {
 // (logos 3D de Vitrum, vista Angle, material Black).
 export const skills = {
   id: 'superpoderes',
-  eyebrow: 'Habilidades',
   // La segunda parte del título va en gris.
   title: ['Con qué', 'construyo'],
   lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue. Pasa el cursor sobre una fila para detenerla.',
