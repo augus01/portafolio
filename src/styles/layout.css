@@ -41,6 +41,11 @@
 .ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
 .ap-about__body{display:flex;justify-content:flex-end}
+/* Ficha de Sobre mí: cuatro datos en una fila (una columna angosta se apila). Solo tokens: lienzo con borde hairline, sin sombra. */
+.ap-info{margin:0;padding:var(--space-6);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:var(--space-6);box-sizing:border-box;border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-lg);background:var(--surface-raised)}
+.ap-info__item{display:flex;flex-direction:column;gap:var(--space-1);min-width:0}
+.ap-info__term.label{margin:0;color:var(--ink-secondary)}
+.ap-info__value.body{margin:0;color:var(--ink-primary);font-weight:500;overflow-wrap:break-word}
 /* Media columna, mínimo 300px; bajo 300px de ancho ocupa todo, sin scroll horizontal. */
 .ap-about__text{display:flex;flex-direction:column;gap:var(--space-6);width:clamp(min(300px, 100%), 50%, 100%)}
 .ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
@@ -67,7 +72,9 @@
   mask-image:linear-gradient(to right,transparent,#000 var(--hab-fade),#000 calc(100% - var(--hab-fade)),transparent)}
 .hab-mq__track{list-style:none;margin:0;padding:0;display:flex;width:max-content;animation:hab-mq var(--hab-speed-a) linear infinite;will-change:transform}
 .hab-mq__track--b{animation-duration:var(--hab-speed-b);animation-delay:var(--hab-offset-b)}
-.hab-mq__row:hover .hab-mq__track{animation-play-state:paused}
+.hab-mq__row:hover .hab-mq__track,.hab-mq[data-paused="true"] .hab-mq__track{animation-play-state:paused}
+/* Botón de pausa (WCAG 2.2.2): botón secundario del sistema, alineado a la izquierda bajo la bajada. */
+.hab-mq__control{align-self:flex-start;margin-top:var(--space-2)}
 .hab-mq__item{flex:none;width:var(--hab-item-width);display:flex;flex-direction:column;align-items:center;gap:var(--space-3)}
 .hab-mq__logo{display:block;width:var(--hab-logo-size);height:var(--hab-logo-size);object-fit:contain}
 .hab-mq__name.body-sm{font-weight:500;color:var(--ink-primary)}
@@ -77,6 +84,8 @@
   .hab-mq__track{animation:none;width:auto;flex-wrap:wrap;justify-content:center;row-gap:var(--space-8)}
   .hab-mq__item[aria-hidden="true"]{display:none}
   .hab-mq__row{-webkit-mask-image:none;mask-image:none}
+  /* Sin animación no hay nada que pausar: se oculta el botón y la frase que lo explica. */
+  .hab-mq__control,.hab-mq__hint{display:none}
 }
 
 /* Proyectos: galería con logo (artefacto "Hero", frame Proyectos-logo, aprobado el 2 nov 2026, sin fondos de color).
@@ -117,7 +126,8 @@
 .ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
 .ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:400;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
-.ap-gal__role.meta{padding-top:var(--space-2);color:var(--gal-muted)}
+.ap-gal__foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);padding-top:var(--space-2)}
+/* El rol es información, no un tramo de título: va en --ink-secondary (≈8:1, regla común de arriba) y no en el gris editorial (≈2,4:1). */
 /* Composición para tres proyectos (container queries sobre .ap-gal-wrap):
    960px o más: tres columnas iguales en una fila.
    720 a 959px: dos columnas; el tercero ocupa la fila entera, con la card a la izquierda y el texto a la derecha.
