@@ -49,7 +49,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 | Regla del sistema | Excepción de Sobre mí | Variable |
 | --- | --- | --- |
-| Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(36px, 6.2vw, 92px)`, interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
+| Escala tipográfica fija (`.display` 3,5rem, peso 700, Helvetica) | Frase de impacto en Geist 400, `clamp(32px, 4.4vw, 64px)` (móvil: Oswald, `clamp(28px, 7.6vw, 48px)`), interlineado 1,08 | `--about-statement-size`, `--about-statement-leading` |
 | Monocromo con tintas del sistema | Tramo destacado de la frase en gris `#a3a3a8` | `--about-muted` |
 | Máximo tres familias | Párrafos en **Oswald** 400 (Google Fonts), 22px | `--about-text-font`, `--about-text-size` |
 

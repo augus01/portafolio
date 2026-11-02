@@ -62,7 +62,7 @@
 
   /* Sobre mí: la frase pasa a Oswald, los párrafos ocupan todo el ancho y el ritmo se aprieta. 56px arriba = space-12 + space-2. */
   .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);
-    --about-statement-font:var(--font-oswald);--about-statement-size:clamp(30px, 8.6vw, 92px);--about-statement-leading:1.1}
+    --about-statement-font:var(--font-oswald);--about-statement-size:clamp(28px, 7.6vw, 48px);--about-statement-leading:1.1}
   .ap-about__text{gap:var(--space-4);width:100%}
 
   /* Proyectos: mismo relleno lateral que Sobre mí; el carrusel sangra hasta el borde de la pantalla. */

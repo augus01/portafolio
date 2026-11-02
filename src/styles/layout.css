@@ -17,7 +17,7 @@
 /* Sobre mí (sección aprobada en el lienzo, 30 oct 2026). Los valores sin token del sistema son excepciones
    documentadas en design-system/INTEGRACION.md y viven solo en estas variables locales. */
 .ap-about{gap:var(--space-16);
-  --about-statement-font:var(--font-text);--about-statement-size:clamp(36px, 6.2vw, 92px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
+  --about-statement-font:var(--font-text);--about-statement-size:clamp(32px, 4.4vw, 64px);--about-statement-leading:1.08;--about-muted:var(--ink-highlight-muted);
   --about-text-font:var(--font-oswald);--about-text-size:22px}
 .ap-about__statement.display{margin:0;max-width:var(--page-max);font-family:var(--about-statement-font);font-weight:400;font-size:var(--about-statement-size);line-height:var(--about-statement-leading);color:var(--ink-primary)}
 .ap-about__muted{color:var(--about-muted)}
