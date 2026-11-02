@@ -29,7 +29,7 @@ export const mobileMenu = {
 export const hero = {
   name: 'AUGUSTO PINTO',
   uppercase: true,
-  role: 'Construyo productos con IA para la vida real',
+  role: 'Menos promesas, más productos que resuelven lo cotidiano',
   location: 'Santiago, Chile',
   height: 'min(100svh, 900px)',
 };
