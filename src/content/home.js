@@ -56,13 +56,13 @@ export const about = {
 };
 
 // Superpoderes ("Con qué construyo", artefacto "Hero"): cinta de logos 3D en dos filas que avanzan en sentidos
-// de velocidad distinta; pasar el cursor detiene la fila. Cada tecnología usa /habilidades/<logo>.webp
+// de velocidad distinta; no se detiene. Cada tecnología usa /habilidades/<logo>.webp
 // (logos 3D de Vitrum, vista Angle, material Black).
 export const skills = {
   id: 'superpoderes',
   // La segunda parte del título va en gris.
   title: ['Con qué', 'construyo'],
-  lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue. Pasa el cursor sobre una fila para detenerla.',
+  lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue.',
   rows: [
     [
       { name: 'React', logo: 'react' },

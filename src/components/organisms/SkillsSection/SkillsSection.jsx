@@ -1,7 +1,7 @@
 import { TechMarqueeRow } from '../../molecules/TechMarqueeRow';
 
 // Superpoderes: "Con qué construyo" (artefacto "Hero"). Encabezado con la tipografía de Sobre mí y una cinta de
-// logos 3D en dos filas a velocidades distintas; el cursor detiene la fila y sin movimiento se ve como grilla.
+// logos 3D en dos filas a velocidades distintas que no se detienen; sin movimiento se ve como grilla.
 export function SkillsSection({ id, title, lead, rows }) {
   const [first, second] = title;
   return (

@@ -46,7 +46,7 @@
 .ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
 
 /* Superpoderes, "Con qué construyo" (artefacto "Hero", 2 nov 2026): cinta en dos filas. Cada fila lleva sus logos dos
-   veces; la pista avanza la mitad de su ancho y vuelve a empezar sin salto. El cursor detiene la fila. Logos 3D de Vitrum
+   veces; la pista avanza la mitad de su ancho y vuelve a empezar sin salto. Logos 3D de Vitrum
    (vista Angle, material Black). La cinta ocupa todo el ancho; el encabezado se alinea con el resto de las secciones.
    Excepciones sin token en variables --hab-* (design-system/INTEGRACION.md). */
 .hab-mq{box-sizing:border-box;width:100%;padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);overflow:hidden;color:var(--ink-primary);font-family:var(--font-text);
@@ -67,7 +67,6 @@
   mask-image:linear-gradient(to right,transparent,#000 var(--hab-fade),#000 calc(100% - var(--hab-fade)),transparent)}
 .hab-mq__track{list-style:none;margin:0;padding:0;display:flex;width:max-content;animation:hab-mq var(--hab-speed-a) linear infinite;will-change:transform}
 .hab-mq__track--b{animation-duration:var(--hab-speed-b);animation-delay:var(--hab-offset-b)}
-.hab-mq__row:hover .hab-mq__track{animation-play-state:paused}
 /* Botón de pausa (WCAG 2.2.2): botón secundario del sistema, alineado a la izquierda bajo la bajada. */
 .hab-mq__item{flex:none;width:var(--hab-item-width);display:flex;flex-direction:column;align-items:center;gap:var(--space-3)}
 .hab-mq__logo{display:block;width:var(--hab-logo-size);height:var(--hab-logo-size);object-fit:contain}
