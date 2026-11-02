@@ -19,7 +19,7 @@ El sistema original se publica sobre MUI 7 (`window.AugustoPinto`). Aquí **no s
 | Capa del sistema | Carpeta | Componentes |
 | --- | --- | --- |
 | Átomos | `src/components/atoms/` | Icon, Logo, Tag, Link, Button, Divider · Pill (píldora de NavBar) · Wordmark (nombre ajustado del Hero) · HeroCanvas, GrainOverlay (propios del hero inmersivo) |
-| Moléculas | `src/components/molecules/` | NavBar, FormField, SocialLinks, SkillGroup · MobileNavBar (barra móvil), MediaCard (card de proyecto con pie numerado) |
+| Moléculas | `src/components/molecules/` | NavBar, FormField, SocialLinks, SkillGroup · MobileNavBar (barra móvil), ProjectTile (card de proyecto con logo y pie) |
 | Organismos | `src/components/organisms/` | Hero, SectionHeadline, ProjectCard, StoryTimeline, DiscoveryHint, ContactForm, Footer · HeroStage, MobileMenu, ProjectShowcase y las secciones de la página |
 | Plantillas | `src/components/templates/` | ImmersiveLandingTemplate (PortfolioPage del inventario) |
 | Páginas | `src/components/pages/` | HomePage |
@@ -55,17 +55,15 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 ## Excepciones aprobadas (sección Proyectos)
 
-`#proyectos` se aprobó en el lienzo (30 oct 2026, vistas escritorio y móvil) y reemplaza a la grilla de InfoCard. Cada proyecto (`ProjectShowcase`) tiene cabecera —nombre y rol | descripción— y cards (`MediaCard`) con imagen y pie numerado. No usa `ProjectCard` del sistema: el lienzo pide otra composición. Lo que no tiene token está en variables `--proj-*` de `.ap-projects` (`src/styles/layout.css`):
+`#proyectos` sigue el frame **Proyectos-logo** del artefacto "Hero" (2 nov 2026), sin fondos de color: reemplaza a la versión con capturas (`ProjectShowcase` + `MediaCard`). Es una galería de dos columnas (una bajo 720px de contenedor) con un encabezado "Lo que he / construido" en `.hero` y el conteo en `.label`. Cada proyecto (`ProjectTile`) es una card 5:4 en `--surface-raised` con `border-hairline`, `radius-lg`, número en `.label` y el logo al centro, que crece al pasar el mouse. Debajo: nombre en `.display`, descripción en `.body` y rol en `.label`, alineados entre cards con subgrid. Las cards no son links mientras no exista una página de detalle. Lo que no tiene token está en variables `--gal-*` de `.ap-gal-wrap` (`src/styles/layout.css`):
 
 | Regla del sistema | Excepción de Proyectos | Variable |
 | --- | --- | --- |
-| Escala tipográfica fija | Nombre y rol en Oswald 500, 28px (24px bajo 720px); descripción en Oswald 22px (20px); pie de card en Oswald 15px | `--proj-title-size`, `--proj-text-size`, `--proj-cap-size` |
-| Monocromo con tintas del sistema | Rol en el gris destacado `#a3a3a8`, compartido con Sobre mí | `--ink-highlight-muted` (en `.ap-page`) |
-| Espaciado en escala de 4/8 | Rejilla 454fr / 613fr / 760fr; 20px entre cabecera y cards; 10px entre imagen y pie | `--proj-columns`, `--proj-gap`, `--proj-card-gap` |
-| Superficies del sistema | La card toma el tamaño de su foto: las cards de un proyecto comparten alto y cada una crece según la proporción de su imagen, que se ve entera y a color, con `border-hairline` y `radius-md`. Sin imagen, marco de relleno cuadrado `rgba(18,18,18,.06)`. Bajo 720px, carrusel de alto `min(62svh, 440px)` con la captura móvil del paso si existe | `--proj-media-fill`, `--proj-media-height-m`, `--card-ratio` |
-| Breakpoint de 600px | Bajo **720px** las cards pasan a carrusel horizontal con snap (76% de ancho, a sangre hasta el borde) | `layout.css` |
+| Escala tipográfica fija | Nombre en minúsculas con interletrado -0,045em; bajo 900px el nombre baja a 2rem y el título a 3,5rem (2,5rem bajo 720px) | `--gal-name-tracking`, `--gal-title-size-m`, `--gal-title-size-s` |
+| Proporciones del sistema | Card 5:4; logo al 64% (imagen) o 76% (símbolo + nombre) del ancho; hover a escala 1,05 | `--gal-ratio`, `--gal-logo-width-ink`, `--gal-logo-width`, `--gal-hover-scale` |
+| Monocromo y fuentes del sistema | Los logos conservan su color y su fuente de marca: Rumbo a Casa en Bricolage Grotesque 700 (`#14181f`), Zam en Plus Jakarta Sans 500 (negro). Ambas se descargan solo con las letras de sus nombres | `--gal-font-rumbo`, `--gal-ink-rumbo`, `--gal-font-zam`, `--gal-ink-zam` |
 
-Oswald se descarga en 400 y 500 (como en el lienzo actualizado), así que nombre y rol se ven en 500.
+Archivos de logo en `public/proyectos/`: `rumbo-simbolo.svg` (del repositorio augus01/rumbo-a-casa), `inkvibe-logo.png` (de inkvibe.app, nombre recoloreado a negro para fondo claro) y `zam-isotipo.svg` (**provisorio**: redibujado desde la galería aprobada; reemplazar por el archivo original).
 
 ## Excepciones aprobadas (vista móvil)
 
@@ -98,7 +96,7 @@ El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carác
 
 ## Pendientes contra el sistema
 
-- **Contraste del gris destacado (Sobre mí y rol de Proyectos):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
+- **Contraste del gris destacado (Sobre mí):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.

@@ -26,42 +26,50 @@
 .ap-about__text{display:flex;flex-direction:column;gap:var(--space-6);width:clamp(min(300px, 100%), 50%, 100%)}
 .ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
 
-/* Proyectos (lienzo aprobado, 30 oct 2026): cada proyecto es cabecera (nombre y rol | descripción) y cards con pie numerado.
-   Cabecera y cards comparten la rejilla 454 / 613 / 760 del lienzo para que alineen. Valores sin token: variables --proj-*. */
-.ap-projects{gap:var(--space-24);
-  --proj-gap:20px;--proj-columns:454fr 613fr 760fr;
-  --proj-title-size:28px;--proj-title-leading:1.15;--proj-text-size:22px;
-  --proj-card-gap:10px;--proj-media-fill:rgba(18,18,18,.06);--proj-media-height-m:min(62svh, 440px);
-  --proj-media-label:.6875rem;--proj-media-tracking:.08em;--proj-cap-size:15px;
-  --proj-bleed:var(--space-8)}
-.ap-proj{display:flex;flex-direction:column;gap:var(--proj-gap)}
-.ap-proj__grid{display:grid;grid-template-columns:var(--proj-columns);gap:var(--space-3)}
-.ap-proj__head{align-items:start}
-.ap-proj__who{grid-column:1;min-width:0}
-.ap-proj__title.subheading,.ap-proj__role.subheading{margin:0;font-family:var(--font-oswald);font-weight:500;font-size:var(--proj-title-size);line-height:var(--proj-title-leading);color:var(--ink-primary)}
-.ap-proj__role.subheading{color:var(--ink-highlight-muted)}
-.ap-proj__desc.lead{grid-column:2 / -1;margin:0;max-width:72ch;font-family:var(--font-oswald);font-size:var(--proj-text-size);color:var(--ink-primary)}
-/* La card toma el tamaño de su foto: todas las cards de un proyecto comparten alto y cada una crece según la
-   proporción de su imagen (--card-ratio = ancho / alto, desde MediaCard). La foto se ve entera, sin recortes ni marco.
-   Sin imagen, la card es cuadrada. */
-.ap-proj__cards{display:flex;align-items:flex-start}
-.ap-proj__card{margin:0;display:flex;flex-direction:column;gap:var(--proj-card-gap);min-width:0;flex:var(--card-ratio, 1) 1 0}
-.ap-proj__media{display:flex;align-items:center;justify-content:center;box-sizing:border-box;width:100%;height:auto;aspect-ratio:var(--card-ratio, 1);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-md);background:var(--proj-media-fill);object-fit:cover}
-.ap-proj__media > .label{font-size:var(--proj-media-label);font-weight:400;letter-spacing:var(--proj-media-tracking);color:var(--ink-secondary)}
-.ap-proj__cap{display:flex;justify-content:space-between;gap:var(--space-3);font-family:var(--font-oswald);font-size:var(--proj-cap-size);font-weight:400;color:var(--ink-secondary)}
-/* Bajo 720px: cabecera en una columna y cards en carrusel horizontal con snap, a sangre hasta el borde de la sección.
-   Cada card usa la captura móvil de su paso si existe (<source> en MediaCard, proporción --card-ratio-m): mismo alto
-   para todas y ancho según la foto, con tope para que asome la siguiente. */
-@media (max-width: 719px){
-  .ap-projects{--proj-title-size:24px;--proj-text-size:20px}
-  .ap-proj{gap:var(--space-4)}
-  .ap-proj__head{grid-template-columns:1fr}
-  .ap-proj__who,.ap-proj__desc.lead{grid-column:1}
-  .ap-proj__cards{overflow-x:auto;scroll-snap-type:x mandatory;margin:0 calc(var(--proj-bleed) * -1);padding:0 var(--proj-bleed);scroll-padding:0 var(--proj-bleed);scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .ap-proj__cards::-webkit-scrollbar{display:none}
-  .ap-proj__card{flex:0 0 auto;width:min(calc(var(--proj-media-height-m) * var(--card-ratio-m, var(--card-ratio, 1))), 86%);scroll-snap-align:start}
-  .ap-proj__media{aspect-ratio:var(--card-ratio-m, var(--card-ratio, 1))}
+/* Proyectos: galería con logo (artefacto "Hero", frame Proyectos-logo, aprobado el 2 nov 2026, sin fondos de color).
+   Dos columnas de cards iguales 5:4; cada card es el logo del proyecto sobre --surface-raised con número arriba a la
+   izquierda. El pie (nombre, descripción, rol) usa subgrid para alinear filas entre cards. Bajo 720px, una columna.
+   Excepciones sin token en variables --gal-* y en las fuentes de marca de cada logo (design-system/INTEGRACION.md). */
+.ap-gal-wrap{gap:var(--space-16);container-type:inline-size;
+  --gal-ratio:5 / 4;--gal-name-tracking:-0.045em;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
+  --gal-title-size-m:3.5rem;--gal-title-size-s:2.5rem;
+  --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
+  --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
+.ap-gal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4) var(--space-8)}
+.ap-gal-title.hero{margin:0;text-transform:uppercase;color:var(--ink-primary)}
+.ap-gal-title span{display:block;color:var(--ink-secondary)}
+.ap-gal-count.label{margin:0;color:var(--ink-secondary)}
+.ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-4);row-gap:var(--space-12)}
+.ap-gal__item{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:var(--space-2);color:var(--ink-primary)}
+.ap-gal__tile{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:var(--gal-ratio);container-type:inline-size;margin-bottom:var(--space-4);box-sizing:border-box;
+  border-radius:var(--radius-lg);border:var(--stroke-hairline) solid var(--border-hairline);background:var(--surface-raised)}
+.ap-gal__num.label{position:absolute;left:var(--space-6);top:var(--space-6);color:var(--ink-secondary)}
+.ap-gal__logo,.ap-gal__lockup{transition:transform var(--dur-move) var(--ease-out)}
+.ap-gal__item:hover .ap-gal__logo,.ap-gal__item:hover .ap-gal__lockup{transform:scale(var(--gal-hover-scale))}
+.ap-gal__logo{display:block;width:var(--gal-logo-width-ink);height:auto}
+.ap-gal__lockup{display:flex;align-items:center;justify-content:center;width:var(--gal-logo-width)}
+.ap-gal__symbol{display:block;flex:none;height:auto}
+.ap-gal__wordmark{line-height:1;white-space:nowrap}
+/* Rumbo a Casa: símbolo y nombre como en su Logotipo (Bricolage Grotesque 700, -0.02em, separación 22% del alto). */
+.ap-gal__lockup--rumbo{gap:3cqw}
+.ap-gal__lockup--rumbo .ap-gal__symbol{width:13%}
+.ap-gal__lockup--rumbo .ap-gal__wordmark{font-family:var(--gal-font-rumbo);font-weight:700;letter-spacing:-0.02em;font-size:8cqw;color:var(--gal-ink-rumbo)}
+/* Zam: isotipo negro y el nombre en Plus Jakarta Sans 500, la fuente de su marca. */
+.ap-gal__lockup--zam{gap:4cqw}
+.ap-gal__lockup--zam .ap-gal__symbol{width:32%}
+.ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:20cqw;color:var(--gal-ink-zam)}
+.ap-gal__name.display{margin:0;letter-spacing:var(--gal-name-tracking);text-transform:lowercase}
+.ap-gal__desc.body{margin:0;max-width:640px;color:var(--ink-secondary)}
+.ap-gal__role.label{margin:0;padding-top:var(--space-2);color:var(--ink-primary)}
+@container (max-width: 899px){
+  .ap-gal-title.hero{font-size:var(--gal-title-size-m)}
+  .ap-gal__name.display{font-size:2rem;line-height:1.05}
 }
+@container (max-width: 719px){
+  .ap-gal-title.hero{font-size:var(--gal-title-size-s);line-height:1}
+  .ap-gal{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup{transition:none}}
 
 /* Sin scroll horizontal desde 320px: solo una palabra más ancha que la columna se corta, en vez de desbordar. */
 .ap-section .ap-headline__title{overflow-wrap:break-word}

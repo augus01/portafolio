@@ -75,57 +75,35 @@ export const skills = {
 
 export const projects = {
   id: 'proyectos',
-  intro: {
-    eyebrow: 'Proyectos',
-    title: 'LA PRUEBA',
-    lead: 'Tres proyectos muestran esos superpoderes en uso: uno con IA para familias, uno de interfaz con un objetivo de negocio y uno que aún estoy construyendo.',
-  },
-  // Línea de paso hacia la oficina 3D, al cierre de la sección.
-  outro: 'Si prefieres conversar antes que leer, entra a la oficina: mis agentes te cuentan cada parte.',
-  // Cada proyecto: nombre y rol, descripción y sus cards (el número 01, 02… se genera en orden).
+  // Encabezado de la galería: la segunda línea va en gris.
+  title: ['Lo que he', 'construido'],
+  count: '3 proyectos',
+  // Cada proyecto es una card con su logo sobre blanco (el número 01, 02… se genera en orden), y debajo
+  // nombre, descripción y rol. `logo.image` es un archivo con el nombre incluido; `logo.symbol` + `logo.wordmark`
+  // compone el símbolo con el nombre escrito en la fuente de esa marca (`logo.brand` elige la fuente).
+  // Las capturas de cada app siguen en /public/proyectos/ para una futura página de detalle.
   items: [
     {
       name: 'Rumbo a Casa',
-      role: 'Frontend e interfaz',
-      description: 'Las familias chilenas deben orientarse entre cuatro subsidios de vivienda del Estado. Construí un asistente que conversa en lenguaje simple, decide la elegibilidad con un motor de reglas que cita el decreto detrás de cada respuesta y arma la lista de documentos para postular. Es una app web en React, bilingüe y mobile-first, sobre CloudFront, Lambda y Bedrock. Ganó la categoría Social Good del hackathon AWS Zero to Shipped.',
-      // Sin `image` se muestra el marco de relleno; `alt` describe la imagen; `width`/`height` son sus medidas reales.
-      // `mobile` es la captura del mismo paso en teléfono, para el carrusel bajo 720px.
-      // Capturas de la app en vivo en modo demo (familia ficticia).
-      cards: [
-        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', width: 780, height: 1040,
-          alt: 'Rumbo a Casa en un teléfono: el avance de cinco pasos completo y la conversación en la que la familia cuenta que quiere comprar su primera vivienda' },
-        { title: 'Elegibilidad con su fuente', image: '/proyectos/rumbo-resultado.jpg', width: 1400, height: 1294,
-          mobile: { image: '/proyectos/rumbo-resultado-movil.jpg', width: 780, height: 1267 },
-          alt: 'Rumbo a Casa: el resultado dice que la familia califica para 3 programas; cada programa muestra su sello, la razón y el decreto que lo respalda' },
-        { title: 'Papeles para postular', image: '/proyectos/rumbo-documentos.jpg', width: 1600, height: 1250,
-          mobile: { image: '/proyectos/rumbo-documentos-movil.jpg', width: 780, height: 1267 },
-          alt: 'Rumbo a Casa: la lista de documentos de DS49 abierta, con su barra de avance y los papeles que la familia ya marcó como guardados' },
-      ],
+      description: 'A qué subsidio de vivienda puede postular tu familia, con la fuente de cada respuesta.',
+      role: 'Co-creador · Ganador AWS Zero to Shipped',
+      // Símbolo y tipografía (Bricolage Grotesque 700) tomados del repositorio augus01/rumbo-a-casa.
+      logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
     },
     {
       name: 'Inkvibe',
-      role: 'Interfaz visual',
-      description: 'La web de Inkvibe debía llevar a las personas a descargar la app móvil, el objetivo principal del equipo. Partí de una base existente y construí y mejoré la interfaz visual del landing. El recorrido presenta la app por secciones y cierra en el llamado a descargarla, en escritorio y en móvil. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
-      // Capturas del landing en vivo (inkvibe.app).
-      cards: [
-        { title: 'Landing en móvil', image: '/proyectos/inkvibe-movil.jpg', width: 780, height: 1400,
-          alt: 'Inkvibe en un teléfono: el inicio del landing con el titular contra los malos tatuajes, el botón Descarga la app y los botones de App Store y Google Play' },
-        { title: 'Descubre artistas', image: '/proyectos/inkvibe-descubre.jpg', width: 780, height: 1122,
-          alt: 'Inkvibe: la sección Descubre, con una galería de tatuajes en el teléfono y el titular Encuentra a tu artista, no cualquiera' },
-        { title: 'Descarga InkVibe', image: '/proyectos/inkvibe-descarga.jpg', width: 1600, height: 1231,
-          mobile: { image: '/proyectos/inkvibe-descarga-movil.jpg', width: 900, height: 922 },
-          alt: 'Inkvibe: la sección final del landing con el titular Encuentra a tu artista. Descarga InkVibe, los botones de App Store y Google Play y un teléfono con las notificaciones de la app' },
-      ],
+      description: 'Marketplace del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar.',
+      role: 'Desarrollador frontend',
+      // Logotipo horizontal de inkvibe.app con el nombre en negro para fondo claro.
+      logo: { brand: 'inkvibe', image: '/proyectos/inkvibe-logo.png', width: 1200, height: 281 },
     },
     {
       name: 'Zam',
-      role: 'Producto en construcción',
-      description: 'Zam está en construcción: hoy existen el logo y la idea. El minimarket y la tienda de conveniencia compiten con supermercados que saben y controlan su información, y eso les da una ventaja enorme. Zam busca poner a esos negocios al mismo nivel, con los datos que hoy no tienen. Es el siguiente paso de lo que vengo construyendo: IA y producto al servicio de quien más lo necesita.',
-      cards: [
-        { title: 'Logo de Zam', alt: 'Logo de Zam' },
-        { title: 'El problema', alt: 'Zam: la brecha de información entre el minimarket y el supermercado' },
-        { title: 'Hacia dónde va', alt: 'Zam: hacia dónde va el producto' },
-      ],
+      description: 'Caja, inventario y finanzas del minimarket de barrio: app para el cajero y panel web para el dueño.',
+      role: 'Proyecto propio · En desarrollo',
+      // Isotipo redibujado en SVG desde la galería aprobada (provisorio hasta tener el archivo original);
+      // el nombre va en Plus Jakarta Sans 500, la fuente de la marca.
+      logo: { brand: 'zam', symbol: '/proyectos/zam-isotipo.svg', symbolWidth: 88, symbolHeight: 88, wordmark: 'Zam' },
     },
   ],
 };
