@@ -133,10 +133,10 @@
 .ap-gal__lockup--rumbo{gap:3cqw;width:90%}
 .ap-gal__lockup--rumbo .ap-gal__symbol{width:16%}
 .ap-gal__lockup--rumbo .ap-gal__wordmark{font-family:var(--gal-font-rumbo);font-weight:700;letter-spacing:-0.02em;font-size:11cqw}
-/* Zam: isotipo y nombre en Plus Jakarta Sans 500, la fuente de su marca, a gran tamaño. */
-.ap-gal__lockup--zam{gap:5cqw;flex-direction:column}
-.ap-gal__lockup--zam .ap-gal__symbol{width:40cqw}
-.ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:30cqw}
+/* Zam: símbolo a la izquierda y "zam" en minúsculas a la derecha, como en su logotipo (Plus Jakarta Sans 500). */
+.ap-gal__lockup--zam{gap:6cqw}
+.ap-gal__lockup--zam .ap-gal__symbol{width:30cqw}
+.ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.01em;font-size:22cqw}
 /* El nombre de cada proyecto toma la tipografía del título de la galería (fuente, peso y espaciado), a un tamaño menor. */
 .ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */

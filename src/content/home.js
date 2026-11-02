@@ -131,9 +131,10 @@ export const projects = {
       name: 'Zam',
       description: 'Caja, inventario y finanzas del minimarket de barrio: app para el cajero y panel web para el dueño.',
       role: 'Proyecto propio · En desarrollo',
-      // Isotipo redibujado en SVG desde la galería aprobada (provisorio hasta tener el archivo original);
-      // el nombre va en Plus Jakarta Sans 500, la fuente de la marca. Sin capturas todavía: solo el logo en blanco.
-      logo: { brand: 'zam', symbol: '/proyectos/zam-isotipo-claro.svg', symbolWidth: 88, symbolHeight: 88, wordmark: 'Zam' },
+      // Símbolo de Zam (cuadrado redondeado con cuatro círculos superpuestos que dejan pétalos en las esquinas),
+      // redibujado en SVG desde la referencia de Augusto, en blanco para la portada; el nombre va en minúsculas en
+      // Plus Jakarta Sans 500, la fuente de la marca. Sin capturas todavía: solo el logo.
+      logo: { brand: 'zam', symbol: '/proyectos/zam-simbolo-claro.svg', symbolWidth: 466, symbolHeight: 466, wordmark: 'zam' },
     },
   ],
 };
