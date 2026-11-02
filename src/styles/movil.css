@@ -65,8 +65,9 @@
     --about-statement-font:var(--font-oswald);--about-statement-size:clamp(28px, 7.6vw, 48px);--about-statement-leading:1.1}
   .ap-about__text{gap:var(--space-4);width:100%}
 
-  /* Proyectos: mismo relleno lateral que Sobre mí. */
-  .ap-gal-wrap{gap:var(--space-12);padding:0 var(--space-4) var(--space-12)}
+  /* Proyectos: mismo relleno lateral que Sobre mí y su título pasa a Oswald, como la frase de Sobre mí. */
+  .ap-gal-wrap{gap:var(--space-12);padding:0 var(--space-4) var(--space-12);
+    --gal-title-font:var(--font-oswald);--gal-title-size:clamp(28px, 7.6vw, 48px);--gal-title-leading:1.1}
 }
 
 @media (max-width: 599px) and (prefers-reduced-motion: reduce){

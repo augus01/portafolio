@@ -18,12 +18,12 @@ export function ProjectTile({ index, name, description, role, logo, className })
   return (
     <article className={['ap-gal__item', className].filter(Boolean).join(' ')}>
       <div className="ap-gal__tile">
-        <span className="ap-gal__num label" aria-hidden="true">{index}</span>
+        <span className="ap-gal__num meta" aria-hidden="true">{index}</span>
         <Logo {...logo} />
       </div>
-      <h3 className="ap-gal__name display">{name}</h3>
-      <p className="ap-gal__desc body">{description}</p>
-      <p className="ap-gal__role label">{role}</p>
+      <h3 className="ap-gal__name subheading">{name}</h3>
+      <p className="ap-gal__desc lead">{description}</p>
+      <p className="ap-gal__role meta">{role}</p>
     </article>
   );
 }

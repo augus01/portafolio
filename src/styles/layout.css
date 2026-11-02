@@ -31,26 +31,28 @@
    izquierda. El pie (nombre, descripción, rol) usa subgrid para alinear filas entre cards. Bajo 720px, una columna.
    Excepciones sin token en variables --gal-* y en las fuentes de marca de cada logo (design-system/INTEGRACION.md). */
 .ap-gal-wrap{gap:var(--space-16);container-type:inline-size;
-  --gal-ratio:5 / 4;--gal-name-tracking:-0.045em;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
-  --gal-title-size-m:3.5rem;--gal-title-size-s:2.5rem;
+  --gal-ratio:5 / 4;--gal-logo-width:76%;--gal-logo-width-ink:64%;--gal-hover-scale:1.05;
+  /* Tipografía de Sobre mí: título como su frase (Geist 400; en móvil, Oswald) y el resto en Oswald. */
+  --gal-title-font:var(--font-text);--gal-title-size:clamp(32px, 4.4vw, 64px);--gal-title-leading:1.08;--gal-muted:var(--ink-highlight-muted);
+  --gal-text-font:var(--font-oswald);--gal-text-size:22px;--gal-name-size:clamp(28px, 3vw, 40px);--gal-name-leading:1.1;--gal-meta-size:15px;
   --gal-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--gal-ink-rumbo:#14181f;
   --gal-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;--gal-ink-zam:#000}
 .ap-gal-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-4) var(--space-8)}
-.ap-gal-title.hero{margin:0;text-transform:uppercase;color:var(--ink-primary)}
-.ap-gal-title span{display:block;color:var(--ink-secondary)}
-.ap-gal-count.label{margin:0;color:var(--ink-secondary)}
+.ap-gal-title.display{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:0;color:var(--ink-primary)}
+.ap-gal-title span{color:var(--gal-muted)}
+.ap-gal-count.meta,.ap-gal__num.meta,.ap-gal__role.meta{margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-secondary)}
 .ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--space-4);row-gap:var(--space-12)}
 .ap-gal__item{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:var(--space-2);color:var(--ink-primary)}
 .ap-gal__tile{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;aspect-ratio:var(--gal-ratio);container-type:inline-size;margin-bottom:var(--space-4);box-sizing:border-box;
   border-radius:var(--radius-lg);border:var(--stroke-hairline) solid var(--border-hairline);background:var(--surface-raised)}
-.ap-gal__num.label{position:absolute;left:var(--space-6);top:var(--space-6);color:var(--ink-secondary)}
+.ap-gal__num.meta{position:absolute;left:var(--space-6);top:var(--space-6);color:var(--ink-secondary)}
 .ap-gal__logo,.ap-gal__lockup{transition:transform var(--dur-move) var(--ease-out)}
 .ap-gal__item:hover .ap-gal__logo,.ap-gal__item:hover .ap-gal__lockup{transform:scale(var(--gal-hover-scale))}
 .ap-gal__logo{display:block;width:var(--gal-logo-width-ink);height:auto}
 .ap-gal__lockup{display:flex;align-items:center;justify-content:center;width:var(--gal-logo-width)}
 .ap-gal__symbol{display:block;flex:none;height:auto}
 .ap-gal__wordmark{line-height:1;white-space:nowrap}
-/* Rumbo a Casa: símbolo y nombre como en su Logotipo (Bricolage Grotesque 700, -0.02em, separación 22% del alto). */
+/* Rumbo a Casa: símbolo y nombre como en su Logotipo (Bricolage Grotesque 700, -0.02em; tamaños en cqw, relativos al ancho de la card). */
 .ap-gal__lockup--rumbo{gap:3cqw}
 .ap-gal__lockup--rumbo .ap-gal__symbol{width:13%}
 .ap-gal__lockup--rumbo .ap-gal__wordmark{font-family:var(--gal-font-rumbo);font-weight:700;letter-spacing:-0.02em;font-size:8cqw;color:var(--gal-ink-rumbo)}
@@ -58,15 +60,10 @@
 .ap-gal__lockup--zam{gap:4cqw}
 .ap-gal__lockup--zam .ap-gal__symbol{width:32%}
 .ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.02em;font-size:20cqw;color:var(--gal-ink-zam)}
-.ap-gal__name.display{margin:0;letter-spacing:var(--gal-name-tracking);text-transform:lowercase}
-.ap-gal__desc.body{margin:0;max-width:640px;color:var(--ink-secondary)}
-.ap-gal__role.label{margin:0;padding-top:var(--space-2);color:var(--ink-primary)}
-@container (max-width: 899px){
-  .ap-gal-title.hero{font-size:var(--gal-title-size-m)}
-  .ap-gal__name.display{font-size:2rem;line-height:1.05}
-}
+.ap-gal__name.subheading{margin:0;font-family:var(--gal-text-font);font-weight:500;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);color:var(--ink-primary)}
+.ap-gal__desc.lead{margin:0;max-width:640px;font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
+.ap-gal__role.meta{padding-top:var(--space-2);color:var(--gal-muted)}
 @container (max-width: 719px){
-  .ap-gal-title.hero{font-size:var(--gal-title-size-s);line-height:1}
   .ap-gal{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup{transition:none}}

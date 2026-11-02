@@ -6,8 +6,8 @@ export function ProjectsSection({ id, title, count, items }) {
   return (
     <section id={id} className="ap-section ap-section--continued ap-gal-wrap">
       <header className="ap-gal-head">
-        <h2 className="ap-gal-title hero">{first} <span>{second}</span></h2>
-        <p className="ap-gal-count label">{count}</p>
+        <h2 className="ap-gal-title display">{first} <span>{second}</span></h2>
+        <p className="ap-gal-count meta">{count}</p>
       </header>
       <div className="ap-gal">
         {items.map((item, i) => (

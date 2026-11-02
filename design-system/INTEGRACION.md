@@ -55,11 +55,11 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 ## Excepciones aprobadas (sección Proyectos)
 
-`#proyectos` sigue el frame **Proyectos-logo** del artefacto "Hero" (2 nov 2026), sin fondos de color: reemplaza a la versión con capturas (`ProjectShowcase` + `MediaCard`). Es una galería de dos columnas (una bajo 720px de contenedor) con un encabezado "Lo que he / construido" en `.hero` y el conteo en `.label`. Cada proyecto (`ProjectTile`) es una card 5:4 en `--surface-raised` con `border-hairline`, `radius-lg`, número en `.label` y el logo al centro, que crece al pasar el mouse. Debajo: nombre en `.display`, descripción en `.body` y rol en `.label`, alineados entre cards con subgrid. Las cards no son links mientras no exista una página de detalle. Lo que no tiene token está en variables `--gal-*` de `.ap-gal-wrap` (`src/styles/layout.css`):
+`#proyectos` sigue el frame **Proyectos-logo** del artefacto "Hero" (2 nov 2026), sin fondos de color: reemplaza a la versión con capturas (`ProjectShowcase` + `MediaCard`). Es una galería de dos columnas (una bajo 720px de contenedor) con un encabezado "Lo que he construido" (el último tramo en gris) y el conteo. Cada proyecto (`ProjectTile`) es una card 5:4 en `--surface-raised` con `border-hairline`, `radius-lg`, número y el logo al centro, que crece al pasar el mouse. Debajo: nombre, descripción y rol, alineados entre cards con subgrid. La tipografía es la de Sobre mí (ajuste del 2 nov 2026). Las cards no son links mientras no exista una página de detalle. Lo que no tiene token está en variables `--gal-*` de `.ap-gal-wrap` (`src/styles/layout.css`):
 
 | Regla del sistema | Excepción de Proyectos | Variable |
 | --- | --- | --- |
-| Escala tipográfica fija | Nombre en minúsculas con interletrado -0,045em; bajo 900px el nombre baja a 2rem y el título a 3,5rem (2,5rem bajo 720px) | `--gal-name-tracking`, `--gal-title-size-m`, `--gal-title-size-s` |
+| Escala tipográfica fija | Tipografía de Sobre mí: título como su frase (Geist 400, `clamp(32px, 4.4vw, 64px)`, interlineado 1,08; bajo 600px Oswald `clamp(28px, 7.6vw, 48px)`), tramo final en `#a3a3a8`; nombre en Oswald 500 `clamp(28px, 3vw, 40px)`; descripción en Oswald 400 22px; número, conteo y rol en Oswald 15px (el rol en `#a3a3a8`) | `--gal-title-*`, `--gal-muted`, `--gal-text-font`, `--gal-text-size`, `--gal-name-size`, `--gal-meta-size` |
 | Proporciones del sistema | Card 5:4; logo al 64% (imagen) o 76% (símbolo + nombre) del ancho; hover a escala 1,05 | `--gal-ratio`, `--gal-logo-width-ink`, `--gal-logo-width`, `--gal-hover-scale` |
 | Monocromo y fuentes del sistema | Los logos conservan su color y su fuente de marca: Rumbo a Casa en Bricolage Grotesque 700 (`#14181f`), Zam en Plus Jakarta Sans 500 (negro). Ambas se descargan solo con las letras de sus nombres | `--gal-font-rumbo`, `--gal-ink-rumbo`, `--gal-font-zam`, `--gal-ink-zam` |
 
@@ -96,7 +96,7 @@ El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carác
 
 ## Pendientes contra el sistema
 
-- **Contraste del gris destacado (Sobre mí):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
+- **Contraste del gris destacado (Sobre mí y Proyectos):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
