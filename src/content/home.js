@@ -1,5 +1,5 @@
-// Contenido del landing. Es el relleno del artefacto aprobado (lorem ipsum):
-// el design system lo prohíbe en producción, así que se reemplaza por textos reales antes de publicar.
+// Contenido del landing. La narrativa es un solo hilo: Hero (promesa) → Sobre mí (quién soy) →
+// Superpoderes (cómo construyo) → Proyectos (la prueba) → Oficina (conversa con mis agentes) → Contacto.
 
 export const nav = {
   items: [
@@ -21,67 +21,100 @@ export const mobileMenu = {
     { label: 'Proyectos', href: '#proyectos' },
     { label: 'Contacto', href: '#contacto' },
   ],
-  cta: { label: 'Hablemos', href: '#contacto' },
+  cta: { label: 'Escribe un mensaje', href: '#contacto' },
   secondary: { label: 'GitHub', href: '#' },
-  meta: 'Ingeniería Civil Informática · Chile',
+  meta: 'Ingeniería Civil Informática · Santiago',
 };
 
 export const hero = {
   name: 'AUGUSTO PINTO',
   uppercase: true,
-  role: 'Ingeniería Civil Informática',
-  location: 'Chile',
+  role: 'Construyo productos con IA para la vida real',
+  location: 'Santiago, Chile',
   height: 'min(100svh, 900px)',
 };
 
 export const about = {
   id: 'sobre-mi',
+  // Ficha de entrada: quién habla, antes de la presentación.
+  summary: [
+    { label: 'Nombre', value: 'Augusto Pinto' },
+    { label: 'Edad y ciudad', value: '21 años, Santiago de Chile' },
+    { label: 'Carrera', value: 'Ingeniería Civil Informática' },
+    { label: 'Estudios', value: '4.º año, Universidad San Sebastián' },
+  ],
   // Frase de impacto: los tramos con `muted` van en gris.
   statement: [
-    { text: 'Lorem ipsum ' },
-    { text: 'dolor sit', muted: true },
-    { text: ' amet consectetur, adipiscing elit sed do eiusmod tempor incididunt ut labore.' },
+    { text: 'Parto por lo que la gente necesita en su día y construyo ' },
+    { text: 'el producto completo', muted: true },
+    { text: ', desde la pantalla hasta la arquitectura.' },
   ],
   paragraphs: [
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
-    'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-    'Curabitur pretium tincidunt lacus, nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.',
+    'En la adolescencia buscaba un hobby, algo que me interesara lo suficiente como para estudiarlo. Empecé con bootcamps básicos de frontend y ahí encontré la base: ver una idea convertirse en una pantalla que alguien puede usar. Desde entonces no solté el hilo. Hoy estudio Ingeniería Civil Informática en la Universidad San Sebastián, en cuarto año, y sigo construyendo.',
+    'Ahora construyo productos con IA aplicada a situaciones de la vida real: tecnología que resuelve un trámite, una duda o una decisión concreta de alguien. No me interesa la IA como demostración, sino como la pieza que hace que un producto realmente ayude. Más abajo vas a ver cómo se ve eso en la práctica.',
+    'Lo que me diferencia es la ambición de hacer el mejor producto para las personas: el que más las ayude y cambie su día. Por eso lo cubro de punta a punta, desde lo visual hasta las funcionalidades y una arquitectura que sostiene al producto. Esa forma de construir tiene piezas concretas, y son mis superpoderes.',
+  ],
+};
+
+// Superpoderes: retoma el diferenciador de Sobre mí y lo baja a cómo construyo.
+export const skills = {
+  id: 'superpoderes',
+  headline: {
+    eyebrow: 'Superpoderes',
+    title: 'CÓMO CONSTRUYO',
+    lead: 'Quiero hacer el producto que más ayude a las personas. Por eso lo cubro de punta a punta: la interfaz, las funciones con IA y la arquitectura en la nube que lo sostiene.',
+  },
+  groups: [
+    { title: 'Interfaz', description: 'Interfaces que se entienden a la primera y se mueven con intención.',
+      items: ['React', 'Vite', 'JavaScript', 'GSAP', 'Three.js'] },
+    { title: 'Funcionalidad e IA', description: 'Funciones con IA aplicada a situaciones reales, con reglas que se pueden explicar.',
+      items: ['JavaScript', 'Amazon Bedrock'] },
+    { title: 'Arquitectura en la nube', description: 'Una base en AWS que sostiene el producto y lo entrega rápido.',
+      items: ['AWS Amplify', 'Amazon CloudFront', 'AWS Lambda'] },
   ],
 };
 
 export const projects = {
   id: 'proyectos',
+  intro: {
+    eyebrow: 'Proyectos',
+    title: 'LA PRUEBA',
+    lead: 'Tres proyectos muestran esos superpoderes en uso: uno con IA para familias, uno de interfaz con un objetivo de negocio y uno que aún estoy construyendo.',
+  },
+  // Línea de paso hacia la oficina 3D, al cierre de la sección.
+  outro: 'Si prefieres conversar antes que leer, entra a la oficina: mis agentes te cuentan cada parte.',
   // Cada proyecto: nombre y rol, descripción y sus cards (el número 01, 02… se genera en orden).
   items: [
     {
-      name: 'Nombre del proyecto',
-      role: 'Rol en el proyecto',
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+      name: 'Rumbo a Casa',
+      role: 'Frontend e interfaz',
+      description: 'Las familias chilenas deben orientarse entre cuatro subsidios de vivienda del Estado. Construí un asistente que conversa en lenguaje simple, decide la elegibilidad con un motor de reglas que cita el decreto detrás de cada respuesta y arma la lista de documentos para postular. Es una app web en React, bilingüe y mobile-first, sobre CloudFront, Lambda y Bedrock. Ganó la categoría Social Good del hackathon AWS Zero to Shipped.',
       // Sin `image` se muestra el marco de relleno; `alt` describe la imagen.
+      // Capturas de la app en vivo (modo demo, familia ficticia), compuestas con la paleta de Rumbo a Casa.
       cards: [
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Conversación guiada', image: '/proyectos/rumbo-conversacion.jpg', alt: 'Rumbo a Casa en un teléfono: la conversación con el asistente y el avance de cinco pasos, todos completos' },
+        { title: 'Elegibilidad con su fuente', image: '/proyectos/rumbo-resultado.jpg', alt: 'Rumbo a Casa en escritorio: el resultado dice que la familia califica para 3 programas, cada uno con su sello y el decreto que lo respalda' },
+        { title: 'Papeles para postular', image: '/proyectos/rumbo-documentos.jpg', alt: 'Rumbo a Casa en escritorio: la lista de documentos de DS49 con su barra de avance y casillas para marcar lo que ya está guardado' },
       ],
     },
     {
-      name: 'Nombre del proyecto',
-      role: 'Rol en el proyecto',
-      description: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      name: 'Inkvibe',
+      role: 'Interfaz visual',
+      description: 'Inkvibe necesitaba que su web llevara a las personas a descargar la app móvil, el objetivo principal del equipo. Partí de una base existente, construí y mejoré la interfaz visual y diseñé una experiencia que conduce al usuario hasta esa descarga. Es la prueba de que lo visual puede servir a un objetivo de negocio.',
       cards: [
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Interfaz renovada', alt: 'Inkvibe: la interfaz web renovada' },
+        { title: 'Camino a la descarga', alt: 'Inkvibe: el recorrido que lleva al usuario a descargar la app' },
+        { title: 'Objetivo de la web', alt: 'Inkvibe: el llamado a descargar la app móvil' },
       ],
     },
     {
-      name: 'Nombre del proyecto',
-      role: 'Rol en el proyecto',
-      description: 'Curabitur pretium tincidunt lacus, nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.',
+      name: 'Zam',
+      role: 'Producto en construcción',
+      description: 'Zam está en construcción: hoy existen el logo y la idea. El minimarket y la tienda de conveniencia compiten con supermercados que saben y controlan su información, y eso les da una ventaja enorme. Zam busca poner a esos negocios al mismo nivel, con los datos que hoy no tienen. Es el siguiente paso de lo que vengo construyendo: IA y producto al servicio de quien más lo necesita.',
       cards: [
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
-        { title: 'Título de la card', alt: 'Imagen de ejemplo' },
+        { title: 'Logo de Zam', alt: 'Logo de Zam' },
+        { title: 'El problema', alt: 'Zam: la brecha de información entre el minimarket y el supermercado' },
+        { title: 'Hacia dónde va', alt: 'Zam: hacia dónde va el producto' },
       ],
     },
   ],
@@ -91,7 +124,7 @@ export const projects = {
 export const office = {
   id: 'oficina',
   title: 'Visita mi oficina',
-  subtitle: 'Gira la maqueta y haz clic en un agente',
+  subtitle: 'Gira la maqueta, elige a un agente y pregúntale lo que quieras saber de mí.',
   office: {
     viewsLabel: 'Vista',
     views: [
@@ -101,14 +134,14 @@ export const office = {
     agentsLabel: 'Agentes',
     agents: [
       { id: 'recepcion', name: 'recepción', section: 'Sobre mí',
-        role: 'Te recibe en la entrada y te cuenta quién soy.',
-        questions: ['¿Quién es Augusto?', '¿Qué estudia?', '¿Qué está buscando?'] },
+        role: 'Mi agente de recepción te recibe y te cuenta quién soy y de dónde vengo.',
+        questions: ['¿Quién es Augusto?', '¿Cómo empezó en la programación?', '¿Qué quiere construir con IA?'] },
       { id: 'arquitecto', name: 'arquitecto', section: 'Proyectos',
-        role: 'Explica mis proyectos y cómo los construí, frente a la pizarra.',
-        questions: ['¿Qué es Helix?', '¿Qué hizo en Inkvibe?', '¿Cómo diseña una arquitectura?'] },
+        role: 'Mi agente de proyectos te explica, frente a la pizarra, qué construí y cómo.',
+        questions: ['¿Cómo se construyó Rumbo a Casa?', '¿Qué hizo en Inkvibe?', '¿Qué es Zam y en qué etapa está?'] },
       { id: 'stack', name: 'stack', section: 'Superpoderes técnicos',
-        role: 'Mis tecnologías, lo que sé de IA y cómo contactarme.',
-        questions: ['¿Qué tecnologías usa?', '¿Qué sabe de IA?', '¿Cómo lo contacto?'] },
+        role: 'Mi agente de superpoderes te muestra cómo construyo, del diseño a la arquitectura.',
+        questions: ['¿Qué tecnologías usa?', '¿Cómo aplica la IA a problemas reales?', '¿Qué hace en AWS?'] },
     ],
     hint: 'Arrastra para girar · clic en un agente',
     note: 'Boceto: aquí se abre el chat del agente',
@@ -120,8 +153,8 @@ export const office = {
 export const contact = {
   id: 'contacto',
   headline: {
-    eyebrow: 'Lorem ipsum',
-    title: 'AMET CONSECTETUR',
-    lead: 'Curabitur sodales ligula in libero. Sed dignissim lacinia nunc, curabitur tortor pellentesque nibh.',
+    eyebrow: 'Conversemos',
+    title: 'CONSTRUYAMOS ALGO JUNTOS',
+    lead: 'Recorriste mi historia, mis proyectos y mi oficina. Si tienes una idea o un problema real que resolver, escríbeme y lo conversamos.',
   },
 };
