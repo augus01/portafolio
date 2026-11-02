@@ -104,7 +104,7 @@ export const projects = {
       cards: [
         { title: 'Landing en móvil', image: '/proyectos/inkvibe-movil.jpg', alt: 'Inkvibe en un teléfono: el inicio del landing con el titular contra los malos tatuajes, el botón Descarga la app y los botones de App Store y Google Play' },
         { title: 'Descubre artistas', image: '/proyectos/inkvibe-descubre.jpg', alt: 'Inkvibe en un teléfono: la sección Descubre muestra una galería de tatuajes y un buscador de artistas, con un índice lateral de Descubre, Agenda, Tatúate y Confianza' },
-        { title: 'Landing en escritorio', image: '/proyectos/inkvibe-landing.jpg', alt: 'Inkvibe en escritorio: el mismo inicio del landing con el llamado a descargar la app y los botones de App Store y Google Play' },
+        { title: 'Descarga InkVibe', image: '/proyectos/inkvibe-descarga.jpg', alt: 'Inkvibe: la sección final del landing con el titular Encuentra a tu artista. Descarga InkVibe, los botones de App Store y Google Play y un teléfono con las notificaciones de la app' },
       ],
     },
     {
