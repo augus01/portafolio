@@ -1,5 +1,5 @@
 // Contenido del landing. La narrativa es un solo hilo: Hero (promesa) → Sobre mí (quién soy) →
-// Superpoderes (cómo construyo) → Proyectos (la prueba) → Oficina (conversa con mis agentes) → Contacto.
+// Superpoderes (cómo construyo) → Proyectos (la prueba) → Contacto (recepción, que te lleva a la oficina).
 
 export const nav = {
   items: [
@@ -21,7 +21,7 @@ export const mobileMenu = {
     { label: 'Proyectos', href: '#proyectos' },
     { label: 'Contacto', href: '#contacto' },
   ],
-  cta: { label: 'Escribe un mensaje', href: '#contacto' },
+  cta: { label: 'Pasa por recepción', href: '#contacto' },
   secondary: { label: 'GitHub', href: 'https://github.com/augus01', external: true },
   meta: 'Ingeniería Civil Informática · Santiago',
 };
@@ -139,42 +139,21 @@ export const projects = {
   ],
 };
 
-// "Visita mi oficina" (función creativa): cada agente atiende una sección del portafolio.
-export const office = {
-  id: 'oficina',
-  title: 'Visita mi oficina',
-  subtitle: 'Gira la maqueta, elige a un agente y pregúntale lo que quieras saber de mí.',
-  office: {
-    viewsLabel: 'Vista',
-    views: [
-      { id: 'iso', label: 'Isométrica' },
-      { id: 'top', label: 'Planta' },
-    ],
-    agentsLabel: 'Agentes',
-    agents: [
-      { id: 'recepcion', name: 'recepción', section: 'Sobre mí',
-        role: 'Mi agente de recepción te recibe y te cuenta quién soy y de dónde vengo.',
-        questions: ['¿Quién es Augusto?', '¿Cómo empezó en la programación?', '¿Qué quiere construir con IA?'] },
-      { id: 'arquitecto', name: 'arquitecto', section: 'Proyectos',
-        role: 'Mi agente de proyectos te explica, frente a la pizarra, qué construí y cómo.',
-        questions: ['¿Cómo se construyó Rumbo a Casa?', '¿Qué hizo en Inkvibe?', '¿Qué es Zam y en qué etapa está?'] },
-      { id: 'stack', name: 'stack', section: 'Superpoderes técnicos',
-        role: 'Mi agente de superpoderes te muestra cómo construyo, del diseño a la arquitectura.',
-        questions: ['¿Qué tecnologías usa?', '¿Cómo aplica la IA a problemas reales?', '¿Qué hace en AWS?'] },
-    ],
-    hint: 'Arrastra para girar · clic en un agente',
-    note: 'Boceto: aquí se abre el chat del agente',
-    closeLabel: 'Volver a la oficina',
-    fallback: 'No se pudo abrir la vista 3D en este navegador.',
-  },
-};
-
+// Contacto: en vez de formulario, el agente de recepción en su escritorio 3D. "Pasa a la oficina" es la pista
+// visible de la función creativa ("Visita mi oficina", en /oficina/; contenido en src/content/office.js).
 export const contact = {
   id: 'contacto',
   headline: {
-    eyebrow: 'Conversemos',
-    title: ['Construyamos', 'algo juntos'],
-    lead: 'Recorriste mi historia, mis proyectos y mi oficina. Si tienes una idea o un problema real que resolver, escríbeme y lo conversamos.',
+    eyebrow: 'Contacto',
+    title: ['Pasa por', 'recepción'],
+    lead: '¿Tienes un proyecto, una práctica o una idea con IA? Aquí no hay formulario: pasa por recepción y saluda.',
+  },
+  enter: { label: 'Pasa a la oficina', href: '/oficina/' },
+  meta: 'Chile · GMT−3',
+  hint: 'Clic en el personaje o en el timbre',
+  desk: {
+    lines: ['¡Hola! Soy recepción', 'Deja tu mensaje para Augusto', '¿Pasas a la oficina? Te llevo', 'Toca el timbre si quieres'],
+    follow: '¡Sígueme!',
   },
 };
 

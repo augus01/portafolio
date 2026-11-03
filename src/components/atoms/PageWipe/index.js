@@ -1,0 +1,1 @@
+export { PageWipe } from './PageWipe';

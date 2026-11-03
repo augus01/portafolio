@@ -3,6 +3,9 @@ const PATHS = {
   menu: ['M4 12h16', 'M4 6h16', 'M4 18h16'],
   x: ['M18 6 6 18', 'm6 6 12 12'],
   'arrow-up-right': ['M7 7h10v10', 'M7 17 17 7'],
+  'arrow-right': ['M5 12h14', 'm12 5 7 7-7 7'],
+  'arrow-left': ['m12 19-7-7 7-7', 'M19 12H5'],
+  list: ['M3 12h.01', 'M3 18h.01', 'M3 6h.01', 'M8 12h13', 'M8 18h13', 'M8 6h13'],
 };
 
 export function Icon({ name, size = 'md', label, className }) {

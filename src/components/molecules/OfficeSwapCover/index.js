@@ -1,0 +1,1 @@
+export { OfficeSwapCover } from './OfficeSwapCover';

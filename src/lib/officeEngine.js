@@ -1,17 +1,25 @@
-// Motor de la oficina 3D (Three.js r128), portado del artefacto "Landing · oficina" (office-engine.js).
-// La escena (decorado, personajes y huevos de pascua) llega en `scene`; los textos de los agentes, en `agents`.
-// El panel y los botones los dibuja React: el motor solo avisa con `onChange({ active, mode })`.
+// Motor de la oficina 3D (Three.js r128), portado del artefacto "Hero · Augusto Pinto" (office-engine.js, modo chat).
+// El decorado y los personajes llegan en `theme` (src/lib/officeThemes.js); los nombres de los agentes, en `agents`.
+// Un clic en un agente no abre panel: lo marca y avisa con `onPick(id | null)`; la conversación la dibuja React.
+// Los globos de diálogo sobre cada agente se muestran con `say({ id: texto })` y el anillo del que habla con `speak(id)`.
 import * as THREE from 'three';
 import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
 
-export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: content, onChange }) {
-  if (!stage || !holder || !labelsEl) return null;
+// Puesto fijo de cada agente en la planta: posición, zona de clic y punto de la cámara. Cada oficina puede moverlo.
+const SPOTS = {
+  recepcion: { pos: [2.6, 1.3, 1.55], hit: { c: [2.6, 1.0, 1.95], s: [3.0, 2.0, 1.6] } },
+  arquitecto: { pos: [-4.25, 1.3, 0], hit: { c: [-3.9, 1.0, 0], s: [1.9, 2.0, 2.8] } },
+  stack: { pos: [1.3, 1.3, -4.25], hit: { c: [1.6, 1.0, -3.9], s: [3.2, 2.0, 1.9] } },
+};
+
+export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) {
+  if (!stage || !holder || !labelsEl || !theme) return null;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let renderer;
   try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (e) { return null; }
   const off = { raf: 0, visible: true };
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-  renderer.setClearColor(cfg.clear);
+  renderer.setClearColor(theme.clear);
   renderer.localClippingEnabled = true;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -21,14 +29,19 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
 
   const scene = new THREE.Scene();
   const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 200);
-  scene.add(new THREE.HemisphereLight(cfg.hemi[0], cfg.hemi[1], cfg.hemi[2]));
-  const sun = new THREE.DirectionalLight(cfg.sun[0], cfg.sun[1]);
+  scene.add(new THREE.HemisphereLight(theme.hemi[0], theme.hemi[1], theme.hemi[2]));
+  const sun = new THREE.DirectionalLight(theme.sun[0], theme.sun[1]);
   sun.position.set(7, 14, 9);
   sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048);
   Object.assign(sun.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40 });
   sun.shadow.bias = -0.0006;
   scene.add(sun);
+
+  // Agentes: nombre del contenido, puesto del motor y, si la oficina lo cambia, el de la oficina.
+  const moved = theme.agents || {};
+  const AG = agents.map((a) => ({ ...a, ...SPOTS[a.id], ...(moved[a.id] || {}) }));
+  let active = null, hovered = null, speaking = null;
 
   // Ayudas de construcción: y es la base del objeto.
   const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.88, metalness: 0 }, o || {}));
@@ -40,17 +53,20 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     sphere: (r, m, x, y, z, sx, sy, sz) => { const g = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 20), m); if (sx) g.scale.set(sx, sy, sz); return place(g, x, y, z); },
     cone: (r, h, m, x, y, z) => place(new THREE.Mesh(new THREE.ConeGeometry(r, h, 24), m), x, y + h / 2, z),
     torus: (R, t, m, x, y, z, arc, rx, ry, rz) => { const g = new THREE.Mesh(new THREE.TorusGeometry(R, t, 8, 40, arc || Math.PI * 2), m); g.rotation.set(rx || 0, ry || 0, rz || 0); return place(g, x, y, z); },
+    arch: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 48, 1, false, Math.PI / 2, Math.PI), m); g.rotation.x = Math.PI / 2; return place(g, x, y, z); },
+    discZ: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 40), m); g.rotation.x = Math.PI / 2; return place(g, x, y, z); },
+    discX: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 40), m); g.rotation.z = Math.PI / 2; return place(g, x, y, z); },
     part: (geo, m, x, y, z) => { const g = new THREE.Mesh(geo, m); g.position.set(x, y, z); g.castShadow = true; return g; },
+    // Para animaciones del decorado: true si el visitante eligió a ese agente o si es el que está hablando.
+    isActive: (id) => (active && active.id === id) || (speaking && speaking.id === id),
   };
-  const extra = cfg.build(api) || {};
+  const extra = theme.build(api) || {};
 
-  // Agentes: posición y zona de clic vienen de la escena; nombre, sección y preguntas, del contenido.
-  const AGENTS = content.map((c) => ({ ...c, ...cfg.spots[c.id] }));
   const hitMat = new THREE.MeshBasicMaterial({ visible: false });
-  const ringMat = new THREE.MeshBasicMaterial({ color: cfg.ring, transparent: true, opacity: 0.9 });
+  const ringMat = new THREE.MeshBasicMaterial({ color: theme.ring, transparent: true, opacity: 0.9 });
   const hitboxes = [];
-  AGENTS.forEach((a) => {
-    const g = cfg.makeAgent(api, a.id);
+  AG.forEach((a) => {
+    const g = theme.makeAgent(api, a.id);
     g.position.set(...a.pos);
     g.rotation.y = Math.PI / 4;
     scene.add(g);
@@ -68,7 +84,7 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     hitboxes.push(hb);
   });
 
-  // Huevos de pascua: la escena devuelve { eggs: [{ c, s, anim(t) }] }; un clic en la zona los abre o cierra.
+  // Huevos de pascua: la oficina devuelve { eggs: [{ c, s, anim(t) }] }; un clic en la zona los abre o cierra.
   const ray = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
   const eggs = extra.eggs || [];
@@ -90,7 +106,7 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   const pickEgg = (e) => { if (!eggBoxes.length) return null; const hit = cast(e, eggBoxes); return hit ? hit.object.userData.egg : null; };
   const pick = (e) => { const hit = cast(e, hitboxes); return hit ? hit.object.userData.agent : null; };
 
-  // Etiquetas HTML sobre la escena.
+  // Etiquetas HTML sobre la escena y un globo de diálogo por agente.
   const labels = [];
   const addLabel = (text, cls, getPos) => {
     const el = document.createElement('div');
@@ -99,16 +115,27 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     el.setAttribute('aria-hidden', 'true');
     labelsEl.appendChild(el);
     labels.push({ el, getPos });
+    return el;
   };
-  AGENTS.forEach((a) => addLabel(a.name, 'agent', () => new THREE.Vector3(a.pos[0], a.mesh.position.y + 0.75, a.pos[2])));
-  (cfg.labels || []).forEach(([t, p]) => addLabel(t, 'deco', () => new THREE.Vector3(...p)));
+  AG.forEach((a) => { a.tagEl = addLabel(a.name, 'agent', () => new THREE.Vector3(a.pos[0], a.mesh.position.y + 0.75, a.pos[2])); });
+  (theme.labels || []).forEach(([t, p]) => addLabel(t, 'deco', () => new THREE.Vector3(...p)));
+  const says = {};
+  AG.forEach((a) => {
+    const el = document.createElement('div');
+    el.className = 'ap-off__say ap-off__say--' + a.id;
+    el.setAttribute('aria-hidden', 'true');
+    const nm = document.createElement('span'); nm.className = 'ap-off__sayname'; nm.textContent = a.name;
+    const tx = document.createElement('span'); tx.className = 'ap-off__saytext';
+    el.append(nm, tx);
+    labelsEl.appendChild(el);
+    says[a.id] = { el, tx, on: false };
+  });
 
   // Cámara isométrica con giro limitado.
   const view = { theta: Math.PI / 4, el: Math.atan(1 / Math.SQRT2), size: 7.2, target: new THREE.Vector3(0, 0.6, 0) };
   const goal = { theta: view.theta, el: view.el, size: view.size, target: view.target.clone() };
   const TH_MIN = 0.0, TH_MAX = Math.PI / 2 - 0.12;
-  let mode = 'iso', active = null, hovered = null;
-  const notify = () => onChange && onChange({ active: active ? active.id : null, mode });
+  let mode = 'iso';
   const baseSize = () => 7.2 * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
   const setOverview = () => {
     goal.target.set(0, 0.6, 0);
@@ -120,7 +147,7 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     const w = stage.clientWidth, h = stage.clientHeight;
     if (!w || !h) return;
     renderer.setSize(w, h);
-    if (!active) setOverview();
+    setOverview();
   };
   resize();
   view.size = goal.size;
@@ -140,17 +167,8 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     cam.lookAt(view.target);
   };
 
-  const openAgent = (a) => {
-    active = a;
-    goal.target.set(...a.focus);
-    goal.size = Math.min(3.0, baseSize() * 0.55);
-    notify();
-  };
-  const closeAgent = () => {
-    active = null;
-    setOverview();
-    notify();
-  };
+  // Elegir un agente (o soltarlo con un segundo clic) avisa a la página.
+  const pickAgent = (a) => { active = active === a ? null : a; if (onPick) onPick(active ? active.id : null); kick(); };
 
   // Puntero: girar, hover, clic.
   let drag = null;
@@ -173,7 +191,7 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     canvas.classList.remove('dragging');
     const egHit = (drag && !drag.moved) ? pickEgg(e) : null;
     if (egHit) egHit.on = !egHit.on;
-    else if (drag && !drag.moved) { const a = pick(e); if (a) openAgent(a); else if (active) closeAgent(); }
+    else if (drag && !drag.moved) { const a = pick(e); if (a || active) pickAgent(a || active); }
     drag = null;
   };
   const onCancel = () => { drag = null; canvas.classList.remove('dragging'); };
@@ -184,9 +202,6 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   canvas.addEventListener('pointercancel', onCancel);
   canvas.addEventListener('pointerleave', onLeave);
 
-  // Bucle: solo corre mientras la oficina está en pantalla.
-  const clock = new THREE.Clock();
-  const v = new THREE.Vector3();
   // Tope de 60 fps para todos; en modo liviano, sombras a 1024 y pixelRatio 1; en el mínimo, además 30 fps.
   const cap = createFrameCap(60);
   const applyTier = (tier) => {
@@ -201,6 +216,10 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   };
   applyTier(getPerfTier());
   const offTier = onPerfTier(applyTier);
+
+  // Bucle: solo corre mientras la oficina está en pantalla.
+  const clock = new THREE.Clock();
+  const v = new THREE.Vector3();
   const frame = (now) => {
     off.raf = 0;
     if (!off.visible || document.hidden) return;
@@ -212,9 +231,9 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     view.size += (goal.size - view.size) * k;
     view.target.lerp(goal.target, k);
     updateCamera();
-    AGENTS.forEach((a, i) => {
+    AG.forEach((a, i) => {
       a.mesh.position.y = a.base + (reduced ? 0 : Math.sin(t * 1.6 + i * 2) * 0.06);
-      const on = a === hovered || a === active;
+      const on = a === hovered || a === active || a === speaking;
       a.ring.visible = on;
       const s = on ? 1.12 : 1;
       a.mesh.scale.setScalar(a.mesh.scale.x + (s - a.mesh.scale.x) * 0.2);
@@ -234,21 +253,58 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
       l.el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -100%)`;
       l.el.style.display = (Math.abs(v.x) > 1.05 || Math.abs(v.y) > 1.05) ? 'none' : '';
     });
+    // Globos sobre la cabeza del agente sin salirse del recuadro; la colita sigue apuntando al agente.
+    // En pantallas angostas se apilan arriba, a lo ancho, para no tapar la maqueta.
+    const narrow = w < 560;
+    let stackY = 52;
+    AG.forEach((a) => {
+      const s = says[a.id];
+      if (!s.on) return;
+      a.tagEl.style.display = 'none';
+      s.el.classList.toggle('is-docked', narrow);
+      if (narrow) {
+        s.el.style.maxWidth = (w - 16) + 'px';
+        s.el.style.transform = `translate(8px, ${stackY}px)`;
+        stackY += s.el.offsetHeight + 6;
+        return;
+      }
+      s.el.style.maxWidth = '';
+      v.set(a.pos[0], a.mesh.position.y + 0.5, a.pos[2]).project(cam);
+      const x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
+      const bw = s.el.offsetWidth, bh = s.el.offsetHeight;
+      const cx = Math.max(bw / 2 + 8, Math.min(w - bw / 2 - 8, x));
+      const top = Math.max(8, y - bh - 16);
+      s.el.style.transform = `translate(${Math.round(cx - bw / 2)}px, ${Math.round(top)}px)`;
+      s.el.style.setProperty('--tail', Math.round(Math.max(18, Math.min(bw - 18, bw / 2 + (x - cx)))) + 'px');
+    });
     off.raf = requestAnimationFrame(frame);
   };
-  const kick = () => { if (!off.raf && off.visible && !document.hidden) off.raf = requestAnimationFrame(frame); };
+  function kick() { if (!off.raf && off.visible && !document.hidden) off.raf = requestAnimationFrame(frame); }
   const io = new IntersectionObserver((es) => { off.visible = es[0].isIntersecting; kick(); }, { threshold: 0 });
   io.observe(stage);
-  const ro = new ResizeObserver(resize);
+  const ro = new ResizeObserver(() => { resize(); kick(); });
   ro.observe(stage);
   document.addEventListener('visibilitychange', kick);
   kick();
 
+  const byId = (id) => AG.find((x) => x.id === id) || null;
   return {
-    // Abre el agente o, si ya estaba abierto, vuelve a la vista general (como los botones del artefacto).
-    toggle(id) { const a = AGENTS.find((x) => x.id === id); if (!a) return; if (active === a) closeAgent(); else openAgent(a); },
-    close() { if (active) closeAgent(); },
-    setMode(m) { mode = m; if (active) closeAgent(); else { setOverview(); notify(); } },
+    // Marca al agente elegido desde los botones de la página (sin volver a avisar con onPick).
+    select(id) { active = byId(id); kick(); },
+    // Anillo sobre el agente que acaba de responder.
+    speak(id) { speaking = byId(id); kick(); },
+    // say({ arquitecto: 'texto' }): muestra esos globos y oculta los demás.
+    say(map) {
+      AG.forEach((a) => {
+        const s = says[a.id];
+        const t = map && map[a.id];
+        s.on = !!t; s.tx.textContent = t || '';
+        s.el.classList.toggle('is-on', s.on);
+        if (!s.on) a.tagEl.style.display = '';
+      });
+      kick();
+    },
+    setMode(m) { mode = m; setOverview(); kick(); },
     dispose() {
       if (off.raf) cancelAnimationFrame(off.raf);
       offTier();
@@ -260,8 +316,14 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
       canvas.removeEventListener('pointercancel', onCancel);
       canvas.removeEventListener('pointerleave', onLeave);
       labels.forEach((l) => l.el.remove());
-      scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+      Object.values(says).forEach((s) => s.el.remove());
+      // Libera geometrías, materiales y el contexto WebGL: así se puede cambiar de oficina muchas veces seguidas.
+      scene.traverse((o) => {
+        if (o.geometry) o.geometry.dispose();
+        if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { if (m.map) m.map.dispose(); m.dispose(); });
+      });
       renderer.dispose();
+      if (renderer.forceContextLoss) renderer.forceContextLoss();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     },
   };

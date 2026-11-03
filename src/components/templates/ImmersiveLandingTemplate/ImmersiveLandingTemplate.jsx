@@ -6,6 +6,7 @@ import { Footer } from '../../organisms/Footer';
 import { MobileMenu } from '../../organisms/MobileMenu';
 import { useImmersiveScroll } from '../../../hooks/useImmersiveScroll';
 import { useMobileMenu } from '../../../hooks/useMobileMenu';
+import { useHashOnLoad } from '../../../hooks/useHashOnLoad';
 
 // Estructura del landing: nav sticky, hero fijo durante un pin corto (~0,35 pantallas) y la página que sigue.
 // Con animación, la página sube un viewport y se funde encima del hero: nunca se ven los dos a la vez.

@@ -1,38 +1,60 @@
-import { useRef } from 'react';
+import { useId, useMemo, useRef } from 'react';
 import { OfficeButton } from '../../atoms/OfficeButton';
-import { OfficeAgentPanel } from '../../molecules/OfficeAgentPanel';
-import { useOffice } from '../../../hooks/useOffice';
+import { OfficeChatHistory } from '../../molecules/OfficeChatHistory';
+import { OfficeSwapCover } from '../../molecules/OfficeSwapCover';
+import { OfficeChatDock } from '../OfficeChatDock';
+import { useOfficeScene } from '../../../hooks/useOfficeScene';
+import { useOfficeChat } from '../../../hooks/useOfficeChat';
 
-// Escenario de la oficina 3D: lienzo, etiquetas, barra de vistas y agentes, pista y panel del agente.
-// Arrastrar gira la maqueta; clic en un agente (o su botón) acerca la cámara y abre el panel.
-export function Office({ agents, views, viewsLabel, agentsLabel, hint, note, closeLabel, fallback, className }) {
-  const stageRef = useRef(null);
+// Maqueta 3D de la oficina con la conversación encima: vistas y agentes arriba, globos sobre cada agente,
+// caja para escribir abajo e historial plegable. El cambio de oficina (`swap`) la tapa con cuadrados.
+// Arrastrar gira la maqueta; clic en un agente (o en su botón) lo elige para hablarle directo.
+export function Office({ stageRef, themeId, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, className }) {
   const canvasRef = useRef(null);
   const labelsRef = useRef(null);
-  const office = useOffice(stageRef, canvasRef, labelsRef, agents);
-  const active = agents.find((a) => a.id === office.active) || null;
+  const historyId = useId();
+  const agentList = useMemo(() => Object.values(agents), [agents]);
+  const chatRef = useRef(null);
+  const scene = useOfficeScene({
+    stageRef, canvasRef, labelsRef, themeId, agents: agentList,
+    onPick: (id) => chatRef.current?.setTo(id, true),
+  });
+  const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail });
+  chatRef.current = chat;
 
   return (
-    <div className={['ap-off', 'ap-off--original', className].filter(Boolean).join(' ')}>
+    <div className={['ap-off', `ap-off--${themeId}`, className].filter(Boolean).join(' ')}>
       <div className="ap-off__stage" ref={stageRef}>
         <div className="ap-off__canvas" ref={canvasRef}>
-          {office.failed && <p className="ap-off__fallback body">{fallback}</p>}
+          {scene.failed && <p className="ap-off__fallback body">{stage.fallback}</p>}
         </div>
         <div className="ap-off__labels" ref={labelsRef} />
         <div className="ap-off__bar">
-          <div className="ap-off__row" role="group" aria-label={viewsLabel}>
-            {views.map((v) => (
-              <OfficeButton key={v.id} pressed={office.mode === v.id} onClick={() => office.setMode(v.id)}>{v.label}</OfficeButton>
+          <div className="ap-off__row ap-off__row--views" role="group" aria-label={stage.viewsLabel}>
+            {stage.views.map((v) => (
+              <OfficeButton key={v.id} pressed={scene.mode === v.id} onClick={() => scene.setMode(v.id)}>{v.label}</OfficeButton>
             ))}
           </div>
-          <div className="ap-off__row" role="group" aria-label={agentsLabel}>
-            {agents.map((a) => (
-              <OfficeButton key={a.id} pressed={office.active === a.id} onClick={() => office.toggle(a.id)}>{a.name}</OfficeButton>
+          <div className="ap-off__row" role="group" aria-label={stage.agentsLabel}>
+            {agentList.map((a) => (
+              <OfficeButton key={a.id} pressed={chat.to === a.id} onClick={() => chat.setTo(chat.to === a.id ? null : a.id)}>{a.name}</OfficeButton>
             ))}
           </div>
         </div>
-        <p className={['ap-off__hint', 'label', active && 'is-hidden'].filter(Boolean).join(' ')}>{hint}</p>
-        <OfficeAgentPanel agent={active} closeLabel={closeLabel} note={note} onClose={office.close} />
+        <OfficeChatDock chat={chat} texts={texts} historyId={historyId} leadNote={leadEmail ? texts.lead.noteMail : texts.lead.noteDraft} />
+        <OfficeChatHistory
+          id={historyId}
+          open={chat.histOpen}
+          title={texts.historyLabel}
+          ariaLabel={texts.historyAria}
+          closeLabel={texts.closeHistory}
+          me={texts.me}
+          msgs={chat.msgs}
+          agents={agents}
+          onClose={chat.toggleHist}
+        />
+        <p className="ap-sr" aria-live="polite">{chat.live}</p>
+        <OfficeSwapCover swap={swap} label={swapLabel} target={swapTarget} />
       </div>
     </div>
   );

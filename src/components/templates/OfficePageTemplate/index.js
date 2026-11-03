@@ -1,0 +1,1 @@
+export { OfficePageTemplate } from './OfficePageTemplate';
