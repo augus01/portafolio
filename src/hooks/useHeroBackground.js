@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createHeroGL } from '../lib/heroGL';
+import { isSoftwareRenderer, raisePerfTier } from '../lib/perfTier';
 
 const PALETTE = ['shadow', 'teal', 'cyan', 'cyan-light', 'lime', 'ocre', 'rose'];
 
@@ -47,6 +48,8 @@ export function useHeroBackground(canvasRef, stageRef, motionRef) {
     try { gl = createHeroGL(canvas, pal); } catch { gl = null; }
     if (!gl) { setIsGL(false); return undefined; }
     setIsGL(true);
+    // WebGL sin GPU real (SwiftShader, llvmpipe…): directo al nivel mínimo.
+    if (isSoftwareRenderer(gl.rendererName())) raisePerfTier(2);
 
     let scale = Math.min(window.devicePixelRatio || 1, 1.5);
     const isStatic = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
