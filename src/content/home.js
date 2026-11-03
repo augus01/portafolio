@@ -144,6 +144,18 @@ export const office = {
   id: 'oficina',
   title: 'Visita mi oficina',
   subtitle: 'Gira la maqueta, elige a un agente y pregúntale lo que quieras saber de mí.',
+  // Cambio de serie: la oficina se redecora según la serie elegida, con una cortina de cuadrados mientras carga.
+  themes: {
+    label: 'Cambia la oficina según la serie',
+    nowLabel: 'Ahora',
+    loadingLabel: 'Cambiando de oficina',
+    items: [
+      { id: 'original', label: 'Original', place: 'Mi oficina de siempre' },
+      { id: 'madmen', label: 'Mad Men', place: 'Agencia de los años 60' },
+      { id: 'sopranos', label: 'Los Soprano', place: 'Trastienda de Nueva Jersey' },
+      { id: 'odisea', label: '2001 Odisea', place: 'Estación orbital, 1968' },
+    ],
+  },
   office: {
     viewsLabel: 'Vista',
     views: [

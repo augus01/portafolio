@@ -3,8 +3,13 @@
    Todas son de Google Fonts con licencia SIL Open Font License 1.1; solo el subconjunto latino.
    - Archivo (variable, ancho 62–125%, peso 100–900): nombre del hero y título del overlay.
    - Oswald (variable, peso 200–700): Sobre mí, Proyectos y menú móvil.
-   - Bricolage Grotesque 700 y Plus Jakarta Sans 500: solo las letras de los logos "Rumbo a Casa" y "Zam". */
+   - Bricolage Grotesque 700 y Plus Jakarta Sans 500: solo las letras de los logos "Rumbo a Casa" y "Zam".
+   - DM Serif Display 400, Playfair Display 700 itálica y Jost 300: nombre del agente en las oficinas Mad Men,
+     Los Soprano y 2001 Odisea. No se precargan: el navegador las baja solo al elegir esa serie. */
 @font-face { font-family: "Archivo"; font-style: normal; font-weight: 100 900; font-stretch: 62% 125%; font-display: swap; src: url("/fonts/Archivo-latin.woff2") format("woff2"); }
 @font-face { font-family: "Oswald"; font-style: normal; font-weight: 200 700; font-display: swap; src: url("/fonts/Oswald-latin.woff2") format("woff2"); }
 @font-face { font-family: "Bricolage Grotesque"; font-style: normal; font-weight: 700; font-display: swap; src: url("/fonts/BricolageGrotesque-700-rumbo.woff2") format("woff2"); }
 @font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url("/fonts/PlusJakartaSans-500-zam.woff2") format("woff2"); }
+@font-face { font-family: "DM Serif Display"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/DMSerifDisplay-400-latin.woff2") format("woff2"); }
+@font-face { font-family: "Playfair Display"; font-style: italic; font-weight: 700; font-display: swap; src: url("/fonts/PlayfairDisplay-italic-latin.woff2") format("woff2"); }
+@font-face { font-family: "Jost"; font-style: normal; font-weight: 300; font-display: swap; src: url("/fonts/Jost-latin.woff2") format("woff2"); }

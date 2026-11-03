@@ -111,6 +111,20 @@ La función creativa `#oficina` se aprobó en el artefacto "Landing · oficina",
 
 El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carácter ✕ del artefacto. Componentes: átomo `OfficeButton`, molécula `OfficeAgentPanel`, organismos `Office` y `OfficeSection`; lógica en `hooks/useOffice.js` y `lib/officeEngine.js`.
 
+### Cambio de serie (artefacto "Oficina · cambio de serie", 2 nov 2026)
+
+Junto al título, un selector cambia la oficina según la serie: **Original**, **Mad Men** (agencia de los años 60), **Los Soprano** (trastienda de Nueva Jersey) y **2001 Odisea** (estación orbital, 1968). Al elegir una, una cortina de cuadrados tapa solo el escenario (nace en la fila del centro y avanza de izquierda a derecha), un panel muestra el avance en 16 segmentos, se monta la oficina nueva por detrás (liberando el contexto WebGL de la anterior) y los cuadrados se retiran. Cada escena se descarga aparte al elegirla. Con `prefers-reduced-motion` los cuadrados aparecen y se van de una vez. En 2001 Odisea el anillo de voz del núcleo de IA "habla" cuando el agente stack está abierto.
+
+| Regla del sistema | Excepción del cambio de serie | Dónde |
+| --- | --- | --- |
+| Monocromo, sin acentos | Mad Men, Los Soprano y 2001 Odisea cambian los colores de la UI del escenario (fondo, borde, botones, etiquetas, panel y preguntas) a la paleta de cada serie. Original sigue en tokens. El selector y la cortina siempre usan tokens | `.ap-off--madmen`, `.ap-off--sopranos`, `.ap-off--odisea` en `src/styles/oficina.css` |
+| Familias del sistema | Nombre del agente en DM Serif Display 400 (34px), Playfair Display 700 itálica (32px) y Jost 300 en mayúsculas (26px, tracking .2em), alojadas en `/public/fonts` y sin precarga | `--off-name-*`, `src/styles/fuentes.css` |
+| Radios del sistema | Escenario de 10px (Mad Men), 4px (Los Soprano) y 14px (2001 Odisea); cápsula del selector de 28px | `--off-radius`, `--off-sw-radius` |
+| Escala tipográfica fija | Botones del selector en mono 12px | `--off-sw-size` |
+| Duraciones del sistema | Cada cuadrado crece en 220ms; los retardos de la cortina se calculan en `useOfficeSwap` | `--off-swap-cell`, `src/hooks/useOfficeSwap.js` |
+
+Componentes: moléculas `OfficeThemeSwitcher` y `OfficeSwapCurtain`; escenas en `src/lib/officeThemes/` (piezas comunes en `src/lib/officeKit.js`).
+
 ## Excepción aprobada (modo liviano de rendimiento)
 
 Aprobada el 2 nov 2026: en equipos o navegadores que no dan abasto (p. ej. Opera GX con GX Control, WebGL sin GPU), la página baja de calidad sola y mantiene todas las animaciones. Lógica en `src/lib/perfTier.js`: el ticker de GSAP mide la fluidez y, si la media de 60 cuadros supera 24 ms (~42 fps) o el renderizador WebGL es por software, sube un nivel. El nivel nunca baja y se publica en `<html data-perf="lite|min">`.

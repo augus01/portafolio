@@ -1,5 +1,7 @@
 // Motor de la oficina 3D (Three.js r128), portado del artefacto "Landing · oficina" (office-engine.js).
 // La escena (decorado, personajes y huevos de pascua) llega en `scene`; los textos de los agentes, en `agents`.
+// Cada oficina temática puede mover un agente con `scene.agents = { id: { pos, hit, focus } }` y consultar
+// `api.isActive(id)` en su `tick` (por ejemplo, el núcleo de IA de 2001 habla cuando stack está abierto).
 // El panel y los botones los dibuja React: el motor solo avisa con `onChange({ active, mode })`.
 import * as THREE from 'three';
 import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
@@ -30,6 +32,8 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   sun.shadow.bias = -0.0006;
   scene.add(sun);
 
+  let mode = 'iso', active = null, hovered = null;
+
   // Ayudas de construcción: y es la base del objeto.
   const M = (c, o) => new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.88, metalness: 0 }, o || {}));
   const place = (g, x, y, z) => { g.position.set(x, y, z); g.castShadow = true; g.receiveShadow = true; scene.add(g); return g; };
@@ -40,12 +44,16 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     sphere: (r, m, x, y, z, sx, sy, sz) => { const g = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 20), m); if (sx) g.scale.set(sx, sy, sz); return place(g, x, y, z); },
     cone: (r, h, m, x, y, z) => place(new THREE.Mesh(new THREE.ConeGeometry(r, h, 24), m), x, y + h / 2, z),
     torus: (R, t, m, x, y, z, arc, rx, ry, rz) => { const g = new THREE.Mesh(new THREE.TorusGeometry(R, t, 8, 40, arc || Math.PI * 2), m); g.rotation.set(rx || 0, ry || 0, rz || 0); return place(g, x, y, z); },
+    arch: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 48, 1, false, Math.PI / 2, Math.PI), m); g.rotation.x = Math.PI / 2; return place(g, x, y, z); },
+    discZ: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 40), m); g.rotation.x = Math.PI / 2; return place(g, x, y, z); },
+    discX: (r, t, m, x, y, z) => { const g = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t, 40), m); g.rotation.z = Math.PI / 2; return place(g, x, y, z); },
+    isActive: (id) => !!active && active.id === id,
     part: (geo, m, x, y, z) => { const g = new THREE.Mesh(geo, m); g.position.set(x, y, z); g.castShadow = true; return g; },
   };
   const extra = cfg.build(api) || {};
 
   // Agentes: posición y zona de clic vienen de la escena; nombre, sección y preguntas, del contenido.
-  const AGENTS = content.map((c) => ({ ...c, ...cfg.spots[c.id] }));
+  const AGENTS = content.map((c) => ({ ...c, ...cfg.spots[c.id], ...(cfg.agents && cfg.agents[c.id]) }));
   const hitMat = new THREE.MeshBasicMaterial({ visible: false });
   const ringMat = new THREE.MeshBasicMaterial({ color: cfg.ring, transparent: true, opacity: 0.9 });
   const hitboxes = [];
@@ -107,7 +115,6 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   const view = { theta: Math.PI / 4, el: Math.atan(1 / Math.SQRT2), size: 7.2, target: new THREE.Vector3(0, 0.6, 0) };
   const goal = { theta: view.theta, el: view.el, size: view.size, target: view.target.clone() };
   const TH_MIN = 0.0, TH_MAX = Math.PI / 2 - 0.12;
-  let mode = 'iso', active = null, hovered = null;
   const notify = () => onChange && onChange({ active: active ? active.id : null, mode });
   const baseSize = () => 7.2 * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
   const setOverview = () => {
@@ -260,8 +267,13 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
       canvas.removeEventListener('pointercancel', onCancel);
       canvas.removeEventListener('pointerleave', onLeave);
       labels.forEach((l) => l.el.remove());
-      scene.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) o.material.dispose(); });
+      // Libera geometrías, materiales y el contexto WebGL: así se puede cambiar de oficina muchas veces seguidas.
+      scene.traverse((o) => {
+        if (o.geometry) o.geometry.dispose();
+        if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.dispose());
+      });
       renderer.dispose();
+      if (renderer.forceContextLoss) renderer.forceContextLoss();
       if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
     },
   };
