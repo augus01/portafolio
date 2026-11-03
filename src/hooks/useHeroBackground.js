@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { createHeroGL } from '../lib/heroGL';
-import { isSoftwareRenderer, raisePerfTier } from '../lib/perfTier';
+import { createFrameCap, getPerfTier, isSoftwareRenderer, onPerfTier, raisePerfTier } from '../lib/perfTier';
 
 const PALETTE = ['shadow', 'teal', 'cyan', 'cyan-light', 'lime', 'ocre', 'rose'];
+// Escalones del modo liviano: cuadros por segundo del fondo y escala interna máxima (el fondo es difuso: no se nota).
+const TIERS = [null, { fps: 30, scale: 0.6 }, { fps: 30, scale: 0.45 }];
 
 // Máscara elíptica detrás del titular opcional: el shader oscurece solo ahí, según lo visible que esté el texto.
-function textBox(stage, canvas) {
-  const o = stage.querySelector('.ap-overlay');
-  const i = stage.querySelector('.ap-overlay__inner');
+// `o` e `i` (.ap-overlay y su interior) se buscan una sola vez al montar.
+function textBox(o, i, canvas) {
   if (!o || !i) return null;
   // Sin titular ni párrafo no hay nada que proteger: sin máscara (evita una franja oscura vacía).
   if (!i.textContent.trim()) return null;
@@ -52,6 +53,11 @@ export function useHeroBackground(canvasRef, stageRef, motionRef) {
     if (isSoftwareRenderer(gl.rendererName())) raisePerfTier(2);
 
     let scale = Math.min(window.devicePixelRatio || 1, 1.5);
+    // Tope de 60 fps para todos (en pantallas de 120/144 Hz es la mitad de trabajo); 30 fps en modo liviano.
+    const cap = createFrameCap(60);
+    let budget = 1 / 60, floor = 0.6;
+    const overlay = stage.querySelector('.ap-overlay');
+    const overInner = stage.querySelector('.ap-overlay__inner');
     const isStatic = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const drawStatic = () => gl.render(6.0, 0.9, 0, 0, 0);
     const size = () => {
@@ -70,6 +76,8 @@ export function useHeroBackground(canvasRef, stageRef, motionRef) {
     const frame = (now) => {
       loop = 0;
       if (!visible || document.hidden) return;
+      loop = requestAnimationFrame(frame);
+      if (!cap.ready(now)) return;
       const dt = Math.min(0.05, Math.max(0, (now - last) / 1000));
       last = now;
       t += dt;
@@ -83,17 +91,27 @@ export function useHeroBackground(canvasRef, stageRef, motionRef) {
       flow += dt * 0.28 * (1 + 1.4 * heroP + 1.6 * tun);
       drive = (drive + dt * (0.6 + 7.0 * tun)) % 1000;
       if (flow > 100) flow -= 100;
-      // Si el equipo no llega a ~50fps, baja la resolución interna (el fondo es difuso: no se nota).
+      // Si el fondo no llega a su ritmo objetivo, baja la resolución interna. Compara contra el presupuesto del tope,
+      // no contra un valor fijo: a 30 fps cada cuadro dura 33 ms por diseño y no debe leerse como lentitud.
       acc += dt; n += 1;
       if (n === 90) {
-        if (acc / 90 > 0.021 && scale > 0.6) { scale = Math.max(0.6, scale * 0.8); gl.resize(canvas.clientWidth, canvas.clientHeight, scale); }
+        if (acc / 90 > budget * 1.25 && scale > floor) { scale = Math.max(floor, scale * 0.8); gl.resize(canvas.clientWidth, canvas.clientHeight, scale); }
         acc = 0; n = 0;
       }
       cx += (tx - cx) * 0.06;
       cy += (ty - cy) * 0.06;
-      gl.render(t, flow, cx, -cy, heroP, textBox(stage, canvas), [tun, exit, drive]);
-      loop = requestAnimationFrame(frame);
+      gl.render(t, flow, cx, -cy, heroP, textBox(overlay, overInner, canvas), [tun, exit, drive]);
     };
+    const applyTier = (tier) => {
+      const cfg = TIERS[tier];
+      if (!cfg) return;
+      cap.setFps(cfg.fps);
+      budget = 1 / cfg.fps;
+      floor = 0.45;
+      if (scale > cfg.scale) { scale = cfg.scale; size(); }
+    };
+    applyTier(getPerfTier());
+    const offTier = onPerfTier(applyTier);
     const kick = () => {
       if (loop || !visible || document.hidden) return;
       last = performance.now();
@@ -116,6 +134,7 @@ export function useHeroBackground(canvasRef, stageRef, motionRef) {
 
     return () => {
       if (loop) cancelAnimationFrame(loop);
+      offTier();
       ro.disconnect();
       if (io) io.disconnect();
       if (onVis) document.removeEventListener('visibilitychange', onVis);
