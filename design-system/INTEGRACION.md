@@ -96,20 +96,24 @@ La vista móvil se aprobó en el lienzo "Movil" del mismo artefacto (30 oct 2026
 
 Los iconos del menú usan Lucide (`menu`, `x`) del átomo `Icon` con el trazo engrosado por CSS, en vez de los trazados propios del lienzo.
 
-## Excepciones aprobadas (Visita mi oficina)
+## Excepciones aprobadas (Contacto y Visita mi oficina)
 
-La función creativa `#oficina` se aprobó en el artefacto "Landing · oficina", versión **"Original con más vida"** (31 oct 2026), y va después de Proyectos como en el lienzo "Hero". Es una maqueta 3D (Three.js r128, `three@0.128.0`) de la oficina con tres agentes: recepción (Sobre mí), arquitecto (Proyectos) y stack (Superpoderes técnicos). Arrastrar gira la vista, un clic en un agente o en su botón acerca la cámara y abre su panel, Esc lo cierra; el cajón del rack y el closet esconden dos agentes más. Three.js se descarga aparte, solo cuando el escenario se acerca a la pantalla.
+Aprobadas en el artefacto **"Hero · Augusto Pinto"** (3 nov 2026). Contacto deja de ser un formulario: es **"Pasa por recepción"**, con el agente amarillo de recepción en su escritorio 3D (Three.js r128, `src/lib/contactDesk.js`). Respira, parpadea, mira al cursor, teclea si lo dejas tranquilo y salta al hacerle clic o al tocar el timbre. El botón amarillo **"Pasa a la oficina"** es la pista visible de la función creativa: recepción salta, dice "¡Sígueme!", tres franjas con los colores de los agentes tapan la pantalla y se abre la página **`/oficina/`**. "Volver a recepción" hace el mismo paso al revés y deja al visitante en `/#contacto`.
 
-| Regla del sistema | Excepción de la oficina | Dónde |
+La oficina vive en su propia página, a pantalla completa. Tiene cuatro versiones intercambiables (Original, Mad Men, Los Soprano, 2001 Odisea) y la conversación con los tres agentes encima: recepción (quién es Augusto y el recado), arquitecto (proyectos) y stack (tecnologías). Las respuestas salen de los temas de `src/content/office.js` (lógica pura con tests en `src/lib/officeChat.js`); el artefacto además usaba un modelo de IA del entorno del lienzo, que el sitio no tiene. Recepción toma nombre, necesidad y correo y arma la ficha del recado. Si `leadEmail` tiene un correo, "Enviar recado" abre el correo del visitante con el recado listo; si es `null`, la ficha lo dice como boceto. Three.js, el motor y los decorados se descargan solo en `/oficina/`; el escritorio de recepción, solo cuando Contacto se acerca a la pantalla.
+
+| Regla del sistema | Excepción | Dónde |
 | --- | --- | --- |
-| Monocromo, sin acentos | La maqueta 3D usa la paleta viva del artefacto (muebles, alfombra, sofá, personajes). La UI encima (botones, etiquetas, panel) sigue en tokens monocromos | `src/lib/officeScene.js` |
-| Escala tipográfica fija | Título y pista en Oswald 28px (500 y 400); botones, etiquetas y pista del escenario en mono 11px; nombre del agente en Oswald 500 28px en minúsculas; preguntas en Geist 15px | `--off-*` de `.ap-office` |
-| Tintas del sistema | Pista bajo el título en gris `#6b6e78` (~5:1 sobre el lienzo) | `--off-subtitle` |
-| Trazo de 1px | Bordes de 2px en escenario, botones, panel y preguntas; foco de 3px | `--off-stroke`, `--off-focus-width` |
-| Radios del sistema | Panel 22px, preguntas 14px, escenario 18px bajo 720px | `--off-panel-radius`, `--off-q-radius`, `--off-radius` |
-| Breakpoint de 600px | Bajo **720px** el escenario baja a `min(78svh, 640px)` (mín. 520px) y se ocultan las etiquetas decorativas | `src/styles/oficina.css` |
+| Monocromo, sin acentos | Color propio de cada agente (recepción `#f7c61b`, arquitecto `#2f54d4`, stack `#e0621f`) en el botón "Pasa a la oficina", los globos, el botón de enviar, los puntos del historial y las franjas del paso entre páginas. Las maquetas 3D usan la paleta viva de cada oficina | `--ap-agent-*` en `src/styles/oficina.css`; `src/lib/officeThemes.js`, `src/lib/contactDesk.js` |
+| Tokens de color en la UI | Mad Men, Los Soprano y 2001 Odisea pintan la UI del escenario (botones, etiquetas, caja del chat, historial) con su paleta; la Original usa solo tokens | `.ap-off--madmen`, `--sopranos`, `--odisea` (variables `--off-*`) |
+| Superficies del sistema | Ficha del recado en crema `#fffbea`, igual en las cuatro oficinas | `.ap-ofd__card` |
+| Escala tipográfica fija | Título de la oficina en Oswald 28px (22px bajo 720px); botones, etiquetas, globos de nombre y pistas en mono 10–13px; globos en Geist 15px; nombre de la oficina en el panel de carga en display 700 2rem en mayúsculas | `oficina.css`, `contacto.css` |
+| Trazo de 1px | Bordes de 2px en escenario, botones, caja del chat, globos y botón de recepción; foco de 3px | `--off-stroke`, `--ct-stroke` |
+| Radios del sistema | Caja del chat e historial 22px, globos 16px, selector de serie 28px, escenario 18px bajo 720px, globo de recepción 14px | `oficina.css`, `contacto.css` |
+| Breakpoint de 600px | Bajo **720px** la cabecera de la oficina se compacta (solo flecha de vuelta, título y series), se ocultan las vistas y las etiquetas decorativas y los globos se apilan arriba; bajo **900px** Contacto pasa a una columna | `oficina.css`, `contacto.css` |
+| Movimiento | Cambio de oficina con un barrido de cuadrados (72px) y panel de avance en 16 segmentos; paso entre páginas con tres franjas (420ms). Con `prefers-reduced-motion` no hay barrido ni franjas | `hooks/useThemeSwap.js`, `hooks/usePageWipe.js` |
 
-El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carácter ✕ del artefacto. Componentes: átomo `OfficeButton`, molécula `OfficeAgentPanel`, organismos `Office` y `OfficeSection`; lógica en `hooks/useOffice.js` y `lib/officeEngine.js`.
+Componentes: átomos `OfficeButton` y `PageWipe`; moléculas `OfficeThemeSwitch`, `OfficeLeadCard`, `OfficeChatHistory`, `OfficeSwapCover`; organismos `ContactSection`, `Office`, `OfficeChatDock`, `OfficeHeader`; plantilla `OfficePageTemplate`; página `OfficePage`. Lógica en `hooks/useOfficeScene.js`, `useOfficeChat.js`, `useThemeSwap.js`, `usePageWipe.js`, `useContactDesk.js` y `lib/officeEngine.js`, `officeThemes.js`, `officeKit.js`, `contactDesk.js`, `officeChat.js`. El build copia `dist/index.html` a `dist/oficina/index.html` (`vite.config.js`) y `main.jsx` elige la página por la ruta.
 
 ## Excepción aprobada (modo liviano de rendimiento)
 
@@ -117,8 +121,8 @@ Aprobada el 2 nov 2026: en equipos o navegadores que no dan abasto (p. ej. Opera
 
 | Nivel | Qué cambia | Dónde |
 | --- | --- | --- |
-| Todos | Fondo del hero y oficina con tope de 60 fps; la cinta de logos se pausa fuera de pantalla | `useHeroBackground.js`, `officeEngine.js`, `TechMarqueeRow` |
-| `lite` | Fondo del hero a 30 fps y escala interna máx. 0,6; oficina con pixelRatio 1 y sombras de 1024 | mismos archivos |
+| Todos | Fondo del hero, oficina y escritorio de recepción con tope de 60 fps; la cinta de logos se pausa fuera de pantalla | `useHeroBackground.js`, `officeEngine.js`, `contactDesk.js`, `TechMarqueeRow` |
+| `lite` | Fondo del hero a 30 fps y escala interna máx. 0,6; oficina con pixelRatio 1 y sombras de 1024; escritorio de recepción con pixelRatio 1 y sombras de 512 | mismos archivos |
 | `min` | Además: fondo a escala 0,45, oficina a 30 fps, sin grano, pills de la nav en `--surface-raised` sin vidrio y barra móvil en `--surface-canvas` sin desenfoque | `hero-inmersivo.css`, `movil.css` |
 
 Para revisar cada nivel a mano: `?perf=full`, `?perf=lite` o `?perf=min` en la URL.

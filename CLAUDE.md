@@ -86,5 +86,5 @@ Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un compo
 - Repo: https://github.com/augus01/portafolio.git (rama `main`).
 
 ## Pendiente de definir
-- Feature creativa: **"Visita mi oficina"** (maqueta 3D con agentes, sección `#oficina`). Falta definir qué hace cada agente al abrir su panel (hoy es un boceto).
+- Feature creativa: **"Visita mi oficina"**, página propia `/oficina/` (maqueta 3D con cuatro oficinas y chat con los tres agentes); la pista visible es "Pasa a la oficina" en Contacto. Falta definir a qué correo llega el recado de recepción (`leadEmail` en `src/content/office.js`) o un envío real con Lambda + SES.
 - Contenido real: historia, skills, proyectos (hoy hay lorem ipsum del artefacto aprobado)
