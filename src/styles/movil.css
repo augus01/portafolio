@@ -28,6 +28,8 @@
   .ap-mnav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);box-sizing:border-box;padding:var(--space-2) var(--space-4);
     transition:background var(--dur-enter) var(--ease-out),border-color var(--dur-enter) var(--ease-out)}
   .ap-mnav[data-tone="light"]{background:var(--m-bar-surface);-webkit-backdrop-filter:blur(var(--m-bar-blur));backdrop-filter:blur(var(--m-bar-blur));border-bottom:var(--stroke-hairline) solid var(--border-hairline)}
+  /* Nivel mínimo de rendimiento: barra sólida, sin desenfoque. */
+  html[data-perf="min"] .ap-mnav[data-tone="light"]{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--surface-canvas)}
   .ap-mnav[data-tone="dark"]{border-bottom:var(--stroke-hairline) solid transparent}
   /* Botón de solo icono, sin píldora: blanco sobre el hero, tinta oscura sobre la página clara. */
   .ap-mnav__toggle{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:var(--m-toggle-size);height:var(--m-toggle-size);padding:0;margin-right:var(--m-toggle-nudge);border:0;border-radius:var(--radius-pill);background:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}

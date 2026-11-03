@@ -2,6 +2,7 @@
 // La escena (decorado, personajes y huevos de pascua) llega en `scene`; los textos de los agentes, en `agents`.
 // El panel y los botones los dibuja React: el motor solo avisa con `onChange({ active, mode })`.
 import * as THREE from 'three';
+import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
 
 export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: content, onChange }) {
   if (!stage || !holder || !labelsEl) return null;
@@ -186,9 +187,24 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
   // Bucle: solo corre mientras la oficina está en pantalla.
   const clock = new THREE.Clock();
   const v = new THREE.Vector3();
-  const frame = () => {
+  // Tope de 60 fps para todos; en modo liviano, sombras a 1024 y pixelRatio 1; en el mínimo, además 30 fps.
+  const cap = createFrameCap(60);
+  const applyTier = (tier) => {
+    if (tier < 1) return;
+    renderer.setPixelRatio(1);
+    resize();
+    if (sun.shadow.mapSize.x !== 1024) {
+      sun.shadow.mapSize.set(1024, 1024);
+      if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
+    }
+    if (tier >= 2) cap.setFps(30);
+  };
+  applyTier(getPerfTier());
+  const offTier = onPerfTier(applyTier);
+  const frame = (now) => {
     off.raf = 0;
     if (!off.visible || document.hidden) return;
+    if (!cap.ready(now)) { off.raf = requestAnimationFrame(frame); return; }
     const t = clock.getElapsedTime();
     const k = reduced ? 1 : 0.12;
     view.theta += (goal.theta - view.theta) * k;
@@ -235,6 +251,7 @@ export function mountOffice({ stage, holder, labelsEl, scene: cfg, agents: conte
     setMode(m) { mode = m; if (active) closeAgent(); else { setOverview(); notify(); } },
     dispose() {
       if (off.raf) cancelAnimationFrame(off.raf);
+      offTier();
       io.disconnect(); ro.disconnect();
       document.removeEventListener('visibilitychange', kick);
       canvas.removeEventListener('pointerdown', onDown);

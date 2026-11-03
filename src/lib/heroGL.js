@@ -161,6 +161,12 @@ function create(canvas, palette) {
       gl.uniform1f(L.uProgress, progress);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     },
+    rendererName: function () {
+      try {
+        var ext = gl.getExtension('WEBGL_debug_renderer_info');
+        return String(gl.getParameter(ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER) || '');
+      } catch (e) { return ''; }
+    },
     destroy: function () { gl.deleteTexture(tex); gl.deleteBuffer(buf); gl.deleteProgram(prog); }
   };
 }

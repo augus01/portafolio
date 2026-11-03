@@ -14,6 +14,8 @@ html.lenis,html.lenis body{height:auto}
 .ap-hero__gl{position:absolute;inset:0;width:100%;height:100%;display:block;z-index:0;animation:ap-bg-in 1600ms var(--ease-out) both}
 .ap-sticky .ap-hero{z-index:1}
 .ap-grain{position:absolute;inset:0;z-index:2;pointer-events:none;background:url(../assets/grain.png) repeat;background-size:256px 256px;opacity:.055;mix-blend-mode:overlay}
+/* Nivel mínimo de rendimiento: sin grano (su mezcla sobre el fondo animado se recalcula en cada cuadro). */
+html[data-perf="min"] .ap-grain{display:none}
 
 /* Con WebGL activo, el Hero del sistema queda transparente y su fondo CSS se apaga. */
 .ap-sticky.is-gl .ap-hero{background:transparent}
@@ -54,6 +56,8 @@ html.lenis,html.lenis body{height:auto}
 /* Pills sobre el hero: vidrio translúcido que se tiñe con el espectro. Sobre fondo claro queda el estilo del sistema. */
 .ap-navwrap .ap-nav--dark .ap-pill{background:rgba(255,255,255,.55);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
 @media (hover: hover){.ap-navwrap .ap-nav--dark .ap-pill:hover{background:rgba(255,255,255,.75);border-color:rgba(255,255,255,.7)}}
+/* Nivel mínimo de rendimiento (data-perf, src/lib/perfTier.js): sin vidrio en las pills, tono sólido del sistema. */
+html[data-perf="min"] .ap-navwrap .ap-nav--dark .ap-pill:not(.is-current):not(:hover){-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--surface-raised)}
 .ap-navwrap .ap-nav--dark .ap-pill.is-current{background:var(--ink-on-dark);color:var(--ink-primary);border-color:var(--ink-on-dark)}
 
 /* Entrada: fondo → nombre → nav. */

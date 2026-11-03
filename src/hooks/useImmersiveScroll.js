@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
+import { createGovernor, getPerfTier, raisePerfTier } from '../lib/perfTier';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -58,7 +59,12 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
 
       const lenis = new Lenis({ lerp: 0.16, smoothWheel: true, syncTouch: true });
       lenis.on('scroll', ScrollTrigger.update);
-      const tick = (t) => lenis.raf(t * 1000);
+      // El mismo ticker mide la fluidez: si la página no llega a ~42 fps, sube un nivel de rendimiento.
+      const gov = createGovernor();
+      const tick = (t, dt) => {
+        lenis.raf(t * 1000);
+        if (gov.sample(dt)) raisePerfTier(getPerfTier() + 1);
+      };
       gsap.ticker.add(tick);
       gsap.ticker.lagSmoothing(0);
       motionRef.current.lenis = lenis;
