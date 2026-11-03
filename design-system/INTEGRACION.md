@@ -56,7 +56,7 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 
 ## Excepciones aprobadas (sección Superpoderes)
 
-`#superpoderes` sigue la sección **"Con qué construyo"** del artefacto "Hero" (2 nov 2026) y va entre Sobre mí y Proyectos. Es un encabezado igual al de Sobre mí y Proyectos (título con el último tramo en gris y bajada, alineado con el contenido de `.ap-section`; sin la etiqueta "Habilidades" del artefacto, ajuste del 2 nov 2026) y una cinta de 17 logos 3D en dos filas (`SkillsSection` + `TechMarqueeRow`). Cada fila lleva sus logos dos veces y avanza en bucle sin salto; la segunda va más lenta y desfasada. La cinta no se detiene: sin pausa por cursor, foco ni toque (decisión del 2 nov 2026; no cumple WCAG 2.2.2, pendiente asumido). Con `prefers-reduced-motion` la cinta se queda quieta como grilla centrada, sin la copia. La copia de cada fila tiene `aria-hidden`, y los logos usan `alt=""` porque el nombre va escrito debajo. Lo que no tiene token está en variables `--hab-*` de `.hab-mq` (`src/styles/layout.css`; móvil en `movil.css`):
+`#superpoderes` sigue la sección **"Con qué construyo"** del artefacto "Hero" (2 nov 2026) y va entre Sobre mí y Proyectos. Es un encabezado igual al de Sobre mí y Proyectos (título con el último tramo en gris y bajada, alineado con el contenido de `.ap-section`; sin la etiqueta "Habilidades" del artefacto, ajuste del 2 nov 2026) y una cinta de 17 logos 3D en dos filas (`SkillsSection` + `TechMarqueeRow`). Cada fila lleva sus logos dos veces y avanza en bucle sin salto; la segunda va más lenta y desfasada. Desde el artefacto "Hero · Augusto Pinto" (3 nov 2026) cada logo es un botón: al pasar el cursor la fila se detiene y el logo sube y gira a su versión a color; al hacer clic se abre su ficha (molécula `SkillCard`, lógica en `hooks/useSkillPicker.js`) al centro sobre un velo con desenfoque: categoría, logo a color flotando sobre el halo del color de su marca, qué logré con esa tecnología y en qué proyectos la usé. La cinta queda detenida mientras la ficha está abierta; Esc, el velo o "Cerrar" la cierran y el foco vuelve al logo, y se cierra sola si la sección sale de pantalla. Con `prefers-reduced-motion` la cinta se queda quieta como grilla centrada, sin la copia. La copia de cada fila tiene `aria-hidden`, y los logos usan `alt=""` porque el nombre va escrito debajo. Lo que no tiene token está en variables `--hab-*` de `.hab-mq` (`src/styles/layout.css`; móvil en `movil.css`):
 
 | Regla del sistema | Excepción de Superpoderes | Variable |
 | --- | --- | --- |
@@ -64,9 +64,11 @@ La sección `#sobre-mi` se aprobó en el mismo lienzo (30 oct 2026) y se clonó 
 | Proporciones del sistema | Cada tecnología mide 208px de ancho, con el logo a 128px; la sección ocupa al menos el alto de la pantalla desde 900px | `--hab-item-width`, `--hab-logo-size` |
 | Duraciones del sistema (≤ 280ms) | Bucle lineal infinito de 46s (fila 1) y 54s con −17s de desfase (fila 2) | `--hab-speed-a`, `--hab-speed-b`, `--hab-offset-b` |
 | Sin degradados | Máscara `linear-gradient` que desvanece el 10% de cada borde de la fila (solo transparencia, no pinta color) | `--hab-fade` |
-| Monocromo | Sin excepción: los logos son 3D en negro (Vitrum, vista Angle, material Black) | — |
+| Monocromo | Los logos son 3D en negro (Vitrum, vista Angle, material Black); al pasar el cursor o en la ficha se ven a color, y la ficha pinta detrás un halo del color de la marca al 22% (`tint` en el contenido) | `--hab-tint` |
+| Duraciones y movimiento | Giro del logo en dos tiempos de 200ms; la ficha entra en 450ms y el logo flota en un bucle de 5,5s. Sin animación con `prefers-reduced-motion` | `--hab-flip` |
+| Radios y sombras | Ficha de 24px (20px bajo 600px) con sombra propia; escenario del logo 18px; velo `rgba(14,15,18,.42)` con desenfoque de 4px | `src/styles/layout.css` |
 
-Archivos de logo en `public/habilidades/<tecnología>.webp` (240×240, extraídos del artefacto). El contenido (tecnologías y orden de las filas) vive en `skills` de `src/content/home.js`.
+Archivos de logo en `public/habilidades/<tecnología>.webp` (negro) y `<tecnología>-color.webp` (color), extraídos del artefacto. El contenido (tecnologías, orden de las filas, categoría, qué logré, proyectos y color de marca) vive en `skills` de `src/content/home.js`; "Helix" del artefacto va como "Zam", el nombre actual del proyecto.
 
 ## Excepciones aprobadas (sección Proyectos)
 
@@ -133,7 +135,6 @@ Para revisar cada nivel a mano: `?perf=full`, `?perf=lite` o `?perf=min` en la U
 
 - **Contenido:** el artefacto del hero trae lorem ipsum. El sistema lo prohíbe: hay que reemplazarlo por textos reales (en `src/content/`) antes de publicar.
 - **Logos SVG y Big Shoulders Display:** los archivos binarios del artefacto no se pudieron exportar. El logo se dibuja desde el átomo `Logo`; Big Shoulders está "guardada" y no se usa.
-- **Oficina:** el panel de cada agente es un boceto ("aquí se abre el chat del agente"): falta definir si las preguntas abren un chat real.
+- **Recado de recepción:** falta definir el correo de `leadEmail` (`src/content/office.js`) o un envío real (Lambda + SES); mientras sea `null`, la ficha se muestra como boceto.
 - **Nav fuera del hero:** la nav (píldoras en escritorio, barra en móvil) no se muestra sobre el hero; aparece arriba al llegar a la página, con y sin `prefers-reduced-motion`. El hero muestra solo el rol, sin ubicación.
-- **Nav sobre la oficina:** en escritorio la nav fija de píldoras queda encima de la barra de la oficina cuando el escenario llega al tope (igual que en el lienzo).
 - Decisiones abiertas del sistema: ver `inventario.md` (idioma, foto en el hero…).
