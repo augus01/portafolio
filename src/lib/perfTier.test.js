@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   createGovernor, createFrameCap, isSoftwareRenderer, parsePerfParam,
-  getPerfTier, raisePerfTier, onPerfTier,
+  getPerfTier, raisePerfTier, onPerfTier, forcePerfTier,
 } from './perfTier.js';
 
 test('sube cuando la media supera 24 ms', () => {
@@ -26,6 +26,12 @@ test('un pico aislado no sube el nivel', () => {
   const g = createGovernor();
   for (let i = 0; i < 59; i++) g.sample(16.7);
   assert.equal(g.sample(200), false);
+});
+
+test('tres tirones de carga en una ventana sana no suben el nivel', () => {
+  const g = createGovernor();
+  for (let i = 0; i < 57; i++) assert.equal(g.sample(16.7), false);
+  for (let i = 0; i < 3; i++) assert.equal(g.sample(200), false);
 });
 
 test('a 60 Hz con tope 60 dibuja todos los cuadros', () => {
@@ -71,4 +77,10 @@ test('raisePerfTier nunca baja y avisa', () => {
   off();
   assert.equal(getPerfTier(), 2);
   assert.deepEqual(seen, [1, 2]);
+});
+
+test('forcePerfTier fija el nivel y bloquea las subidas automáticas', () => {
+  forcePerfTier(0);
+  raisePerfTier(2);
+  assert.equal(getPerfTier(), 0);
 });

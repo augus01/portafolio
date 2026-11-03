@@ -5,6 +5,7 @@
 const MAX_TIER = 2;
 const NAMES = { full: 0, lite: 1, min: 2 };
 let tier = 0;
+let locked = false;
 const listeners = new Set();
 
 /** Media móvil de intervalos entre cuadros; `sample` devuelve true cuando la página no llega a ~42 fps. */
@@ -14,7 +15,9 @@ export function createGovernor({ windowSize = 60, slowMs = 24 } = {}) {
     sample(dtMs) {
       // Pestaña oculta, capturas o cambio de pestaña: no dicen nada de la fluidez.
       if (!(dtMs > 0) || dtMs > 250) return false;
-      sum += dtMs; n += 1;
+      // Cada muestra pesa como máximo 50 ms: varios tirones de carga (three.js, fuentes) no bajan de nivel a un
+      // equipo sano, y una lentitud sostenida (33 ms o más por cuadro) igual se detecta.
+      sum += Math.min(dtMs, 50); n += 1;
       if (n < windowSize) return false;
       const slow = sum / n > slowMs;
       sum = 0; n = 0;
@@ -52,12 +55,26 @@ export function parsePerfParam(search) {
 
 export function getPerfTier() { return tier; }
 
+function publish() {
+  if (typeof document !== 'undefined') {
+    if (tier) document.documentElement.dataset.perf = tier === 1 ? 'lite' : 'min';
+    else delete document.documentElement.dataset.perf;
+  }
+  listeners.forEach((fn) => fn(tier));
+}
+
 export function raisePerfTier(next) {
   const t = Math.min(MAX_TIER, next);
-  if (!(t > tier)) return;
+  if (locked || !(t > tier)) return;
   tier = t;
-  if (typeof document !== 'undefined') document.documentElement.dataset.perf = tier === 1 ? 'lite' : 'min';
-  listeners.forEach((fn) => fn(tier));
+  publish();
+}
+
+/** Fija el nivel y desactiva las subidas automáticas (para `?perf=`, que debe mostrar ese nivel y no otro). */
+export function forcePerfTier(next) {
+  tier = Math.max(0, Math.min(MAX_TIER, next));
+  locked = true;
+  publish();
 }
 
 export function onPerfTier(fn) {
