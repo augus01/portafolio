@@ -30,7 +30,7 @@ export const hero = {
   name: 'AUGUSTO PINTO',
   uppercase: true,
   role: 'Menos promesas, más productos que ayudan cada día',
-  height: 'min(100svh, 900px)',
+  height: '100svh',
 };
 
 export const about = {

@@ -107,7 +107,7 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       motionRef.current.tl = tl;
 
       // La página que sigue se monta justo bajo el final del pin (un viewport hacia arriba) y aparece cubriendo el hero.
-      after.style.setProperty('margin-top', 'calc(-1 * min(100svh, 900px))');
+      after.style.setProperty('margin-top', '-100svh');
       // El nombre no sube: viene hacia ti (crece) y se desvanece, como si lo dejaras atrás al avanzar por la luz.
       tl.fromTo(name, { scale: 1, transformOrigin: '50% 50%' }, { scale: 3.4, duration: 0.24, ease: 'power2.in' }, 0)
         .to(name, { opacity: 0, duration: 0.14, ease: 'power1.in' }, 0.1)
