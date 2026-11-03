@@ -9,7 +9,7 @@ const officeRoute = () => ({
   name: 'office-route',
   apply: 'build',
   closeBundle() {
-    const out = resolve(__dirname, 'dist');
+    const out = resolve(import.meta.dirname, 'dist');
     mkdirSync(resolve(out, 'oficina'), { recursive: true });
     copyFileSync(resolve(out, 'index.html'), resolve(out, 'oficina', 'index.html'));
   },
