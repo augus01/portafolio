@@ -108,6 +108,18 @@ La función creativa `#oficina` se aprobó en el artefacto "Landing · oficina",
 
 El botón de cerrar usa el icono `x` de Lucide (átomo `Icon`) en vez del carácter ✕ del artefacto. Componentes: átomo `OfficeButton`, molécula `OfficeAgentPanel`, organismos `Office` y `OfficeSection`; lógica en `hooks/useOffice.js` y `lib/officeEngine.js`.
 
+## Excepción aprobada (modo liviano de rendimiento)
+
+Aprobada el 2 nov 2026: en equipos o navegadores que no dan abasto (p. ej. Opera GX con GX Control, WebGL sin GPU), la página baja de calidad sola y mantiene todas las animaciones. Lógica en `src/lib/perfTier.js`: el ticker de GSAP mide la fluidez y, si la media de 60 cuadros supera 24 ms (~42 fps) o el renderizador WebGL es por software, sube un nivel. El nivel nunca baja y se publica en `<html data-perf="lite|min">`.
+
+| Nivel | Qué cambia | Dónde |
+| --- | --- | --- |
+| Todos | Fondo del hero y oficina con tope de 60 fps; la cinta de logos se pausa fuera de pantalla | `useHeroBackground.js`, `officeEngine.js`, `TechMarqueeRow` |
+| `lite` | Fondo del hero a 30 fps y escala interna máx. 0,6; oficina con pixelRatio 1 y sombras de 1024 | mismos archivos |
+| `min` | Además: fondo a escala 0,45, oficina a 30 fps, sin grano, pills de la nav en `--surface-raised` sin vidrio y barra móvil en `--surface-canvas` sin desenfoque | `hero-inmersivo.css`, `movil.css` |
+
+Para revisar cada nivel a mano: `?perf=full`, `?perf=lite` o `?perf=min` en la URL.
+
 ## Pendientes contra el sistema
 
 - **Contraste del gris destacado (Sobre mí y Proyectos):** `#a3a3a8` sobre `--surface-canvas` da ~2,4:1, bajo el 3:1 de WCAG para texto grande. Proponer un gris de al menos 3:1 antes de publicar.
