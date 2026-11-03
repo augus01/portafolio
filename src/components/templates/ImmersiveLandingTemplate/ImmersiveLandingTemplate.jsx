@@ -18,6 +18,7 @@ export function ImmersiveLandingTemplate({ nav, mobileMenu, hero, footer, childr
   const menuId = useId();
   const menu = useMobileMenu(motionRef);
   useImmersiveScroll(rootRef, motionRef, setNavTone);
+  useHashOnLoad(motionRef);
 
   return (
     <div ref={rootRef} className="ap-page">
