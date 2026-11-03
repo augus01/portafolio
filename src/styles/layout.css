@@ -39,18 +39,20 @@
 .ap-about__text{display:flex;flex-direction:column;gap:var(--space-6);width:clamp(min(300px, 100%), 50%, 100%)}
 .ap-about__text > .lead{margin:0;font-family:var(--about-text-font);font-size:var(--about-text-size);color:var(--ink-primary)}
 
-/* Superpoderes, "Con qué construyo" (artefacto "Hero", 2 nov 2026): cinta en dos filas. Cada fila lleva sus logos dos
+/* Superpoderes, "Con qué construyo" (artefacto "Hero · Augusto Pinto", 3 nov 2026): cinta en dos filas. Cada fila lleva sus logos dos
    veces; la pista avanza la mitad de su ancho y vuelve a empezar sin salto. Logos 3D de Vitrum
    (vista Angle, material Black). La cinta ocupa todo el ancho; el encabezado se alinea con el resto de las secciones.
    Excepciones sin token en variables --hab-* (design-system/INTEGRACION.md). */
 .hab-mq{box-sizing:border-box;width:100%;padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);overflow:hidden;color:var(--ink-primary);font-family:var(--font-text);
   --hab-title-font:var(--font-oswald);--hab-title-size:var(--section-title-size);--hab-title-leading:var(--section-title-leading);--hab-muted:var(--ink-highlight-muted);
   --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:var(--section-lead-max);
-  --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%}
+  --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%;
+  --hab-btn-radius:var(--radius-lg);--hab-btn-active:rgba(18,18,18,.05);--hab-lift:-4px;--hab-grow:1.04;--hab-flip:200ms}
 @media (min-width:900px){.hab-mq{min-height:100vh}}
 /* Mismo ancho y relleno que .ap-section, para que el título arranque en la misma línea que Sobre mí y Proyectos. */
 .hab-mq__head{box-sizing:border-box;width:100%;max-width:var(--page-max);margin:0 auto;padding:0 var(--space-8)}
 .hab-mq__intro{display:flex;flex-direction:column;gap:var(--space-4);max-width:var(--hab-intro-max)}
+.hab-mq__eyebrow.label{margin:0;font:500 .75rem/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-secondary)}
 .hab-mq__title.display{margin:0;font-family:var(--hab-title-font);font-weight:400;font-size:var(--hab-title-size);line-height:var(--hab-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .hab-mq__title span{color:var(--hab-muted)}
 .hab-mq__lead.lead{margin:0;font-family:var(--hab-text-font);font-size:var(--hab-text-size);font-weight:400;color:var(--ink-primary)}
@@ -61,18 +63,71 @@
   mask-image:linear-gradient(to right,transparent,#000 var(--hab-fade),#000 calc(100% - var(--hab-fade)),transparent)}
 .hab-mq__track{list-style:none;margin:0;padding:0;display:flex;width:max-content;animation:hab-mq var(--hab-speed-a) linear infinite;will-change:transform}
 .hab-mq__track--b{animation-duration:var(--hab-speed-b);animation-delay:var(--hab-offset-b)}
-/* La cinta no se pausa con el cursor; solo se detiene fuera de pantalla para ahorrar CPU. */
-.hab-mq__row.is-paused .hab-mq__track{animation-play-state:paused}
+/* La cinta se detiene con el cursor encima, con una ficha abierta y fuera de pantalla (para ahorrar CPU). */
+.hab-mq__row:hover .hab-mq__track,.hab-mq__row.is-paused .hab-mq__track{animation-play-state:paused}
 .hab-mq__item{flex:none;width:var(--hab-item-width);display:flex;flex-direction:column;align-items:center;gap:var(--space-3)}
 .hab-mq__logo{display:block;width:var(--hab-logo-size);height:var(--hab-logo-size);object-fit:contain}
 .hab-mq__name.body-sm{font-weight:500;color:var(--ink-primary)}
+/* Cada logo es un botón: al pasar (o con su ficha abierta) sube un poco y gira a su versión a color. */
+.hab-mq__btn{appearance:none;background:none;border:0;margin:0;padding:var(--space-3) var(--space-2);width:100%;display:flex;flex-direction:column;align-items:center;gap:var(--space-3);border-radius:var(--hab-btn-radius);cursor:pointer;color:inherit;font:inherit;transition:background var(--dur-enter) var(--ease-out)}
+.hab-mq__btn:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.hab-mq__btn.is-active{background:var(--hab-btn-active)}
+.hab-mq__pic{position:relative;display:block;perspective:600px;transition:transform 350ms cubic-bezier(.2,.8,.2,1)}
+.hab-mq__logo{backface-visibility:hidden;transition:transform var(--hab-flip) cubic-bezier(.25,1,.5,1) var(--hab-flip),opacity 0s linear var(--hab-flip)}
+.hab-mq__logo--color{position:absolute;inset:0;opacity:0;transform:rotateY(-90deg);transition:transform var(--hab-flip) cubic-bezier(.5,0,.75,0),opacity 0s linear var(--hab-flip)}
+.hab-mq__btn.is-active .hab-mq__pic{transform:translateY(var(--hab-lift)) scale(var(--hab-grow))}
+.hab-mq__btn.is-active .hab-mq__logo:not(.hab-mq__logo--color){opacity:0;transform:rotateY(90deg);transition:transform var(--hab-flip) cubic-bezier(.5,0,.75,0),opacity 0s linear var(--hab-flip)}
+.hab-mq__btn.is-active .hab-mq__logo--color{opacity:1;transform:none;transition:transform var(--hab-flip) cubic-bezier(.25,1,.5,1) var(--hab-flip),opacity 0s linear var(--hab-flip)}
+@media (hover: hover){
+  .hab-mq__btn:hover .hab-mq__pic{transform:translateY(var(--hab-lift)) scale(var(--hab-grow))}
+  .hab-mq__btn:hover .hab-mq__logo:not(.hab-mq__logo--color){opacity:0;transform:rotateY(90deg);transition:transform var(--hab-flip) cubic-bezier(.5,0,.75,0),opacity 0s linear var(--hab-flip)}
+  .hab-mq__btn:hover .hab-mq__logo--color{opacity:1;transform:none;transition:transform var(--hab-flip) cubic-bezier(.25,1,.5,1) var(--hab-flip),opacity 0s linear var(--hab-flip)}
+}
+
+/* Ficha de la tecnología: al centro sobre un velo, con el logo a color flotando sobre el halo de su marca. */
+.hab-veil{position:fixed;inset:0;z-index:59;margin:0;padding:0;border:0;background:rgba(14,15,18,.42);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);cursor:pointer;opacity:0;visibility:hidden;transition:opacity 300ms,visibility 0s linear 300ms}
+.hab-veil.is-open{opacity:1;visibility:visible;transition:opacity 300ms,visibility 0s}
+.hab-pop{position:fixed;z-index:60;left:50%;top:50%;width:min(420px,calc(100vw - 24px));max-height:calc(100svh - 48px);overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box;padding:20px;background:var(--surface-raised);color:var(--ink-primary);font-family:var(--font-text);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--space-6);box-shadow:0 2px 6px rgba(14,15,18,.08),0 32px 80px rgba(14,15,18,.28);
+  /* Va en <body>, fuera de .ap-page: repite la familia Oswald de la página. */
+  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;
+  opacity:0;transform:translate(-50%,-46%) scale(.94);visibility:hidden;transition:opacity 300ms,transform 450ms cubic-bezier(.2,.8,.2,1),visibility 0s linear 450ms}
+.hab-pop.is-open{opacity:1;transform:translate(-50%,-50%);visibility:visible;transition:opacity 300ms,transform 450ms cubic-bezier(.2,.8,.2,1),visibility 0s}
+.hab-pop__top{display:flex;justify-content:space-between;align-items:center;gap:var(--space-3)}
+.hab-pop__eyebrow.label{margin:0;font:500 11px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-secondary)}
+.hab-pop__close{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:var(--target-min);height:var(--target-min);margin:calc(var(--space-2) * -1) calc(var(--space-2) * -1) calc(var(--space-2) * -1) 0;padding:0;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--ink-primary);cursor:pointer}
+@media (hover: hover){.hab-pop__close:hover{background:var(--surface-sunken)}}
+.hab-pop__close:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.hab-pop__stage{position:relative;margin:var(--space-3) 0 var(--space-4);height:236px;border-radius:18px;display:flex;align-items:center;justify-content:center;perspective:800px;overflow:hidden;
+  background:radial-gradient(circle at 50% 42%,var(--hab-tint,rgba(18,18,18,.08)) 0%,rgba(251,251,249,0) 68%),var(--surface-canvas)}
+.hab-pop__float{position:relative;z-index:1;display:block;animation:hab-float 5.5s ease-in-out infinite}
+.hab-pop__logo{display:block;width:184px;height:184px;object-fit:contain;filter:drop-shadow(0 18px 22px rgba(14,15,18,.18));animation:hab-pop-in 600ms cubic-bezier(.2,.8,.2,1) both}
+.hab-pop__shadow{position:absolute;left:50%;bottom:20px;width:120px;height:14px;margin-left:-60px;border-radius:50%;background:radial-gradient(closest-side,rgba(14,15,18,.22),rgba(14,15,18,0));animation:hab-shadow 5.5s ease-in-out infinite}
+.hab-pop__name.heading{margin:0;font-family:var(--font-text);font-weight:400;font-size:34px;line-height:1.08;letter-spacing:-0.02em;color:var(--ink-primary)}
+.hab-pop__desc.body{margin:10px 0 0;font-family:var(--font-oswald);font-size:18px;line-height:1.5;font-weight:400;color:#2b2d33}
+.hab-pop__projects{margin-top:var(--space-4);padding-top:14px;border-top:var(--stroke-hairline) dashed var(--border-hairline)}
+.hab-pop__label.label{margin:0 0 var(--space-2);font:500 11px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-secondary)}
+.hab-pop__chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.hab-pop__chip.body-sm{font-family:var(--font-oswald);font-size:15px;font-weight:400;line-height:1;padding:var(--space-2) var(--space-3);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-pill);background:var(--surface-canvas);color:var(--ink-primary)}
+@keyframes hab-float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes hab-shadow{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.82);opacity:.7}}
+@keyframes hab-pop-in{from{opacity:0;transform:rotateY(-50deg) scale(.7)}to{opacity:1;transform:none}}
+@media (max-width: 599px){
+  .hab-pop{padding:var(--space-4);border-radius:var(--radius-lg)}
+  .hab-pop__stage{height:176px;margin:var(--space-2) 0 var(--space-3)}
+  .hab-pop__logo{width:136px;height:136px}
+  .hab-pop__shadow{bottom:14px;width:96px;margin-left:-48px}
+  .hab-pop__name.heading{font-size:28px}
+  .hab-pop__desc.body{font-size:17px}
+}
 @keyframes hab-mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 /* Sin movimiento: cada fila se ve como grilla centrada, sin la copia ni la máscara. */
 @media (prefers-reduced-motion: reduce){
   .hab-mq__track{animation:none;width:auto;flex-wrap:wrap;justify-content:center;row-gap:var(--space-8)}
   .hab-mq__item[aria-hidden="true"]{display:none}
   .hab-mq__row{-webkit-mask-image:none;mask-image:none}
-  /* Sin animación no hay nada que pausar: se oculta el botón y la frase que lo explica. */
+  .hab-veil,.hab-veil.is-open,.hab-pop,.hab-pop.is-open{transition:none}
+  .hab-pop__float,.hab-pop__shadow,.hab-pop__logo{animation:none}
+  .hab-mq__pic,.hab-mq__logo,.hab-mq__logo--color{transition:none !important}
 }
 
 /* Proyectos (estilo Josephmark): dos columnas de portadas a sangre, sin card blanca. Cada portada es el color real de
