@@ -56,6 +56,12 @@ export const chat = {
   // Cuando la pregunta es de otro agente: quien la recibe lo dice y la cámara viaja al escritorio del otro.
   handoff: (to) => `Esa pregunta es para ${to.name}, que sabe de ${to.topic}. Te llevo a su escritorio.`,
   // Cuando otro agente completa la respuesta: el que habló lo anuncia antes de que la cámara viaje.
+  // Arquitecto o stack te pasan a recepción: para dejar un recado, o cuando la pregunta no es de nadie.
+  handoffLead: 'Para dejarle un recado a Augusto te atiende recepción. Te llevo a su escritorio.',
+  handoffBack: 'De eso se encarga recepción. Te llevo a su escritorio.',
+  handoffUnknown: 'Eso no lo sé yo. Recepción puede dejarle tu pregunta a Augusto. Te llevo a su escritorio.',
+  // Lo que dice recepción cuando llegas derivado con una pregunta que nadie sabe (sin volver a mandarte a otro agente).
+  noMatchHanded: 'Esa la responde mejor Augusto en persona. Si quieres, tomo tus datos y le dejo tu pregunta: escribe “quiero contactarlo”.',
   handoffMore: (to) => `${to.name.charAt(0).toUpperCase() + to.name.slice(1)} sabe de ${to.topic} y te cuenta el resto. Te llevo con él.`,
   typingAll: 'La oficina está pensando…',
   placeholder: (name) => `Pregúntale algo a ${name}`,

@@ -27,12 +27,18 @@ export function isConfirm(text) {
  * agente hay un aviso (marcado `handoff: true`): `handoff` al derivar, `handoffMore` cuando otro completa.
  * Sin tema, responde recepción. Devuelve como máximo 4 respuestas `{ agent, text, handoff? }`.
  */
-export function answer(question, { topics, agents, to, from, noMatch, handoff, handoffMore }) {
+export function answer(question, { topics, agents, to, from, noMatch, noMatchHanded, handoff, handoffMore, handoffUnknown }) {
   const n = normalize(question);
   const hits = topics.filter((t) => t.rx.test(n));
   const asked = to || from;
   const out = [];
-  if (!hits.length) out.push({ agent: 'recepcion', text: noMatch });
+  if (!hits.length) {
+    // Nadie sabe del tema: si estabas con arquitecto o stack, te pasa a recepción, que ofrece dejarle la pregunta a Augusto.
+    if (asked && asked !== 'recepcion' && handoffUnknown) {
+      return [{ agent: asked, handoff: true, text: handoffUnknown }, { agent: 'recepcion', text: noMatchHanded || noMatch }];
+    }
+    out.push({ agent: 'recepcion', text: noMatch });
+  }
   else {
     const main = hits.find((h) => h.agent === asked) || hits[0];
     out.push({ agent: main.agent, text: main.text });

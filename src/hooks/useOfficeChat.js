@@ -66,13 +66,28 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   useEffect(() => () => { clearTimeout(timerRef.current); clearTimeout(seqRef.current); }, []);
 
   const push = (list, patch) => setState((st) => ({ ...st, msgs: st.msgs.concat(list), ...(patch || {}) }));
-  const recep = (text, patch) => { push([msg('recepcion', text)], patch); bubbles([{ agent: 'recepcion', text }]); };
+  // Aviso de paso a recepción: si estabas con arquitecto o stack (elegido o el último que habló), él lo dice primero y
+  // la cámara viaja después. Sin agente previo, o si ya estabas con recepción, no hay aviso.
+  const toRecep = (passText) => {
+    const from = state.to || lastRef.current;
+    return from && from !== 'recepcion' ? [{ agent: from, handoff: true, text: passText || chat.handoffBack }] : [];
+  };
+  // Cualquier respuesta de recepción pasa por aquí, así ningún cambio a ella es abrupto.
+  const recep = (text, patch, passText) => {
+    const pass = toRecep(passText);
+    push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', text)]), { ...(patch || {}), ...(pass.length ? { to: null } : {}) });
+    if (pass.length) sceneRef.current.select(null);
+    bubbles(pass.concat([{ agent: 'recepcion', text }]));
+  };
 
   const startLead = (after, prev) => {
     const ask = after ? chat.lead.askAfter : chat.lead.ask;
-    push([msg('recepcion', ask)], { lead: { step: 'name' } });
-    // Si otro agente acaba de responder, su globo se queda y recepción suma el suyo.
-    bubbles((prev || []).filter((r) => r.agent !== 'recepcion').concat([{ agent: 'recepcion', text: ask }]));
+    // Si estabas con arquitecto o stack, primero te avisa que el recado lo toma recepción y la cámara viaja a ella.
+    const pass = toRecep(chat.handoffLead);
+    push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', ask)]), { lead: { step: 'name' }, to: null });
+    sceneRef.current.select(null);
+    // Si otro agente acaba de responder, su globo va antes y recepción suma el suyo.
+    bubbles((prev || []).filter((r) => r.agent !== 'recepcion').concat(pass, [{ agent: 'recepcion', text: ask }]));
   };
 
   const leadSend = (lead) => {
@@ -119,7 +134,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
     sceneRef.current.say(from ? { [from]: '…' } : {});
     timerRef.current = setTimeout(() => {
-      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, handoff: chat.handoff, handoffMore: chat.handoffMore });
+      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
       push(replies.map((r) => msg(r.agent, r.text)), { typing: false });
       bubbles(replies);
     }, TYPING_MS);
@@ -128,8 +143,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   const pickVisitor = (v) => {
     if (state.visitor) return;
     writeStore({ visitor: v.id });
-    push([msg('visitor', v.label), msg('recepcion', v.reply)], { visitor: v.id });
-    bubbles([{ agent: 'recepcion', text: v.reply }]);
+    push([msg('visitor', v.label)]);
+    recep(v.reply, { visitor: v.id });
   };
 
   // Chips bajo la caja: quién visita, luego sus preguntas sugeridas; durante el recado, cancelar.

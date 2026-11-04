@@ -91,3 +91,16 @@ test('answer: cada cambio de agente lleva un aviso antes', () => {
     if (out[i].agent !== out[i - 1].agent) assert.equal(out[i - 1].handoff, true, `falta aviso antes de ${out[i].agent}`);
   }
 });
+
+test('answer: si arquitecto o stack no saben, te pasan a recepción con aviso', () => {
+  const out = answer('¿Cuál es su comida favorita?', { ...opts('stack'), noMatchHanded: chat.noMatchHanded, handoffUnknown: chat.handoffUnknown });
+  assert.deepEqual(out.map((r) => r.agent), ['stack', 'recepcion']);
+  assert.equal(out[0].handoff, true);
+  assert.equal(out[1].text, chat.noMatchHanded);
+});
+
+test('answer: una pregunta de recepción hecha a arquitecto pasa por su aviso', () => {
+  const out = answer('¿Quién es Augusto?', { ...opts('arquitecto'), handoff: chat.handoff });
+  assert.deepEqual(out.map((r) => r.agent), ['arquitecto', 'recepcion']);
+  assert.match(out[0].text, /recepción.*Te llevo a su escritorio/);
+});
