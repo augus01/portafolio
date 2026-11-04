@@ -192,10 +192,12 @@ export const contact = {
   },
   enter: { label: 'Pasa a la oficina', href: '/oficina/' },
   meta: 'Chile · GMT−3',
-  hint: 'Clic en el personaje o en el timbre',
+  hint: 'Tres clics en recepción y te lleva a la oficina',
   desk: {
     lines: ['¡Hola! Soy recepción', 'Deja tu mensaje para Augusto', '¿Pasas a la oficina? Te llevo', 'Toca el timbre si quieres'],
     follow: '¡Sígueme!',
+    // Lo que dice con el primer y el segundo clic; al tercero te lleva a la oficina.
+    tickles: ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'],
   },
 };
 

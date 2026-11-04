@@ -24,7 +24,7 @@ export function ImmersiveLandingTemplate({ nav, mobileMenu, hero, footer, childr
     <div ref={rootRef} className="ap-page">
       {/* Sticky al tope de la página; el scroll la ubica abajo mientras se ve el hero. */}
       <div className="ap-navwrap">
-        <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} tone={navTone} menuPlacement={navTone === 'dark' ? 'up' : 'down'} />
+        <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} onNavigate={menu.navigate} tone={navTone} menuPlacement={navTone === 'dark' ? 'up' : 'down'} />
         <MobileNavBar tone={navTone} brand={nav.brand} open={menu.open} menuId={menuId} onOpen={menu.openMenu} buttonRef={menu.openRef} />
         <MobileMenu id={menuId} open={menu.open} {...mobileMenu} onClose={menu.closeMenu} onNavigate={menu.navigate} closeRef={menu.closeRef} />
       </div>

@@ -154,6 +154,22 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       st.hopT = now();
       if (spin) st.spinGoal += Math.PI * 2;
     };
+    /* Tres saltos seguidos (el último con giro) y después `done`: así recepción te lleva a la oficina.
+       Sin animación, `done` corre de inmediato. Mientras salta no se vuelve a pedir. */
+    var HOP_MS = 560, leading = false;
+    var lead = function (done) {
+      if (leading) return;
+      if (reduced) { done(); return; }
+      leading = true;
+      var i = 0;
+      var next = function () {
+        hop(i === 2);
+        i += 1;
+        timers.push(setTimeout(i < 3 ? next : function () { leading = false; done(); }, HOP_MS));
+      };
+      next();
+    };
+    var timers = [];
     var ringBell = function () { st.ringT = now(); };
 
     /* Cursor: mira hacia donde estás (en toda la página) */
@@ -176,9 +192,18 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       return ray.intersectObjects(list, false).length > 0;
     };
     var onCanvasMove = function (e) { canvas.style.cursor = (hitAt(e, agentMeshes) || hitAt(e, [bell, bellKnob])) ? 'pointer' : ''; };
+    /* Tres clics seguidos (menos de 0,8 s entre uno y otro) sobre recepción: te lleva a la oficina (`opts.onTriple`). */
+    var tickles = opts.tickles || ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'];
+    var clicks = 0, lastClick = -10;
     var onCanvasClick = function (e) {
       if (hitAt(e, [bell, bellKnob])) { ringBell(); hop(false); say('¡Ding! Ya voy', 2.4); return; }
-      if (hitAt(e, agentMeshes)) { hop(true); say('¡Jaja, me haces cosquillas!', 2.4); }
+      if (!hitAt(e, agentMeshes) || leading) return;
+      var t = now();
+      clicks = t - lastClick < 0.8 ? clicks + 1 : 1;
+      lastClick = t;
+      if (clicks >= 3 && opts.onTriple) { clicks = 0; opts.onTriple(); return; }
+      hop(true);
+      say(tickles[Math.min(clicks, tickles.length) - 1], 2.4);
     };
     canvas.addEventListener('pointermove', onCanvasMove);
     canvas.addEventListener('click', onCanvasClick);
@@ -288,7 +313,9 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
     return {
       hop: hop,
       say: say,
+      lead: lead,
       dispose: function () {
+        timers.forEach(clearTimeout);
         if (raf) cancelAnimationFrame(raf);
         offTier();
         io.disconnect(); ro.disconnect();

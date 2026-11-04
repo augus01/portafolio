@@ -9,7 +9,8 @@ const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener n
 // Navegación en píldoras flotantes; en contenedores de menos de 600px se pliega en un botón de menú.
 // `brand` ({ href, label }) agrega el logo "apinto" en negro como primer elemento de la cápsula, enlace al inicio;
 // en ventanas angostas pasa al monograma "ap" (layout.css).
-export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', label = 'Principal', className }) {
+// `onNavigate(e, href)` recibe los clics en anclas de la misma página (#…), para saltar con el scroll suave del landing.
+export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', label = 'Principal', onNavigate, className }) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
   const rootRef = useRef(null);
@@ -34,7 +35,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
 
   const pill = (item) => (
     <li key={item.label}>
-      <Pill href={item.href} current={item.current} {...extProps(item)}>{item.label}</Pill>
+      <Pill href={item.href} current={item.current} onClick={onNavigate && item.href.charAt(0) === '#' ? (e) => onNavigate(e, item.href) : undefined} {...extProps(item)}>{item.label}</Pill>
     </li>
   );
 
@@ -71,7 +72,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
                   className={['ap-nav__item', 'body', item.current && 'is-current'].filter(Boolean).join(' ')}
                   href={item.href}
                   aria-current={item.current ? 'page' : undefined}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => { setOpen(false); if (onNavigate && item.href.charAt(0) === '#') onNavigate(e, item.href); }}
                   {...extProps(item)}
                 >
                   {item.label}
