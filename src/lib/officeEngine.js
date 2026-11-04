@@ -2,7 +2,8 @@
 // El decorado y los personajes llegan en `theme` (src/lib/officeThemes.js); los nombres de los agentes, en `agents`.
 // Un clic en un agente no abre panel: lo marca y avisa con `onPick(id | null)`; la conversación la dibuja React.
 // Los globos de diálogo sobre cada agente se muestran con `say({ id: texto })` y el anillo del que habla con `speak(id)`.
-// Si habla un solo agente, la cámara se acerca a él (como recepción en Contacto) y vuelve a la vista general al callar.
+// Cuando un agente habla, la cámara se acerca a él (como recepción en Contacto) y solo entonces se ve su globo;
+// Esc (`unfocus()`) vuelve a la vista general.
 import * as THREE from 'three';
 import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
 
@@ -308,19 +309,29 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     speak(id) { speaking = byId(id); kick(); },
     // say({ arquitecto: 'texto' }, { focus }): muestra esos globos y oculta los demás. Con `focus: false` la cámara
     // queda en la vista general (primera vista de cada oficina).
+    // El globo solo se ve con la cámara acercada: la cámara va al último agente que habló (el último del mapa) y
+    // solo su globo se muestra; las demás respuestas quedan en el historial.
     say(map, opts) {
+      const ids = Object.keys(map || {}).filter((id) => map[id]);
+      const last = ids.length ? byId(ids[ids.length - 1]) : null;
+      focus = mode === 'iso' && last && !(opts && opts.focus === false) ? last : null;
       AG.forEach((a) => {
         const s = says[a.id];
-        const t = map && map[a.id];
-        s.on = !!t; s.tx.textContent = t || '';
+        s.on = a === focus; s.tx.textContent = s.on ? map[a.id] : '';
         s.el.classList.toggle('is-on', s.on);
         if (!s.on) a.tagEl.style.display = '';
       });
-      // Un solo agente hablando (o escribiendo): la cámara se le acerca. Varios a la vez: vista general.
-      const talking = AG.filter((a) => says[a.id].on);
-      focus = mode === 'iso' && talking.length === 1 && !(opts && opts.focus === false) ? talking[0] : null;
       frameGoal();
       kick();
+    },
+    // Esc: vuelve a la vista general y oculta el globo.
+    unfocus() {
+      if (!focus) return false;
+      focus = null;
+      AG.forEach((a) => { const s = says[a.id]; s.on = false; s.tx.textContent = ''; s.el.classList.remove('is-on'); a.tagEl.style.display = ''; });
+      frameGoal();
+      kick();
+      return true;
     },
     setMode(m) { mode = m; setOverview(); kick(); },
     dispose() {

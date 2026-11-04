@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef } from 'react';
+import { useEffect, useId, useMemo, useRef } from 'react';
 import { OfficeThemeSwitch } from '../../molecules/OfficeThemeSwitch';
 import { OfficeChatHistory } from '../../molecules/OfficeChatHistory';
 import { OfficeSwapCover } from '../../molecules/OfficeSwapCover';
@@ -7,7 +7,7 @@ import { useOfficeScene } from '../../../hooks/useOfficeScene';
 import { useOfficeChat } from '../../../hooks/useOfficeChat';
 
 // Maqueta 3D de la oficina con la conversación encima: el selector de serie arriba, dentro del escenario, globos sobre
-// cada agente (la cámara se acerca al que habla), caja para escribir abajo e historial plegable. El cambio de oficina
+// el agente que habla (la cámara se le acerca y solo entonces se ve su globo; Esc vuelve a la vista general), caja para escribir abajo e historial plegable. El cambio de oficina
 // (`swap`) la tapa con cuadrados. Arrastrar gira la maqueta; clic en un agente lo elige para hablarle directo.
 export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, className }) {
   const canvasRef = useRef(null);
@@ -21,6 +21,13 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
   });
   const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail });
   chatRef.current = chat;
+
+  // Esc saca el zoom del agente que habla (y su globo) y vuelve a la vista general.
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') scene.unfocus(); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [scene.unfocus]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={['ap-off', `ap-off--${themeId}`, className].filter(Boolean).join(' ')}>
