@@ -77,9 +77,9 @@ public static class ApJob {
 }
 '@
 
-$perfil = Join-Path $env:TEMP ("chrome-bajo-recursos-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
+$carpetaTemporal = Join-Path $env:TEMP ("chrome-bajo-recursos-" + [guid]::NewGuid().ToString('N').Substring(0, 8))
 $flags = @(
-  "--user-data-dir=`"$perfil`"",
+  "--user-data-dir=`"$carpetaTemporal`"",
   '--no-first-run', '--no-default-browser-check',
   "--renderer-process-limit=$($p.Procesos)",
   "--js-flags=--max-old-space-size=$($p.Js)",
@@ -114,6 +114,6 @@ Write-Host 'Cierra esa ventana de Chrome (o esta consola) para terminar; tu Chro
 try { $proc.WaitForExit() } finally {
   if ($freno -and -not $freno.HasExited) { Stop-Process -Id $freno.Id -Force -ErrorAction SilentlyContinue }
   Start-Sleep -Milliseconds 500
-  Remove-Item -Recurse -Force $perfil -ErrorAction SilentlyContinue
+  Remove-Item -Recurse -Force $carpetaTemporal -ErrorAction SilentlyContinue
   Write-Host 'Listo: perfil temporal borrado.'
 }
