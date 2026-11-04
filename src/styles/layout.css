@@ -225,7 +225,8 @@
 /* Logo "apinto" en negro como primer elemento de la cápsula de la nav, enlace al inicio (4 nov 2026). Tiene el alto y
    el relleno de una píldora; bajo 900px de ventana pasa al monograma "ap" para que la cápsula quepa. */
 .ap-nav__brand{display:inline-flex;align-items:center;flex:none;min-height:calc(var(--target-min) * var(--nav-scale, 1));padding-inline:calc(var(--space-4) * var(--nav-scale, 1));border-radius:var(--radius-pill);color:var(--ink-primary)}
-.ap-nav__brand .ap-logo{height:calc(22px * var(--nav-scale, 1));width:auto}
+/* El trazo de la "p" baja del renglón y sube el dibujo: se baja para que el cuerpo del logo quede en la línea del texto. */
+.ap-nav__brand .ap-logo{height:calc(22px * var(--nav-scale, 1));width:auto;transform:translateY(calc(var(--space-1) * var(--nav-scale, 1)))}
 @media (hover: hover){.ap-nav__brand:hover{background:var(--surface-sunken)}}
 .ap-nav__brand:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
 .ap-nav__mono{display:none !important}
