@@ -24,10 +24,10 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
 
   // Esc saca el zoom del agente que habla (y su globo) y vuelve a la vista general.
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') scene.unfocus(); };
+    const onKey = (e) => { if (e.key === 'Escape') chatRef.current?.unfocus(); };
     document.addEventListener('keydown', onKey);
     return () => document.removeEventListener('keydown', onKey);
-  }, [scene.unfocus]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={['ap-off', `ap-off--${themeId}`, className].filter(Boolean).join(' ')}>

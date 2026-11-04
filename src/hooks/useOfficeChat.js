@@ -3,6 +3,10 @@ import { answer, bubbleMap, greeting, isConfirm, isEmail, leadMailto, wantsConta
 
 const STORE = 'ap-office-visit';
 const TYPING_MS = 550;
+// Cuánto se queda la cámara en cada agente cuando responden varios seguidos: el aviso de derivación se lee rápido; una
+// respuesta, según su largo. La última respuesta se queda hasta que pase otra cosa.
+const HANDOFF_MS = 2200;
+const holdFor = (r) => (r.handoff ? HANDOFF_MS : Math.min(9000, Math.max(2600, r.text.length * 45)));
 
 // Recuerda quién visita y su última pregunta (solo en este navegador; sin acceso, la oficina funciona igual).
 const readStore = () => { try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; } };
@@ -18,6 +22,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   const idRef = useRef(0);
   const askedRef = useRef([]);
   const timerRef = useRef(0);
+  const seqRef = useRef(0);
+  const lastRef = useRef(null);
   const msg = (who, text) => ({ id: ++idRef.current, who, text });
 
   const [state, setState] = useState(() => {
@@ -36,17 +42,28 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     };
   });
 
-  // Globos sobre cada agente, anillo en el último que habló y aviso para lectores de pantalla.
+  // Globos: la cámara se acerca a cada agente que responde, uno tras otro (primero quien deriva, después a quien deriva),
+  // con su globo y su anillo. Con `focus: false` no hay zoom ni globo. Aviso completo para lectores de pantalla.
   const bubbles = useCallback((replies, opts) => {
+    clearTimeout(seqRef.current);
     const s = sceneRef.current;
-    s.say(bubbleMap(replies), opts);
-    s.speak(replies.length ? replies[replies.length - 1].agent : null);
-    if (replies.length) setState((st) => ({ ...st, live: replies.map((r) => `${agents[r.agent].name}: ${r.text}`).join(' ') }));
+    if (opts && opts.focus === false) { s.say(bubbleMap(replies), opts); s.speak(null); return; }
+    const play = (i) => {
+      const r = replies[i];
+      if (!r) return;
+      s.say({ [r.agent]: r.text });
+      s.speak(r.agent);
+      lastRef.current = r.agent;
+      if (i < replies.length - 1) seqRef.current = setTimeout(() => play(i + 1), holdFor(r));
+    };
+    if (!replies.length) { s.say({}); s.speak(null); return; }
+    play(0);
+    setState((st) => ({ ...st, live: replies.map((r) => `${agents[r.agent].name}: ${r.text}`).join(' ') }));
   }, [agents]);
 
   // El saludo de recepción aparece en su globo apenas carga la oficina, con la oficina entera a la vista (sin zoom).
   useEffect(() => { bubbles([{ agent: 'recepcion', text: state.greet }], { focus: false }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => () => clearTimeout(timerRef.current), []);
+  useEffect(() => () => { clearTimeout(timerRef.current); clearTimeout(seqRef.current); }, []);
 
   const push = (list, patch) => setState((st) => ({ ...st, msgs: st.msgs.concat(list), ...(patch || {}) }));
   const recep = (text, patch) => { push([msg('recepcion', text)], patch); bubbles([{ agent: 'recepcion', text }]); };
@@ -96,10 +113,13 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     if (wantsContact(text, chat.leadRx)) { startLead(); return; }
     writeStore({ last: text.slice(0, 80) });
     const to = state.to;
+    const from = to || lastRef.current;
     setState((st) => ({ ...st, typing: true }));
-    sceneRef.current.say(to ? { [to]: '…' } : {});
+    clearTimeout(seqRef.current);
+    // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
+    sceneRef.current.say(from ? { [from]: '…' } : {});
     timerRef.current = setTimeout(() => {
-      const replies = answer(text, { topics: chat.topics, agents, to, noMatch: chat.noMatch });
+      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, handoff: chat.handoff });
       push(replies.map((r) => msg(r.agent, r.text)), { typing: false });
       bubbles(replies);
     }, TYPING_MS);
@@ -121,6 +141,14 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   else if (!vis) { chips = chat.visitors.map((v) => ({ label: v.label, pick: () => pickVisitor(v) })); chipsLabel = chat.visitorsLabel; }
   else chips = vis.sugs.map((q) => ({ label: q, pick: () => send(q) }));
 
+  // Esc o soltar al agente: corta la secuencia de respuestas y vuelve a la vista general, sin globo.
+  function unfocus() {
+    clearTimeout(seqRef.current);
+    lastRef.current = null;
+    sceneRef.current.speak(null);
+    sceneRef.current.unfocus();
+  }
+
   const mine = [...state.msgs].reverse().find((m) => m.who === 'visitor');
   const toName = state.to ? agents[state.to].name : null;
   const placeholder = inLead ? chat.lead.placeholders[state.lead.step] : chat.placeholder(toName || chat.placeholderAll);
@@ -141,11 +169,18 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     setDraft: (draft) => setState((st) => ({ ...st, draft })),
     submit: () => send(state.draft),
     toggleHist: () => setState((st) => ({ ...st, histOpen: !st.histOpen })),
-    // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó.
+    // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó. Al elegirlo, la cámara se le
+    // acerca y dice su presentación; al soltarlo, vuelve a la vista general.
     setTo: (id, fromScene) => {
       setState((st) => ({ ...st, to: id || null }));
       if (!fromScene) sceneRef.current.select(id || null);
+      if (!id) { unfocus(); return; }
+      if (state.typing) return;
+      const intro = agents[id].intro;
+      push([msg(id, intro)]);
+      bubbles([{ agent: id, text: intro }]);
     },
+    unfocus,
     leadSend: () => leadSend(state.lead),
     leadFix: () => recep(chat.lead.restart, { lead: { step: 'name' } }),
   };

@@ -22,10 +22,11 @@ export function isConfirm(text) {
 
 /**
  * Respuestas a una pregunta: el agente del primer tema que calza y, si hay otro tema de otro agente, este completa.
- * Sin tema, responde recepción. Si el visitante le habló a un agente que no sabe del tema, ese agente pasa la palabra.
+ * Sin tema, responde recepción. Si el visitante le habló a un agente (`to`, o el último que habló, `from`) que no sabe
+ * del tema, ese agente pasa la palabra con `handoff(agente)` y esa respuesta va marcada con `handoff: true`.
  * Devuelve como máximo 3 respuestas `{ agent, text }`.
  */
-export function answer(question, { topics, agents, to, noMatch }) {
+export function answer(question, { topics, agents, to, from, noMatch, handoff }) {
   const n = normalize(question);
   const hits = topics.filter((t) => t.rx.test(n));
   const out = [];
@@ -35,7 +36,11 @@ export function answer(question, { topics, agents, to, noMatch }) {
     const other = hits.find((h) => h.agent !== hits[0].agent);
     if (other) out.push({ agent: other.agent, text: 'Y para completar: ' + other.text.charAt(0).toLowerCase() + other.text.slice(1) });
   }
-  if (to && out[0].agent !== to) out.unshift({ agent: to, text: `Eso lo sabe mejor ${agents[out[0].agent].name}. Te paso con él.` });
+  const asked = to || from;
+  if (asked && out[0].agent !== asked) {
+    const next = agents[out[0].agent];
+    out.unshift({ agent: asked, handoff: true, text: handoff ? handoff(next) : `Eso lo sabe mejor ${next.name}. Te paso con él.` });
+  }
   return out.slice(0, 3);
 }
 

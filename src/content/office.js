@@ -29,10 +29,14 @@ export const stage = {
 };
 
 // Los tres agentes, con su nombre en minúsculas (su color, el del personaje, vive en src/styles/oficina.css).
+// `intro` es lo que dice cada uno al hacerle clic; `topic`, lo que sabe (para cuando otro agente te deriva a él).
 export const agents = {
-  recepcion: { id: 'recepcion', name: 'recepción' },
-  arquitecto: { id: 'arquitecto', name: 'arquitecto' },
-  stack: { id: 'stack', name: 'stack' },
+  recepcion: { id: 'recepcion', name: 'recepción', topic: 'quién es Augusto y cómo dejarle un recado',
+    intro: 'Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.' },
+  arquitecto: { id: 'arquitecto', name: 'arquitecto', topic: 'los proyectos de Augusto',
+    intro: 'Soy arquitecto. Conozco los proyectos de Augusto: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?' },
+  stack: { id: 'stack', name: 'stack', topic: 'las tecnologías con que construye Augusto',
+    intro: 'Soy stack. Sé con qué tecnologías construye Augusto, de la interfaz a la nube. Pregúntame por una.' },
 };
 
 export const chat = {
@@ -49,6 +53,8 @@ export const chat = {
   closeHistory: 'Cerrar historial',
   me: 'Tú',
   typingTo: (name) => `${name} está escribiendo…`,
+  // Cuando la pregunta es de otro agente: quien la recibe lo dice y la cámara viaja al escritorio del otro.
+  handoff: (to) => `Esa pregunta es para ${to.name}, que sabe de ${to.topic}. Te llevo a su escritorio.`,
   typingAll: 'La oficina está pensando…',
   placeholder: (name) => `Pregúntale algo a ${name}`,
   placeholderAll: 'la oficina',

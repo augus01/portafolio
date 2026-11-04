@@ -239,7 +239,8 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     if (!off.visible || document.hidden) return;
     if (!cap.ready(now)) { off.raf = requestAnimationFrame(frame); return; }
     const t = clock.getElapsedTime();
-    const k = reduced ? 1 : 0.12;
+    // Suavizado de la cámara: ~0,8 s para viajar de un agente a otro, así se entiende a dónde te lleva.
+    const k = reduced ? 1 : 0.08;
     view.theta += (goal.theta - view.theta) * k;
     view.el += (goal.el - view.el) * k;
     view.size += (goal.size - view.size) * k;

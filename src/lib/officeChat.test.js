@@ -62,3 +62,17 @@ test('leadMailto codifica asunto y cuerpo', () => {
   assert.ok(url.startsWith('mailto:a@b.cl?subject=Hola%20mundo&body='));
   assert.match(decodeURIComponent(url.split('body=')[1]), /Nombre: Ana\nNecesita: Una web/);
 });
+
+test('answer: el último agente que habló deriva la pregunta con aviso claro', () => {
+  const out = answer('¿Cómo está armado Zam?', { ...opts(), from: 'recepcion', handoff: chat.handoff });
+  assert.equal(out[0].agent, 'recepcion');
+  assert.equal(out[0].handoff, true);
+  assert.match(out[0].text, /arquitecto.*Te llevo a su escritorio/);
+  assert.equal(out[1].agent, 'arquitecto');
+});
+
+test('answer: si quien habló sabe del tema, no hay derivación', () => {
+  const out = answer('¿Qué es Inkvibe?', { ...opts(), from: 'arquitecto', handoff: chat.handoff });
+  assert.equal(out[0].agent, 'arquitecto');
+  assert.ok(!out.some((r) => r.handoff));
+});
