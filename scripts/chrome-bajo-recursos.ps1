@@ -4,18 +4,22 @@
   - Es otra instancia de Chrome, con un perfil temporal propio: tu Chrome de siempre, tus pestañas y tu perfil no se tocan.
   - Toda esa instancia (y cada proceso que abra) queda en un "job" de Windows con un tope de memoria (-RamMB).
     Si una pestaña pasa el tope, Chrome la cierra con "Sin memoria": eso es parte de la prueba.
-  - Chrome arranca en modo de equipo de gama baja y, con -SinGpu, sin aceleración gráfica (WebGL por software),
-    que es lo que hace que el sitio baje solo al modo liviano (src/lib/perfTier.js).
+  - Cada pestaña tiene un tope de memoria de JavaScript y hay como máximo dos procesos de pestañas. Con -SinGpu, sin
+    aceleración gráfica (WebGL por software), que es lo que hace que el sitio baje solo al modo liviano (src/lib/perfTier.js).
+  - -AndroidGamaBaja suma el modo de Chrome para teléfonos de 1 GB o menos: pinta con colores de 16 bits, así que se
+    ven bordes entre bloques y degradados en escalones. Es propio de ese modo (Chrome de escritorio no lo usa), no del sitio.
   - No cambia nada del sistema. Al cerrar esa ventana termina todo y el perfil temporal se borra: vuelve a la normalidad.
 
   Uso (con `npm run dev` o `npm run preview` corriendo):
     powershell -ExecutionPolicy Bypass -File scripts/chrome-bajo-recursos.ps1
     powershell -ExecutionPolicy Bypass -File scripts/chrome-bajo-recursos.ps1 -RamMB 768 -SinGpu -Url http://localhost:4173/
+    powershell -ExecutionPolicy Bypass -File scripts/chrome-bajo-recursos.ps1 -RamMB 512 -AndroidGamaBaja
 #>
 param(
   [string]$Url = 'http://localhost:5173/',
   [int]$RamMB = 1024,
-  [switch]$SinGpu
+  [switch]$SinGpu,
+  [switch]$AndroidGamaBaja
 )
 
 $ErrorActionPreference = 'Stop'
@@ -55,19 +59,19 @@ $perfil = Join-Path $env:TEMP ("chrome-bajo-recursos-" + [guid]::NewGuid().ToStr
 $flags = @(
   "--user-data-dir=`"$perfil`"",
   '--no-first-run', '--no-default-browser-check',
-  '--enable-low-end-device-mode',
   '--renderer-process-limit=2',
   '--js-flags=--max-old-space-size=256',
   '--new-window'
 )
 if ($SinGpu) { $flags += '--disable-gpu' }
+if ($AndroidGamaBaja) { $flags += '--enable-low-end-device-mode' }
 $flags += $Url
 
 $job = [ApJob]::Create([uint64]$RamMB * 1MB)
 $proc = Start-Process -FilePath $chrome -ArgumentList $flags -PassThru
 [ApJob]::Assign($job, $proc.Handle)
 
-Write-Host "Chrome limitado a $RamMB MB abierto en $Url$(if ($SinGpu) { ' (sin GPU)' })."
+Write-Host "Chrome limitado a $RamMB MB abierto en $Url$(if ($SinGpu) { ' (sin GPU)' })$(if ($AndroidGamaBaja) { ' (modo Android de gama baja)' })."
 Write-Host 'Cierra esa ventana de Chrome (o esta consola) para terminar; tu Chrome normal sigue igual.'
 try { $proc.WaitForExit() } finally {
   Start-Sleep -Milliseconds 500
