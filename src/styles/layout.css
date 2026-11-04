@@ -222,16 +222,16 @@
 @media (hover: hover){.ap-navwrap .ap-nav .ap-nav__bar .ap-pill:hover{background:var(--surface-sunken);border-color:transparent}}
 .ap-navwrap .ap-nav .ap-nav__bar .ap-pill.is-current{background:var(--action);color:var(--on-action);border-color:var(--action)}
 .ap-navwrap .ap-nav--dark .ap-nav__bar{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
-/* Logo "apinto" en negro a la izquierda de la nav, enlace al inicio (4 nov 2026). La cápsula sigue centrada; bajo
-   1100px de ventana el logo pasa al monograma "ap" y la cápsula se corre a la derecha para no montarse con él. */
-.ap-nav__brand{position:absolute;top:50%;left:0;display:inline-flex;align-items:center;min-height:var(--target-min);color:var(--ink-primary);transform:translateY(-50%)}
-.ap-nav__brand .ap-logo{height:calc(32px * var(--nav-scale, 1));width:auto}
-.ap-nav__brand:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset);border-radius:var(--radius-sm)}
+/* Logo "apinto" en negro como primer elemento de la cápsula de la nav, enlace al inicio (4 nov 2026). Tiene el alto y
+   el relleno de una píldora; bajo 900px de ventana pasa al monograma "ap" para que la cápsula quepa. */
+.ap-nav__brand{display:inline-flex;align-items:center;flex:none;min-height:calc(var(--target-min) * var(--nav-scale, 1));padding-inline:calc(var(--space-4) * var(--nav-scale, 1));border-radius:var(--radius-pill);color:var(--ink-primary)}
+.ap-nav__brand .ap-logo{height:calc(22px * var(--nav-scale, 1));width:auto}
+@media (hover: hover){.ap-nav__brand:hover{background:var(--surface-sunken)}}
+.ap-nav__brand:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
 .ap-nav__mono{display:none !important}
-@media (max-width: 1099px){
+@media (max-width: 899px){
   .ap-nav__logo{display:none !important}
   .ap-nav__mono{display:block !important}
-  .ap-navwrap .ap-nav--brand .ap-nav__bar{margin-inline:auto 0}
 }
 .ap-mnav__brand{display:inline-flex;align-items:center;min-height:var(--target-min);color:inherit;border-radius:var(--radius-sm)}
 .ap-mnav__brand:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}

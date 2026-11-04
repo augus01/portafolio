@@ -7,8 +7,8 @@ import { Logo } from '../../atoms/Logo';
 const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener noreferrer' } : null);
 
 // Navegación en píldoras flotantes; en contenedores de menos de 600px se pliega en un botón de menú.
-// `brand` ({ href, label }) agrega a la izquierda el logo "apinto" en negro como enlace al inicio; en ventanas
-// angostas pasa al monograma "ap" (layout.css).
+// `brand` ({ href, label }) agrega el logo "apinto" en negro como primer elemento de la cápsula, enlace al inicio;
+// en ventanas angostas pasa al monograma "ap" (layout.css).
 export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', label = 'Principal', className }) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
@@ -40,13 +40,13 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
 
   return (
     <div ref={rootRef} className={['ap-nav', `ap-nav--${tone}`, brand && 'ap-nav--brand', className].filter(Boolean).join(' ')}>
-      {brand && (
-        <a className="ap-nav__brand" href={brand.href} aria-label={brand.label}>
-          <Logo tone="dark" height={32} decorative className="ap-nav__logo" />
-          <Logo variant="monogram" tone="dark" height={32} decorative className="ap-nav__mono" />
-        </a>
-      )}
       <nav aria-label={label} className="ap-nav__bar">
+        {brand && (
+          <a className="ap-nav__brand" href={brand.href} aria-label={brand.label}>
+            <Logo tone="dark" height={32} decorative className="ap-nav__logo" />
+            <Logo variant="monogram" tone="dark" height={32} decorative className="ap-nav__mono" />
+          </a>
+        )}
         <ul className="ap-nav__group">{items.map(pill)}</ul>
         {actions.length > 0 && <ul className="ap-nav__group ap-nav__group--end">{actions.map(pill)}</ul>}
         {/* Píldora con icono y texto, como en el landing aprobado (ver design-system/INTEGRACION.md). */}
