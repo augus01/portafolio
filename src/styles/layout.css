@@ -243,3 +243,57 @@
 .ap-section .ap-headline__title.display{font-family:var(--font-oswald);font-weight:400;font-size:var(--section-title-size);line-height:var(--section-title-leading);letter-spacing:var(--section-title-tracking);text-transform:none;text-wrap:balance;overflow-wrap:normal;color:var(--ink-primary)}
 .ap-section .ap-headline__title span{color:var(--ink-highlight-muted)}
 .ap-section .ap-headline__lead.lead{max-width:var(--section-lead-max);font-family:var(--font-oswald);font-weight:400;font-size:var(--section-lead-size);color:var(--ink-primary)}
+
+
+/* Pie (ajuste del 4 nov 2026, referencia pedida por Augusto): fondo --surface-inverse a todo el ancho; arriba la pregunta
+   grande con la llamada a la oficina y su círculo de flecha, a la derecha los menús en mayúsculas; una línea y abajo los
+   tres agentes de colores, el año y la nota del despliegue. Lo que no tiene token está en variables --foot-*. */
+.ap-foot{--foot-title-size:clamp(48px, 6.4vw, 104px);--foot-cta-size:clamp(22px, 2.6vw, 40px);--foot-nav-size:clamp(22px, 2.4vw, 34px);
+  --foot-circle:clamp(56px, 5.4vw, 76px);--foot-small:.8125rem;--foot-agent:44px;--foot-pad:clamp(64px, 9vw, 152px)}
+.ap-foot .ap-foot__inner{display:flex;flex-direction:column;gap:clamp(48px, 6vw, 88px);max-width:var(--page-max);margin:0 auto;padding:var(--foot-pad) var(--space-8) var(--space-12)}
+.ap-foot a{color:inherit;text-decoration:none}
+.ap-foot a:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring-on-dark);outline-offset:var(--focus-ring-offset);border-radius:var(--radius-sm)}
+.ap-foot__top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-12) var(--space-8)}
+.ap-foot__pitch{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-6)}
+.ap-foot__brand{display:inline-flex;align-items:center;min-height:var(--target-min)}
+.ap-foot__title{margin:0;font-family:var(--font-text);font-weight:500;font-size:var(--foot-title-size);line-height:.95;letter-spacing:-0.055em}
+.ap-foot__cta{display:inline-flex;align-items:center;gap:var(--space-4);font-family:var(--font-text);font-weight:400;font-size:var(--foot-cta-size);line-height:1;letter-spacing:.01em;text-transform:uppercase}
+.ap-foot__circle{display:inline-flex;align-items:center;justify-content:center;flex:none;width:var(--foot-circle);height:var(--foot-circle);border:var(--stroke-hairline) solid currentColor;border-radius:var(--radius-pill);transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out),transform var(--dur-move) var(--ease-out)}
+.ap-foot__circle .ap-icon{width:40%;height:40%}
+@media (hover: hover){
+  .ap-foot__cta:hover .ap-foot__circle{background:var(--ink-on-dark);color:var(--surface-inverse);transform:translateX(var(--space-1))}
+  .ap-foot__nav a:hover{text-decoration:underline;text-decoration-thickness:var(--stroke-hairline);text-underline-offset:.15em}
+}
+.ap-foot__nav ul{display:flex;flex-direction:column;align-items:flex-end;gap:var(--space-1);margin:0;padding:0;list-style:none}
+.ap-foot__nav a{display:inline-flex;align-items:center;min-height:var(--target-min);font-family:var(--font-text);font-weight:400;font-size:var(--foot-nav-size);line-height:1.1;text-transform:uppercase}
+.ap-foot__bottom{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--space-6);padding-top:var(--space-8);border-top:var(--stroke-hairline) solid var(--ink-on-dark)}
+.ap-foot__left{display:flex;flex-direction:column;align-items:flex-start;gap:var(--space-4)}
+.ap-foot__agents{display:inline-flex;align-items:flex-end;gap:var(--space-2);padding:var(--space-1)}
+.ap-foot__copy,.ap-foot__note{margin:0;font-family:var(--font-text);font-size:var(--foot-small);line-height:1.5;color:var(--ink-on-dark-muted)}
+.ap-foot__note{text-align:right}
+.ap-foot__note a{color:var(--ink-on-dark);text-decoration:underline;text-underline-offset:3px}
+
+/* Los tres agentes del pie, planos y en su color; al pasar sobre ellos saltan uno tras otro. */
+.ap-agent{display:block;width:var(--foot-agent, 44px);height:auto;overflow:visible;transition:transform var(--dur-move) var(--ease-out)}
+.ap-agent__body{stroke:none}
+.ap-agent--recepcion .ap-agent__body{fill:var(--ap-agent-recepcion)}
+.ap-agent--arquitecto .ap-agent__body{fill:var(--ap-agent-arquitecto)}
+.ap-agent--stack .ap-agent__body{fill:var(--ap-agent-stack)}
+.ap-agent__eye{fill:var(--ink-on-dark)}
+.ap-agent__pupil{fill:var(--surface-inverse)}
+.ap-agent__smile{fill:none;stroke:var(--surface-inverse);stroke-width:2.5;stroke-linecap:round}
+.ap-agent__antenna{fill:none;stroke:var(--ap-agent-stack);stroke-width:2.5;stroke-linecap:round}
+.ap-agent__bulb{fill:var(--ap-agent-bulb, #f2a7c3)}
+@media (hover: hover){
+  .ap-foot__agents:hover .ap-agent{transform:translateY(calc(var(--space-2) * -1))}
+  .ap-foot__agents:hover .ap-agent:nth-child(2){transition-delay:60ms}
+  .ap-foot__agents:hover .ap-agent:nth-child(3){transition-delay:120ms}
+}
+@media (prefers-reduced-motion: reduce){.ap-agent,.ap-foot__circle{transition:none}}
+
+@container (max-width: 719px){
+  .ap-foot .ap-foot__inner{padding-inline:var(--space-4)}
+  .ap-foot__nav ul{align-items:flex-start}
+  .ap-foot__bottom{flex-direction:column;align-items:flex-start}
+  .ap-foot__note{text-align:left}
+}

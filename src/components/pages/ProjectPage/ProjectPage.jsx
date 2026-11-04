@@ -9,7 +9,7 @@ import { CaseCover } from '../../organisms/CaseCover';
 import { CaseIntro } from '../../organisms/CaseIntro';
 import { CaseStage } from '../../organisms/CaseStage';
 import { CaseNext } from '../../organisms/CaseNext';
-import { CaseFooter } from '../../organisms/CaseFooter';
+import { Footer } from '../../organisms/Footer';
 import { useCaseParallax } from '../../../hooks/useCaseParallax';
 import { useMobileMenu } from '../../../hooks/useMobileMenu';
 import { casePage, getCase } from '../../../content/projects';
@@ -48,7 +48,7 @@ export function ProjectPage({ slug }) {
         intro={<CaseIntro labels={{ project: casePage.projectLabel, links: casePage.linksLabel, stack: casePage.stackLabel }} {...data.intro} facts={data.facts} />}
         stages={data.stages.map((s) => <CaseStage key={s.label} {...s} />)}
         next={<CaseNext labels={casePage.next} next={data.next} />}
-        footer={<CaseFooter items={casePage.footer} />}
+        footer={<Footer {...casePage.footer} />}
       />
     </div>
   );

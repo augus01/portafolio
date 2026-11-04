@@ -18,8 +18,8 @@ export function CasePageTemplate({ theme, nav, back, head, cover, intro, stages,
       {intro}
       {stages}
       {next}
-      {footer}
       </main>
+      {footer}
     </>
   );
 }

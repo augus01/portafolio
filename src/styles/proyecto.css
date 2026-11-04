@@ -139,7 +139,7 @@ body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case-col p{margin:var(--space-3) 0 0;font-family:var(--font-oswald);font-size:17px;line-height:1.5;color:var(--case-copy-on-dark)}
 
 /* Siguiente proyecto */
-.ap-case-next{padding:176px var(--case-gutter) 0;text-align:center}
+.ap-case-next{padding:176px var(--case-gutter) var(--space-section);text-align:center}
 .ap-case-next__link{display:inline-flex;flex-direction:column;align-items:center;text-decoration:none}
 .ap-case-next__label{color:var(--ink-secondary)}
 .ap-case-next__title{margin:20px 0 0;font-family:var(--font-text);font-weight:400;font-size:clamp(64px, 13cqw, 200px);line-height:.9;letter-spacing:-0.055em;transition:opacity var(--dur-move) var(--ease-in-out)}
@@ -150,15 +150,6 @@ body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case-next__link:hover .ap-case-next__title{opacity:.6}
 .ap-case-all{display:inline-flex;align-items:center;gap:10px;min-height:var(--target-lg);margin-top:72px;padding:0 28px;border:var(--stroke-hairline) solid var(--border-strong);border-radius:var(--radius-pill);text-decoration:none;font-family:var(--font-oswald);font-size:18px;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
 .ap-case-all:hover{background:var(--action);color:var(--on-action)}
-
-/* Pie */
-.ap-case-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-6);padding:var(--space-section) var(--case-gutter) 36px}
-.ap-case-bottom div{display:flex;flex-direction:column;gap:10px}
-.ap-case-bottom div:last-child{align-items:flex-end}
-.ap-case-bottom .ap-case-mono{color:var(--ink-secondary)}
-.ap-case-bottom p{margin:0;font-family:var(--font-oswald);font-size:17px}
-.ap-case-bottom a{display:inline-flex;align-items:center;min-height:var(--target-min);text-decoration:none}
-.ap-case-bottom a:hover{text-decoration:underline;text-underline-offset:5px}
 
 @media (prefers-reduced-motion: reduce){.ap-case *{transition:none !important}}
 
@@ -209,7 +200,6 @@ body:has(.ap-case){background:var(--surface-canvas)}
   .ap-case-combo{padding-bottom:var(--case-gutter)}
   .ap-case-combo .ap-dev-laptop{width:92%}
   .ap-case-combo .ap-dev-phone{right:-4px;width:30%}
-  .ap-case-next{padding-top:112px}
+  .ap-case-next{padding-top:112px;padding-bottom:88px}
   .ap-case-all{margin-top:56px}
-  .ap-case-bottom{padding:88px var(--case-gutter) var(--space-6)}
 }

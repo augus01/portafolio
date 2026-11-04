@@ -2,7 +2,7 @@
 // (4 nov 2026: Rumbo a Casa e Inkvibe, escritorio y móvil). Zam no tiene página en el artefacto ni capturas todavía:
 // usa la misma estructura con su logo y cómo está armado, solo con hechos ya publicados en el sitio.
 // vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build (por eso solo importa contenido plano).
-import { nav as landingNav, mobileMenu as landingMenu } from './home.js';
+import { nav as landingNav, mobileMenu as landingMenu, footer as landingFooter } from './home.js';
 
 const PHONE = { width: 387, height: 784 };
 const dir = '/proyectos/casos';
@@ -18,6 +18,8 @@ export const casePage = {
     items: landingNav.items.map(toLanding),
     actions: landingNav.actions.map(toLanding),
   },
+  // El mismo pie del landing, con las anclas apuntando al landing.
+  footer: { ...landingFooter, nav: { ...landingFooter.nav, items: landingFooter.nav.items.map((i) => ({ ...toLanding(i), current: false })) } },
   mobileMenu: {
     ...landingMenu,
     links: landingMenu.links.map(toLanding),
@@ -30,10 +32,6 @@ export const casePage = {
   stackLabel: 'Stack',
   coverLabel: 'Portada del proyecto',
   next: { label: 'Siguiente proyecto', all: 'Ver todos los proyectos', allHref: '/#proyectos' },
-  footer: [
-    { label: 'Versión', text: '2026 © Augusto Pinto' },
-    { label: 'Sigue', link: { label: 'Escríbeme', href: '/#contacto' } },
-  ],
   documentTitle: (name) => `${name} · Proyecto · Augusto Pinto`,
 };
 

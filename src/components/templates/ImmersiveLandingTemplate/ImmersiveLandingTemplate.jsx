@@ -32,7 +32,7 @@ export function ImmersiveLandingTemplate({ nav, mobileMenu, hero, footer, childr
         <HeroStage hero={hero} motionRef={motionRef} />
       </div>
       <main className="ap-after">{children}</main>
-      {footer && <Footer {...footer} />}
+      {footer && <Footer {...footer} onNavigate={menu.navigate} />}
     </div>
   );
 }

@@ -102,6 +102,16 @@ Cada proyecto tiene su página en **`/proyectos/<slug>/`** (`rumbo-a-casa`, `ink
 
 Componentes: átomo `Device`; moléculas `CaseTopBar`, `CaseCaption`; organismos `CaseHead`, `CaseCover`, `CaseIntro`, `CaseStage`, `CaseNext`, `CaseFooter`; plantilla `CasePageTemplate`; página `ProjectPage`. Contenido en `src/content/projects.js`; capturas en `public/proyectos/casos/` (extraídas del artefacto: teléfono 387 × 784, laptop 1508 × 784, tablet 813 × 1150). El build copia `dist/index.html` a `dist/proyectos/<slug>/index.html` (`vite.config.js`, lista `caseSlugs`) y `main.jsx` elige la página por la ruta.
 
+## Excepción aprobada (pie de página)
+
+El pie (organismo `Footer`, mismo en el landing y en las páginas de proyecto) sigue una referencia que pidió Augusto el 4 nov 2026: fondo `--surface-inverse` a todo el ancho; arriba el logo "apinto" en blanco, la pregunta "¿Tienes una idea?" grande y la llamada "Pasa a la oficina" en mayúsculas con un círculo de flecha (lleva a `/oficina/`); a la derecha, los menús de la nav en mayúsculas. Tras una línea blanca, abajo a la izquierda los tres agentes de colores (átomo `AgentFigure`, planos como sus personajes 3D; enlace a la oficina, saltan al pasar el cursor) y el año; a la derecha, "Desplegado en AWS Amplify" y el repositorio. En el landing, los menús saltan con el scroll suave. Contenido en `footer` de `src/content/home.js`.
+
+| Regla del sistema | Excepción | Variable |
+| --- | --- | --- |
+| Escala tipográfica fija | Pregunta en Geist 500 `clamp(48px, 6.4vw, 104px)`, espaciado −0,055em; llamada y menús en Geist 400 en mayúsculas (`clamp(22px, 2.6vw, 40px)` y `clamp(22px, 2.4vw, 34px)`) | `--foot-title-size`, `--foot-cta-size`, `--foot-nav-size` |
+| Monocromo | Los tres agentes en su color (`--ap-agent-*`) y la bombilla de la antena de stack en rosa `#f2a7c3` | `--ap-agent-bulb` |
+| Proporciones del sistema | Círculo de la flecha `clamp(56px, 5.4vw, 76px)`; agentes de 44px; relleno superior `clamp(64px, 9vw, 152px)` | `--foot-circle`, `--foot-agent`, `--foot-pad` |
+
 ## Excepciones aprobadas (vista móvil)
 
 La vista móvil se aprobó en el lienzo "Movil" del mismo artefacto (30 oct 2026, vista previa 390 × 844) y se aplica **bajo 600px de ventana**, el mismo corte que usan NavBar y Hero. Vive en `src/styles/movil.css`; lo que no tiene token está en variables `--m-*` de `.ap-page`.

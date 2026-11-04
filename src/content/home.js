@@ -201,7 +201,23 @@ export const contact = {
   },
 };
 
+// Pie: pregunta grande con la llamada a la oficina, los menús de la nav y, abajo a la izquierda, los tres agentes.
 export const footer = {
-  links: [{ label: 'Abrir repositorio', href: 'https://github.com/augus01/portafolio', external: true }],
+  brand: { label: 'Augusto Pinto, ir al inicio', href: '/' },
+  title: '¿Tienes una idea?',
+  cta: { label: 'Pasa a la oficina', href: '/oficina/' },
+  nav: {
+    label: 'Pie de página',
+    items: [
+      { label: 'Sobre mí', href: '#sobre-mi' },
+      { label: 'Superpoderes', href: '#superpoderes' },
+      { label: 'Proyectos', href: '#proyectos' },
+      { label: 'Contacto', href: '#contacto' },
+      { label: 'GitHub', href: 'https://github.com/augus01', external: true },
+    ],
+  },
+  agents: { label: 'Visita mi oficina: recepción, arquitecto y stack te esperan', href: '/oficina/', items: ['recepcion', 'arquitecto', 'stack'] },
+  copyright: '© 2026 Augusto Pinto',
   note: 'Desplegado en AWS Amplify',
+  links: [{ label: 'Abrir repositorio', href: 'https://github.com/augus01/portafolio', external: true }],
 };
