@@ -25,12 +25,6 @@ export const themes = {
 };
 
 export const stage = {
-  viewsLabel: 'Vista',
-  views: [
-    { id: 'iso', label: 'Isométrica' },
-    { id: 'top', label: 'Planta' },
-  ],
-  agentsLabel: 'Hablarle a un agente',
   fallback: 'No se pudo abrir la vista 3D en este navegador. Igual puedes conversar con la oficina aquí abajo.',
 };
 

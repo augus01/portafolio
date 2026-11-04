@@ -2,6 +2,7 @@
 // El decorado y los personajes llegan en `theme` (src/lib/officeThemes.js); los nombres de los agentes, en `agents`.
 // Un clic en un agente no abre panel: lo marca y avisa con `onPick(id | null)`; la conversación la dibuja React.
 // Los globos de diálogo sobre cada agente se muestran con `say({ id: texto })` y el anillo del que habla con `speak(id)`.
+// Si habla un solo agente, la cámara se acerca a él (como recepción en Contacto) y vuelve a la vista general al callar.
 import * as THREE from 'three';
 import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
 
@@ -136,18 +137,30 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   const goal = { theta: view.theta, el: view.el, size: view.size, target: view.target.clone() };
   const TH_MIN = 0.0, TH_MAX = Math.PI / 2 - 0.12;
   let mode = 'iso';
+  // Agente al que se acerca la cámara mientras habla (null: vista general). FOCUS es la fracción del encuadre general
+  // y FOCUS_Y cuánto sobre el agente queda el centro, para que su globo entre arriba sin tocar el borde.
+  let focus = null;
+  const FOCUS = 0.36, FOCUS_Y = 0.3;
   const baseSize = () => 7.2 * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
-  const setOverview = () => {
+  const frameGoal = () => {
+    if (focus) {
+      goal.target.set(focus.pos[0], focus.pos[1] + FOCUS_Y, focus.pos[2]);
+      goal.size = baseSize() * FOCUS;
+      return;
+    }
     goal.target.set(0, 0.6, 0);
     goal.size = baseSize() * (mode === 'top' ? 0.85 : 1);
+  };
+  const setOverview = () => {
     goal.el = mode === 'top' ? Math.PI / 2 - 0.001 : Math.atan(1 / Math.SQRT2);
     goal.theta = mode === 'top' ? 0 : Math.PI / 4;
+    frameGoal();
   };
   const resize = () => {
     const w = stage.clientWidth, h = stage.clientHeight;
     if (!w || !h) return;
     renderer.setSize(w, h);
-    setOverview();
+    frameGoal();
   };
   resize();
   view.size = goal.size;
@@ -254,9 +267,9 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
       l.el.style.display = (Math.abs(v.x) > 1.05 || Math.abs(v.y) > 1.05) ? 'none' : '';
     });
     // Globos sobre la cabeza del agente sin salirse del recuadro; la colita sigue apuntando al agente.
-    // En pantallas angostas se apilan arriba, a lo ancho, para no tapar la maqueta.
+    // En pantallas angostas se apilan arriba, a lo ancho y bajo el selector de serie, para no tapar la maqueta.
     const narrow = w < 560;
-    let stackY = 52;
+    let stackY = 60;
     AG.forEach((a) => {
       const s = says[a.id];
       if (!s.on) return;
@@ -302,6 +315,10 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
         s.el.classList.toggle('is-on', s.on);
         if (!s.on) a.tagEl.style.display = '';
       });
+      // Un solo agente hablando (o escribiendo): la cámara se le acerca. Varios a la vez: vista general.
+      const talking = AG.filter((a) => says[a.id].on);
+      focus = mode === 'iso' && talking.length === 1 ? talking[0] : null;
+      frameGoal();
       kick();
     },
     setMode(m) { mode = m; setOverview(); kick(); },

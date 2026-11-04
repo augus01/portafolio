@@ -25,11 +25,12 @@ export function OfficePage() {
   return (
     <>
       <OfficePageTemplate
-        header={<OfficeHeader {...officePage} onBack={onBack} themes={themes} swap={swap} />}
+        header={<OfficeHeader {...officePage} onBack={onBack} />}
       >
         <Office
           stageRef={stageRef}
           themeId={swap.current}
+          themes={themes}
           swap={swap}
           swapLabel={themes.swapLabel}
           swapTarget={target}

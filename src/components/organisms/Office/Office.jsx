@@ -1,15 +1,15 @@
 import { useId, useMemo, useRef } from 'react';
-import { OfficeButton } from '../../atoms/OfficeButton';
+import { OfficeThemeSwitch } from '../../molecules/OfficeThemeSwitch';
 import { OfficeChatHistory } from '../../molecules/OfficeChatHistory';
 import { OfficeSwapCover } from '../../molecules/OfficeSwapCover';
 import { OfficeChatDock } from '../OfficeChatDock';
 import { useOfficeScene } from '../../../hooks/useOfficeScene';
 import { useOfficeChat } from '../../../hooks/useOfficeChat';
 
-// Maqueta 3D de la oficina con la conversación encima: vistas y agentes arriba, globos sobre cada agente,
-// caja para escribir abajo e historial plegable. El cambio de oficina (`swap`) la tapa con cuadrados.
-// Arrastrar gira la maqueta; clic en un agente (o en su botón) lo elige para hablarle directo.
-export function Office({ stageRef, themeId, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, className }) {
+// Maqueta 3D de la oficina con la conversación encima: el selector de serie arriba, dentro del escenario, globos sobre
+// cada agente (la cámara se acerca al que habla), caja para escribir abajo e historial plegable. El cambio de oficina
+// (`swap`) la tapa con cuadrados. Arrastrar gira la maqueta; clic en un agente lo elige para hablarle directo.
+export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, className }) {
   const canvasRef = useRef(null);
   const labelsRef = useRef(null);
   const historyId = useId();
@@ -29,18 +29,16 @@ export function Office({ stageRef, themeId, swap, swapLabel, swapTarget, stage, 
           {scene.failed && <p className="ap-off__fallback body">{stage.fallback}</p>}
         </div>
         <div className="ap-off__labels" ref={labelsRef} />
-        <div className="ap-off__bar">
-          <div className="ap-off__row ap-off__row--views" role="group" aria-label={stage.viewsLabel}>
-            {stage.views.map((v) => (
-              <OfficeButton key={v.id} pressed={scene.mode === v.id} onClick={() => scene.setMode(v.id)}>{v.label}</OfficeButton>
-            ))}
-          </div>
-          <div className="ap-off__row" role="group" aria-label={stage.agentsLabel}>
-            {agentList.map((a) => (
-              <OfficeButton key={a.id} pressed={chat.to === a.id} onClick={() => chat.setTo(chat.to === a.id ? null : a.id)}>{a.name}</OfficeButton>
-            ))}
-          </div>
-        </div>
+        <OfficeThemeSwitch
+          inStage
+          label={themes.label}
+          nowLabel={themes.nowLabel}
+          items={themes.items}
+          current={swap.current}
+          target={swap.target}
+          busy={swap.busy}
+          onPick={swap.go}
+        />
         <OfficeChatDock chat={chat} texts={texts} historyId={historyId} leadNote={leadEmail ? texts.lead.noteMail : texts.lead.noteDraft} />
         <OfficeChatHistory
           id={historyId}

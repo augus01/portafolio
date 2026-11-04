@@ -48,9 +48,13 @@
 .ap-off__fallback.body{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;margin:0;padding:var(--space-8);text-align:center;color:var(--off-panel-muted)}
 .ap-off__labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
 
-.ap-off__bar{position:absolute;z-index:5;top:14px;left:14px;right:14px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:var(--space-2);pointer-events:none}
-.ap-off__bar > *{pointer-events:auto}
-.ap-off__row{display:flex;gap:var(--space-2);flex-wrap:wrap}
+/* Selector de serie dentro del escenario, arriba a la izquierda, con los colores de la oficina (variables --off-*). */
+.ap-ofsw--stage{position:absolute;z-index:5;top:14px;left:14px;max-width:calc(100% - 28px)}
+.ap-ofsw--stage .ap-ofsw__group{border-color:var(--off-line);background:var(--off-btn-bg)}
+.ap-ofsw--stage .ap-ofsw__btn.label{font-size:var(--off-ui-size);letter-spacing:var(--off-ui-tracking);color:var(--off-btn-ink)}
+@media (hover: hover){.ap-ofsw--stage .ap-ofsw__btn.label:hover{background:color-mix(in srgb, var(--off-btn-on-bg) 14%, transparent)}}
+.ap-ofsw--stage .ap-ofsw__btn.label[aria-pressed="true"]{background:var(--off-btn-on-bg);color:var(--off-btn-on-ink)}
+.ap-ofsw--stage .ap-ofsw__btn.label:focus-visible{outline:var(--off-focus-width) solid var(--off-focus)}
 .ap-off__btn.label{display:inline-flex;align-items:center;justify-content:center;font:500 var(--off-ui-size)/1 var(--font-mono);letter-spacing:var(--off-ui-tracking);text-transform:uppercase;border:var(--off-stroke) solid var(--off-line);background:var(--off-btn-bg);color:var(--off-btn-ink);border-radius:var(--radius-pill);padding:0 var(--space-4);min-height:var(--target-min);cursor:pointer;transition:transform var(--dur-press) var(--ease-out)}
 @media (hover: hover){.ap-off__btn.label:hover{transform:translateY(var(--off-btn-lift))}}
 .ap-off__btn.label[aria-pressed="true"]{background:var(--off-btn-on-bg);color:var(--off-btn-on-ink)}
@@ -141,20 +145,17 @@
 /* ---------- Bajo 720px: cabecera compacta, sin vistas y conversación a lo ancho ---------- */
 @media (max-width: 719px){
   .ap-ofp{padding:10px;gap:var(--space-2);min-height:0}
-  .ap-ofp__head{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"back title" "sw sw";align-items:center;gap:var(--space-2) 10px}
+  .ap-ofp__head{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"back title";align-items:center;gap:var(--space-2) 10px}
   .ap-ofp__titles{grid-area:title}
-  .ap-ofp__switch{grid-area:sw;width:100%}
   .ap-ofp__back.label{grid-area:back;width:var(--target-min);padding:0;justify-content:center}
   .ap-ofp__backtxt{display:none}
   .ap-office__title.subheading{font-size:22px}
-  .ap-office__subtitle.subheading,.ap-ofsw__label.label,.ap-ofsw__now.body-sm{display:none}
+  .ap-office__subtitle.subheading{display:none}
+  .ap-ofsw--stage{top:var(--space-2);left:var(--space-2);right:var(--space-2);max-width:none}
   .ap-ofsw__group{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;border-radius:var(--radius-pill)}
   .ap-ofsw__group::-webkit-scrollbar{display:none}
   .ap-ofsw__btn.label{flex:none;min-height:40px;padding:0 14px}
   .ap-off__stage{min-height:0;border-radius:18px}
-  .ap-off__bar{top:var(--space-2);left:var(--space-2);right:var(--space-2)}
-  .ap-off__row--views{display:none}
-  .ap-off__bar .ap-off__btn.label{min-height:36px;padding:0 var(--space-3);font-size:10px}
   .ap-off__tag--deco{display:none !important}
   .ap-off__say{font-size:14px;padding:var(--space-2) var(--space-3) 10px}
   .ap-ofd{left:var(--space-2);right:var(--space-2);bottom:var(--space-2);padding:var(--space-2);gap:var(--space-2);border-radius:18px}
