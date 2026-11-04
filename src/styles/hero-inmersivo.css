@@ -6,8 +6,8 @@ html.lenis,html.lenis body{height:auto}
 /* Paleta local del hero (no es del design system). El shader y el fallback la leen de aquí. */
 .ap-sticky{--hero-shadow:#062a35;--hero-teal:#0b4f63;--hero-cyan:#1fa3c4;--hero-cyan-light:#9fe3f0;--hero-lime:#d9d36a;--hero-ocre:#c9973f;--hero-rose:#d9a3a0}
 
-/* Pin corto: el escenario queda fijo (sticky) ~0,35 pantallas de scroll antes de soltar a la página. */
-.ap-track{position:relative;height:calc(1.35 * min(100svh, 900px))}
+/* Pin corto: el escenario (una pantalla completa, sin tope de alto) queda fijo ~0,35 pantallas de scroll antes de soltar a la página. */
+.ap-track{position:relative;height:135svh}
 /* Salida del túnel: la luz funde al fondo claro de la página antes de soltar el pin. */
 .ap-exit{position:absolute;inset:0;z-index:5;pointer-events:none;background:var(--surface-canvas);opacity:0;visibility:hidden}
 .ap-sticky{position:sticky;top:0;overflow:hidden;background:var(--hero-shadow)}
