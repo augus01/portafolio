@@ -189,6 +189,13 @@
 .ap-gal__lockup--zam .ap-gal__wordmark{font-family:var(--gal-font-zam);font-weight:500;letter-spacing:-0.01em;font-size:22cqw}
 /* El nombre de cada proyecto toma la tipografía del título de la galería (fuente, peso y espaciado), a un tamaño menor. */
 .ap-gal__name.subheading{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-name-size);line-height:var(--gal-name-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
+/* El nombre es el enlace a la página del proyecto; su área cubre todo el proyecto y el foco se dibuja alrededor de él. */
+.ap-gal__item:has(.ap-gal__link){position:relative;cursor:pointer}
+.ap-gal__link{color:inherit;text-decoration:none}
+.ap-gal__link::after{content:"";position:absolute;inset:0;z-index:5}
+.ap-gal__item:hover .ap-gal__link{text-decoration:underline;text-decoration-thickness:var(--stroke-hairline);text-underline-offset:6px}
+.ap-gal__link:focus-visible{outline:none}
+.ap-gal__link:focus-visible::after{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
 /* Igual que la bajada de Superpoderes: mismo ancho máximo y 16px bajo el título (8px del subgrid + 8px). */
 .ap-gal__desc.lead{margin:var(--space-2) 0 0;max-width:var(--section-lead-max);font-weight:var(--gal-text-weight);font-family:var(--gal-text-font);font-size:var(--gal-text-size);color:var(--ink-primary)}
 .ap-gal__foot{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2) var(--space-3);padding-top:var(--space-2)}

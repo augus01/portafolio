@@ -1,0 +1,1 @@
+export { CaseFooter } from './CaseFooter';

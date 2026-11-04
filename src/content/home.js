@@ -133,10 +133,11 @@ export const projects = {
   // Cada proyecto es una portada en el color de su app con el logo en blanco, y debajo
   // nombre, descripción y rol. `logo.image` es un archivo con el nombre incluido; `logo.symbol` + `logo.wordmark`
   // compone el símbolo con el nombre escrito en la fuente de esa marca (`logo.brand` elige la fuente).
-  // Las capturas de cada app siguen en /public/proyectos/ para una futura página de detalle.
+  // `href` lleva a la página dedicada del proyecto (contenido en src/content/projects.js).
   items: [
     {
       name: 'Rumbo a Casa',
+      href: '/proyectos/rumbo-a-casa/',
       description: 'A qué subsidio de vivienda puede postular tu familia, con la fuente de cada respuesta.',
       role: 'Co-creador',
       award: 'Ganador AWS Zero to Shipped',
@@ -154,6 +155,7 @@ export const projects = {
     },
     {
       name: 'Inkvibe',
+      href: '/proyectos/inkvibe/',
       description: 'Marketplace del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar.',
       role: 'Desarrollador frontend',
       // Logotipo horizontal de inkvibe.app con el nombre en blanco, como en su encabezado sobre fondo oscuro.
@@ -166,6 +168,7 @@ export const projects = {
     },
     {
       name: 'Zam',
+      href: '/proyectos/zam/',
       description: 'Caja, inventario y finanzas del minimarket de barrio: app para el cajero y panel web para el dueño.',
       role: 'Proyecto propio · En desarrollo',
       // Símbolo de Zam (cuadrado redondeado con cuatro círculos superpuestos que dejan pétalos en las esquinas),

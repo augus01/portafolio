@@ -1,0 +1,248 @@
+// Páginas dedicadas de cada proyecto (/proyectos/<slug>/), según las páginas de caso del artefacto "Hero · Augusto Pinto"
+// (4 nov 2026: Rumbo a Casa e Inkvibe, escritorio y móvil). Zam no tiene página en el artefacto ni capturas todavía:
+// usa la misma estructura con su logo y cómo está armado, solo con hechos ya publicados en el sitio.
+// Sin imports: vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build.
+
+const PHONE = { width: 387, height: 784 };
+const dir = '/proyectos/casos';
+
+// Textos compartidos de la página de caso.
+export const casePage = {
+  home: { label: '© Augusto Pinto', href: '/' },
+  nav: [
+    { label: 'Proyectos', href: '/#proyectos', current: true },
+    { label: 'Sobre mí', href: '/#sobre-mi', hideSm: true },
+    { label: 'Contacto', href: '/#contacto' },
+  ],
+  back: { label: 'Volver a proyectos', href: '/#proyectos' },
+  projectLabel: 'El proyecto',
+  linksLabel: 'Enlaces del proyecto',
+  stackLabel: 'Stack',
+  coverLabel: 'Portada del proyecto',
+  next: { label: 'Siguiente proyecto', all: 'Ver todos los proyectos', allHref: '/#proyectos' },
+  footer: [
+    { label: 'Versión', text: '2026 © Augusto Pinto' },
+    { label: 'Sigue', link: { label: 'Escríbeme', href: '/#contacto' } },
+  ],
+  documentTitle: (name) => `${name} · Proyecto · Augusto Pinto`,
+};
+
+// `theme`: color de marca (portada y escenarios de marca), fondo de los escenarios, acento, círculo del enlace principal
+// y color con que aparece en "Siguiente proyecto". `stages`: secciones a sangre; cada bloque es un dispositivo con su
+// captura (laptop, teléfonos, tablet + teléfono) o texto.
+export const cases = [
+  {
+    slug: 'rumbo-a-casa',
+    name: 'Rumbo a Casa',
+    eyebrow: 'Social good',
+    meta: [
+      { label: 'Rol', value: 'Co-creador' },
+      { label: 'Reconocimiento', value: 'Ganador Social Good · AWS Zero to Shipped' },
+      { label: 'Lugar y año', value: 'Chile © 2026' },
+    ],
+    theme: { brand: '#16406f', tint: '#e7e1d6', cta: '#b5542e', onCta: '#ffffff', next: '#16406f' },
+    cta: { label: 'Ver la app', href: 'https://d26duk07atmc3z.cloudfront.net/' },
+    cover: {
+      badge: 'Ganador · AWS Zero to Shipped',
+      logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo-claro.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
+      phones: [
+        { src: `${dir}/rumbo-tel-conversacion.webp`, alt: 'Conversación en el teléfono: los cinco pasos completados y el modo demo activo' },
+        { src: `${dir}/rumbo-tel-inicio.webp`, alt: 'Inicio en el teléfono: Find out which housing subsidy you can apply for' },
+        { src: `${dir}/rumbo-tel-plan.webp`, alt: 'Plan en el teléfono: You qualify for 3 programs, con DS49 marcado como You qualify' },
+      ],
+    },
+    intro: {
+      links: [
+        { label: 'Ver la app', href: 'https://d26duk07atmc3z.cloudfront.net/' },
+        { label: 'Abrir repositorio', href: 'https://github.com/BlasterLc/rumbo-a-casa' },
+      ],
+      stack: ['CloudFront', 'Lambda', 'Bedrock', 'DynamoDB', 'Polly'],
+      lead: 'Un asistente que guía a familias chilenas por cuatro subsidios habitacionales del Estado y les dice a cuál pueden postular, con la fuente de cada respuesta.',
+      body: 'Conversa en español o inglés, por texto o por voz. Un motor de reglas decide la elegibilidad y cita el decreto y su fecha detrás de cada resultado; después arma la lista de papeles que conviene reunir. La familia aprieta el botón final en el sitio del MINVU con su Clave Única: la app nunca se la pide. Lo construimos para la hackathon AWS Zero to Shipped y ganó la categoría Social Good.',
+    },
+    facts: [
+      { n: '4', l: 'Subsidios evaluados: DS49, DS1, DS19 y DS52' },
+      { n: '2', l: 'Idiomas, por texto o por voz' },
+      { n: '~5 min', l: 'Para saber a qué puedes postular' },
+      { n: '0', l: 'Claves Únicas pedidas' },
+    ],
+    stages: [
+      {
+        tone: 'tint', label: 'Escritorio',
+        blocks: [
+          { type: 'laptop', shot: { src: `${dir}/rumbo-web-inicio.webp`, alt: 'Inicio de Rumbo a Casa en escritorio: título, programas DS49, DS1, DS19 y DS52, y el panel You apply. We get you ready.' },
+            caption: { n: '01 — Inicio', text: 'Antes de empezar, la portada deja claro qué hace la herramienta y qué queda en manos de la familia.' } },
+          { type: 'laptop', shot: { src: `${dir}/rumbo-web-conversacion.webp`, alt: 'Conversación en escritorio: el asistente explica que la familia califica para DS49, DS19 y DS52 y no para DS1, con el progreso de cinco pasos al lado' },
+            caption: { n: '02 — Conversación', text: 'Cinco pasos: familia, vivienda, ahorro, ingreso y región. Cada respuesta se puede escuchar.' } },
+        ],
+      },
+      {
+        tone: 'brand', label: 'Tablet y teléfono',
+        blocks: [
+          { type: 'duo',
+            copy: { n: '03 — Resultado con fuentes', title: 'Cada respuesta cita su decreto.', text: 'El plan muestra cada programa con su sello, la razón y la fuente: el decreto, la resolución y la fecha de la regla aplicada. Si un programa no aplica, dice cuánto falta.' },
+            tablet: { src: `${dir}/rumbo-tablet-inicio.webp`, alt: 'Inicio de Rumbo a Casa en tablet' },
+            phone: { src: `${dir}/rumbo-tel-documentos.webp`, alt: "Documentos en el teléfono: You don't need to upload anything, y la lista por programa con 1 of 7 ready" } },
+        ],
+      },
+      {
+        tone: 'tint', label: 'Plan y móvil',
+        blocks: [
+          { type: 'laptop', shot: { src: `${dir}/rumbo-web-plan.webp`, alt: 'Plan en escritorio: You qualify for 3 programs, con tarjetas de DS49, DS19, DS52 y DS1 y la fuente de cada una' },
+            caption: { n: '04 — Mi plan', text: 'Los programas a los que la familia califica y los que no, cada uno con su razón y el acceso a sus documentos.' } },
+          { type: 'phones',
+            shots: [
+              { src: `${dir}/rumbo-tel-conversacion.webp`, alt: 'Conversación en el teléfono' },
+              { src: `${dir}/rumbo-tel-plan.webp`, alt: 'Plan en el teléfono' },
+              { src: `${dir}/rumbo-tel-documentos.webp`, alt: 'Documentos en el teléfono' },
+            ],
+            caption: { n: '05 — Móvil', text: 'En el teléfono la navegación baja al pulgar: Talk, My plan, Documents y Alerts.' } },
+        ],
+      },
+    ],
+    nextThumb: { src: `${dir}/rumbo-tel-plan.webp`, ...PHONE },
+  },
+  {
+    slug: 'inkvibe',
+    name: 'Inkvibe',
+    eyebrow: 'Marketplace',
+    meta: [
+      { label: 'Rol', value: 'Desarrollador frontend' },
+      { label: 'Equipo', value: 'Único frontend, con un backend separado' },
+      { label: 'Lugar y año', value: 'Latinoamérica © 2026' },
+    ],
+    theme: { brand: '#2a2a2c', tint: '#313131', tintInk: '#ffffff', accent: '#c8403f', cta: '#c8403f', onCta: '#ffffff', next: '#d64d4b', dark: true },
+    cta: { label: 'Ver sitio', href: 'https://www.inkvibe.app/' },
+    cover: {
+      badge: 'inkvibe.app',
+      logo: { brand: 'inkvibe', image: '/proyectos/inkvibe-logo-claro.png', width: 1200, height: 281, alt: 'Inkvibe' },
+      phones: [
+        { src: `${dir}/inkvibe-tel-catalogo.webp`, alt: 'Catálogo en el teléfono: Encuentra al artista correcto' },
+        { src: `${dir}/inkvibe-tel-landing.webp`, alt: 'Landing en el teléfono: No queremos más malos tatuajes, ni malas experiencias' },
+        { src: `${dir}/inkvibe-tel-descarga.webp`, alt: 'Sección roja en el teléfono: Encuentra a tu artista. Descarga InkVibe.' },
+      ],
+    },
+    intro: {
+      links: [
+        { label: 'Ver sitio', href: 'https://www.inkvibe.app/' },
+        { label: 'Leer el blog', href: 'https://www.inkvibe.app/blog' },
+      ],
+      stack: ['Next.js', 'React', 'Payload CMS', 'PostgreSQL'],
+      lead: 'El marketplace del tatuaje para Latinoamérica: los clientes descubren artistas verificados por estilo y ciudad, revisan portafolios reales, cotizan y reservan en un solo lugar.',
+      body: 'Soy el único desarrollador frontend del equipo y construyo la web con React y Next.js sobre un backend separado. El blog corre en Payload CMS con su Local API sobre un Postgres dedicado: las páginas leen el contenido directo desde el servidor y el equipo lo edita desde el panel, sin tocar código. Cada artista tiene su InkCard, un perfil que comparte con un link.',
+    },
+    facts: [
+      { n: '4', l: 'Superficies de producto en el plan' },
+      { n: '9', l: 'Semanas de plan de trabajo' },
+      { n: '6', l: 'Estilos para filtrar artistas' },
+      { n: '1', l: 'Desarrollador frontend: yo' },
+    ],
+    stages: [
+      {
+        tone: 'tint', label: 'Landing en escritorio',
+        blocks: [
+          { type: 'laptop', shot: { src: `${dir}/inkvibe-web-landing.webp`, alt: 'Landing de Inkvibe en escritorio: No queremos más malos tatuajes, ni malas experiencias, con Descarga la app' },
+            caption: { n: '01 — Landing', text: 'Una promesa directa arriba y una sola acción: descargar la app.' } },
+          { type: 'laptop', shot: { src: `${dir}/inkvibe-web-funcionalidades.webp`, alt: 'Funcionalidades en escritorio: 02 Agenda, Reserva tu hora de manera segura, con el teléfono mostrando Reserva asegurada' },
+            caption: { n: '02 — Funcionalidades', text: 'Descubre, Agenda, Tatúate y Confianza: un recorrido con scroll donde el teléfono cuenta cada paso.' } },
+        ],
+      },
+      {
+        tone: 'accent', label: 'Sección roja del landing',
+        blocks: [
+          { type: 'split', n: '03 — Sección de descarga', title: 'Tatuarse debería ser simple.',
+            text: 'El cierre del landing es rojo y lleva a las tiendas: beneficios en tres chips y un teléfono con la actividad del día en vivo, de la cotización al recordatorio.' },
+          { type: 'combo',
+            laptop: { src: `${dir}/inkvibe-web-descarga.webp`, alt: 'Sección roja en escritorio: Encuentra a tu artista. Descarga InkVibe., con App Store, Google Play y un teléfono con notificaciones' },
+            phone: { src: `${dir}/inkvibe-tel-descarga.webp`, alt: 'Sección roja en el teléfono' } },
+        ],
+      },
+      {
+        tone: 'tint', label: 'Tablet y teléfono',
+        blocks: [
+          { type: 'duo',
+            copy: { n: '04 — Todas las pantallas', title: 'La misma web, de la tablet al teléfono.', text: 'El catálogo filtra por ciudad y por seis estilos y muestra el portafolio completo antes de cotizar. En el teléfono los filtros se pliegan en un solo botón.' },
+            tablet: { src: `${dir}/inkvibe-tablet-landing.webp`, alt: 'Landing de Inkvibe en tablet' },
+            phone: { src: `${dir}/inkvibe-tel-artista.webp`, alt: 'Catálogo en el teléfono: 2 artistas en Chile, con la tarjeta de un artista y sus estilos' } },
+          { type: 'phones',
+            shots: [
+              { src: `${dir}/inkvibe-tel-landing.webp`, alt: 'Landing en el teléfono' },
+              { src: `${dir}/inkvibe-tel-catalogo.webp`, alt: 'Catálogo de artistas en el teléfono' },
+              { src: `${dir}/inkvibe-tel-descarga.webp`, alt: 'Sección de descarga en el teléfono' },
+            ],
+            caption: { n: '05 — Móvil', text: 'Landing, catálogo y descarga en el teléfono.' } },
+        ],
+      },
+      {
+        tone: 'light', label: 'Blog',
+        blocks: [
+          { type: 'duo', wide: true,
+            copy: { n: '06 — Blog', title: 'El blog vive en Payload CMS.', text: 'Payload corre dentro de Next.js y su Local API consulta un Postgres dedicado sin pasar por HTTP. El equipo publica guías y cultura tattoo desde el panel.' },
+            laptop: { src: `${dir}/inkvibe-web-blog.webp`, alt: 'Sección de blog en el landing: Ideas, guías y cultura tattoo, con el artículo Cómo elegir a tu tatuador(a)' } },
+        ],
+      },
+    ],
+    nextThumb: { src: `${dir}/inkvibe-siguiente.jpg`, width: 500, height: 1200 },
+  },
+  {
+    slug: 'zam',
+    name: 'Zam',
+    eyebrow: 'Retail de barrio',
+    meta: [
+      { label: 'Rol', value: 'Proyecto propio' },
+      { label: 'Estado', value: 'En desarrollo' },
+      { label: 'Lugar y año', value: 'Chile © 2026' },
+    ],
+    theme: { brand: 'var(--surface-inverse)', tint: 'var(--surface-sunken)', next: 'var(--surface-inverse)' },
+    cover: {
+      badge: 'En desarrollo',
+      logo: { brand: 'zam', symbol: '/proyectos/zam-simbolo-claro.svg', symbolWidth: 466, symbolHeight: 466, wordmark: 'zam' },
+      phones: [],
+    },
+    intro: {
+      links: [],
+      stack: ['TypeScript', 'NestJS', 'Fastify', 'Next.js', 'Expo', 'PostgreSQL', 'Prisma', 'Supabase', 'Firebase Auth'],
+      lead: 'Caja, inventario y finanzas del minimarket de barrio: una app para el cajero y un panel web para el dueño.',
+      body: 'Es mi proyecto propio y sigue en desarrollo. El dueño revisa en el panel web las ventas, el catálogo, los gastos y el stock; el cajero vende desde la app. Todo está escrito en TypeScript de punta a punta, y cada tienda ve solo sus datos: el multi-tenancy se resuelve en la capa de aplicación. Todavía no tiene capturas públicas; aquí está cómo está armado.',
+    },
+    facts: [
+      { n: '2', l: 'Superficies: app del cajero y panel web del dueño' },
+      { n: '3', l: 'Módulos del backend: inventario, ventas y proveedores' },
+      { n: '3', l: 'Capas: dominio, aplicación e infraestructura' },
+      { n: '1', l: 'Lenguaje de punta a punta: TypeScript' },
+    ],
+    stages: [
+      {
+        tone: 'brand', label: 'Cómo está armado',
+        blocks: [
+          { type: 'split', n: '01 — Arquitectura', title: 'Un backend por módulos, dos pantallas encima.',
+            text: 'El backend corre en NestJS con Fastify y separa cada módulo en dominio, aplicación e infraestructura. La web y la app hablan el mismo lenguaje que el servidor.' },
+          { type: 'columns',
+            items: [
+              { n: 'App del cajero', title: 'Expo', text: 'La caja del minimarket: el cajero registra cada venta desde el teléfono.' },
+              { n: 'Panel del dueño', title: 'Next.js', text: 'Ventas, catálogo, gastos y stock de la tienda en un solo lugar.' },
+              { n: 'Backend', title: 'NestJS + Fastify', text: 'Módulos de inventario, ventas y proveedores, en capas de dominio, aplicación e infraestructura.' },
+              { n: 'Datos e identidad', title: 'Postgres + Firebase', text: 'Tiendas, catálogo, stock, ventas y proveedores en Postgres sobre Supabase con Prisma; Firebase Auth para dueños y cajeros.' },
+            ] },
+        ],
+      },
+    ],
+    nextThumb: null,
+  },
+];
+
+export const caseSlugs = cases.map((c) => c.slug);
+export const caseHref = (slug) => `/proyectos/${slug}/`;
+
+// Datos de la página de un proyecto, con su número y el siguiente (en bucle).
+export function getCase(slug) {
+  const i = cases.findIndex((c) => c.slug === slug);
+  if (i < 0) return null;
+  const next = cases[(i + 1) % cases.length];
+  const pad = (n) => String(n).padStart(2, '0');
+  return {
+    ...cases[i],
+    index: `Proyecto ${pad(i + 1)} / ${pad(cases.length)}`,
+    next: { name: next.name, href: caseHref(next.slug), color: next.theme.next, thumb: next.nextThumb, logo: next.cover.logo },
+  };
+}

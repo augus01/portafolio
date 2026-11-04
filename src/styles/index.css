@@ -1,4 +1,4 @@
-/* Orden: fuentes propias → tokens del design system → componentes del design system → estilos de la página → contacto → oficina 3D → vista móvil. */
+/* Orden: fuentes propias → tokens del design system → componentes del design system → estilos de la página → contacto → oficina 3D → páginas de proyecto → vista móvil. */
 @import './fuentes.css';
 @import '../../design-system/tokens.css';
 @import '../../design-system/components/bundle.css';
@@ -6,4 +6,5 @@
 @import './layout.css';
 @import './contacto.css';
 @import './oficina.css';
+@import './proyecto.css';
 @import './movil.css';

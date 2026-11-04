@@ -1,0 +1,1 @@
+export { CaseCaption } from './CaseCaption';

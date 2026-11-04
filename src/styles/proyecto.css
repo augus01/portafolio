@@ -1,0 +1,222 @@
+/* Páginas dedicadas de cada proyecto (/proyectos/<slug>/), clonadas de las páginas de caso del artefacto
+   "Hero · Augusto Pinto" (4 nov 2026; ritmo de dennissnellenberg.com/work/twice). Una sola hoja para todos los
+   proyectos: cada uno pinta en la raíz --case-brand (portada y escenarios de marca), --case-tint (fondo de los
+   escenarios), --case-accent, --case-cta / --case-on-cta (círculo del enlace) y, en "Siguiente", --case-next.
+   Se adapta con container queries (1000px y 720px de contenedor). Lo que no tiene token está en variables --case-*
+   (excepciones documentadas en design-system/INTEGRACION.md). */
+
+.ap-case{container-type:inline-size;position:relative;min-width:320px;overflow-x:clip;background:var(--surface-canvas);color:var(--ink-primary);font-family:var(--font-text);-webkit-font-smoothing:antialiased;
+  --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8;
+  --case-gutter:40px;--case-head-top:112px;--case-wide-max:1280px;--case-copy-on-dark:rgba(255,255,255,.86);
+  --case-light:#efeee9;--case-device:#0e0f12;--case-device-edge:#2b2d33;--case-laptop-base:#c3c6cc;--case-laptop-base-shade:#9a9ea6;--case-laptop-notch:#a9adb5;--case-laptop-cam:#26282e;
+  --case-device-shadow:0 28px 56px -12px rgba(14,15,18,.4);--case-fab-shadow:0 12px 32px rgba(14,15,18,.18);
+  --case-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--case-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
+  --case-hover-scale:1.07}
+/* El body es oscuro por el hero (hero-inmersivo.css); en una página de proyecto va del color del lienzo. */
+body:has(.ap-case){background:var(--surface-canvas)}
+.ap-case *{box-sizing:border-box}
+.ap-case img{display:block;max-width:100%;height:auto}
+.ap-case a{color:inherit}
+.ap-case :focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.ap-case-stage--brand :focus-visible,.ap-case-stage--accent :focus-visible,.ap-case--dark-tint .ap-case-stage--tint :focus-visible{outline-color:var(--focus-ring-on-dark)}
+.ap-case-mono{font-family:var(--font-mono);font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+
+/* Barra superior */
+.ap-case-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-6) var(--case-gutter) 0;font-family:var(--font-oswald);font-size:17px}
+.ap-case-top a{display:inline-flex;align-items:center;min-height:var(--target-min);text-decoration:none}
+.ap-case-top__nav{display:flex;gap:28px}
+.ap-case-top__nav a{position:relative}
+.ap-case-top__nav a[aria-current="page"]::after{content:"";position:absolute;left:50%;bottom:var(--space-1);width:5px;height:5px;border-radius:var(--radius-pill);background:currentColor;transform:translateX(-50%)}
+.ap-case-top__nav a:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-color:var(--ink-highlight-muted)}
+
+/* Botón redondo para volver a proyectos: sigue al scroll */
+.ap-case-fabwrap{position:sticky;top:20px;z-index:var(--z-nav);display:flex;justify-content:flex-end;height:0;padding-right:var(--space-6)}
+.ap-case-fab{display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin-top:var(--space-4);border-radius:var(--radius-pill);background:var(--action);color:var(--on-action) !important;text-decoration:none;box-shadow:var(--case-fab-shadow);transition:transform var(--dur-press) var(--ease-out)}
+.ap-case-fab:hover{transform:scale(1.06)}
+.ap-case-fab:active{transform:scale(var(--scale-press))}
+
+/* Cabecera: título gigante y fila de datos */
+.ap-case-wrap{max-width:var(--page-max);margin:0 auto;padding:0 var(--case-gutter)}
+.ap-case-head{padding-top:var(--case-head-top)}
+.ap-case-head__inner{padding-left:clamp(0px, 7cqw, 104px)}
+.ap-case-eyebrow{margin:0 0 var(--space-6);color:var(--ink-secondary)}
+.ap-case-title{margin:0;font-family:var(--font-text);font-weight:400;font-size:clamp(56px, 10.5cqw, 152px);line-height:.94;letter-spacing:-0.05em}
+.ap-case-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--case-gutter);max-width:940px;margin:72px 0 0}
+.ap-case-meta dt{padding-bottom:18px;margin-bottom:20px;border-bottom:var(--stroke-hairline) solid var(--border-hairline);color:var(--ink-secondary)}
+.ap-case-meta dd{margin:0;font-family:var(--font-oswald);font-size:19px;line-height:1.4}
+
+/* Portada con el círculo del enlace */
+.ap-case-cover{position:relative;max-width:var(--case-wide-max);margin:var(--case-head-top) auto 0;padding:0 var(--case-gutter)}
+.ap-case-cover__band{position:relative;overflow:hidden;aspect-ratio:16 / 9;background:var(--case-brand)}
+.ap-case-cover--solo .ap-case-cover__band{aspect-ratio:21 / 9}
+.ap-case-cta{position:absolute;z-index:4;top:0;right:calc(var(--case-gutter) + 8%);display:flex;align-items:center;justify-content:center;gap:var(--space-2);width:188px;height:188px;border-radius:var(--radius-pill);transform:translateY(-50%);background:var(--case-cta);color:var(--case-on-cta) !important;text-decoration:none;font-family:var(--font-oswald);font-size:19px;transition:transform var(--dur-move) var(--ease-in-out)}
+.ap-case-cta:hover{transform:translateY(-50%) scale(var(--case-hover-scale))}
+.ap-case-cta:active{transform:translateY(-50%) scale(var(--scale-press))}
+.ap-case-cta:focus-visible{outline-color:var(--focus-ring)}
+.ap-case-cover__badge{position:absolute;z-index:3;top:28px;left:28px;display:inline-flex;align-items:center;min-height:32px;padding:0 14px;border-radius:var(--radius-pill);border:var(--stroke-hairline) solid rgba(255,255,255,.45);color:var(--ink-on-dark)}
+.ap-case-cover__brand{position:absolute;z-index:2;left:0;right:0;top:15%;display:flex;align-items:center;justify-content:center;color:var(--ink-on-dark)}
+.ap-case-cover--solo .ap-case-cover__brand{top:0;bottom:0}
+.ap-case-cover__phones{position:absolute;z-index:1;left:50%;bottom:0;display:flex;align-items:flex-end;justify-content:center;gap:3.5%;width:80%;transform:translateX(-50%)}
+.ap-case-cover__phones .ap-dev-phone{width:23%;margin-bottom:-15%}
+.ap-case-cover__phones .ap-dev-phone:nth-child(2){width:25%;margin-bottom:-7%}
+.ap-case-cover__logo--inkvibe{width:clamp(240px, 44cqw, 600px)}
+.ap-case-lockup{display:flex;align-items:center;justify-content:center;gap:clamp(12px, 2cqw, 28px)}
+.ap-case-lockup__word{line-height:1;white-space:nowrap}
+.ap-case-lockup--rumbo .ap-case-lockup__symbol{width:clamp(56px, 6.4cqw, 92px)}
+.ap-case-lockup--rumbo .ap-case-lockup__word{font-family:var(--case-font-rumbo);font-weight:700;font-size:clamp(40px, 5.8cqw, 84px);letter-spacing:-0.035em}
+.ap-case-lockup--zam .ap-case-lockup__symbol{width:clamp(72px, 9cqw, 132px)}
+.ap-case-lockup--zam .ap-case-lockup__word{font-family:var(--case-font-zam);font-weight:500;font-size:clamp(72px, 10cqw, 148px);letter-spacing:-0.01em}
+
+/* Introducción */
+.ap-case-intro{padding:168px var(--case-gutter) 152px}
+.ap-case-intro__grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--case-gutter)}
+.ap-case-intro__side{display:flex;flex-direction:column;gap:28px}
+.ap-case-stack{display:flex;flex-direction:column;gap:var(--space-3)}
+.ap-case-label{margin:0;color:var(--ink-secondary)}
+.ap-case-lead{margin:0;font-family:var(--font-oswald);font-weight:400;font-size:clamp(24px, 2.7cqw, 34px);line-height:1.3}
+.ap-case-body{max-width:62ch;margin:28px 0 0;font-family:var(--font-oswald);font-size:19px;line-height:1.6;color:var(--ink-secondary)}
+.ap-case-links{display:flex;flex-direction:column;align-items:flex-start;gap:2px;font-family:var(--font-oswald);font-size:19px}
+.ap-case-links a{display:inline-flex;align-items:center;gap:var(--space-1);min-height:var(--target-min);text-decoration:underline;text-decoration-color:var(--ink-highlight-muted);text-underline-offset:6px}
+.ap-case-links a:hover{text-decoration-color:var(--ink-primary)}
+.ap-case-chips{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:0;padding:0;list-style:none}
+.ap-case-chip{display:inline-flex;align-items:center;min-height:32px;padding:0 var(--space-3);border:var(--stroke-hairline) solid var(--border-hairline);border-radius:var(--radius-sm)}
+.ap-case-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-6);margin-top:var(--space-24)}
+.ap-case-fact{padding-top:var(--space-6);border-top:var(--stroke-hairline) solid var(--border-strong)}
+.ap-case-fact__n{margin:0;font-family:var(--font-text);font-weight:400;font-size:clamp(48px, 5.4cqw, 80px);line-height:1;letter-spacing:-0.045em;font-variant-numeric:tabular-nums}
+.ap-case-fact__l{margin:var(--space-3) 0 0;font-family:var(--font-oswald);font-size:17px;line-height:1.4;color:var(--ink-secondary)}
+
+/* Escenarios a sangre */
+.ap-case-stage{padding:clamp(72px, 11cqw, 168px) var(--case-gutter);background:var(--case-tint);color:var(--case-tint-ink, var(--ink-primary))}
+.ap-case-stage--brand{background:var(--case-brand);color:var(--ink-on-dark)}
+.ap-case-stage--accent{background:var(--case-accent);color:var(--ink-on-dark)}
+.ap-case-stage--light{background:var(--case-light);color:var(--ink-primary)}
+.ap-case-stage__item{margin:0}
+.ap-case-stage__item + .ap-case-stage__item{margin-top:clamp(104px, 13cqw, 192px)}
+.ap-case-split + .ap-case-stage__item{margin-top:clamp(64px, 8cqw, 112px)}
+.ap-case-cap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--space-6);align-items:baseline;max-width:1040px;margin:var(--case-gutter) auto 0}
+.ap-case-cap p{margin:0;font-family:var(--font-oswald);font-size:18px;line-height:1.5}
+.ap-case-cap .ap-case-mono{opacity:.75}
+
+/* Dispositivos: laptop, teléfono y tablet */
+.ap-dev-laptop{width:min(100%, 1040px);margin:0 auto}
+.ap-dev-laptop__lid{position:relative;padding:1.3% 1.3% 0;background:var(--case-device);border:var(--stroke-hairline) solid var(--case-device-edge);border-bottom:0;border-radius:22px 22px 0 0}
+.ap-dev-laptop__lid::before{content:"";position:absolute;top:.55%;left:50%;width:6px;height:6px;border-radius:var(--radius-pill);background:var(--case-laptop-cam);transform:translateX(-50%)}
+.ap-dev-laptop__screen{overflow:hidden;border-radius:4px 4px 0 0;background:var(--surface-raised)}
+.ap-dev-laptop__screen img{width:100%}
+.ap-dev-laptop__chin{height:clamp(8px, 2.2cqw, 26px);background:var(--case-device);border-left:var(--stroke-hairline) solid var(--case-device-edge);border-right:var(--stroke-hairline) solid var(--case-device-edge)}
+.ap-dev-laptop__base{position:relative;height:clamp(9px, 1.7cqw, 20px);margin:0 -8.5%;background:var(--case-laptop-base);border-radius:0 0 18px 18px;box-shadow:inset 0 -4px 0 var(--case-laptop-base-shade),0 24px 40px -12px rgba(14,15,18,.35)}
+.ap-dev-laptop__base::before{content:"";position:absolute;top:0;left:50%;width:14%;height:42%;background:var(--case-laptop-notch);border-radius:0 0 10px 10px;transform:translateX(-50%)}
+.ap-dev-phone{position:relative;width:280px;padding:3.4%;background:var(--case-device);border-radius:16% / 7.6%;box-shadow:0 0 0 1px var(--case-device-edge),var(--case-device-shadow)}
+.ap-dev-phone img{width:100%;border-radius:13% / 6.2%}
+.ap-dev-tablet{position:relative;width:560px;padding:2.8%;background:var(--case-device);border-radius:6% / 4.2%;box-shadow:0 0 0 1px var(--case-device-edge),0 32px 64px -16px rgba(0,0,0,.45)}
+.ap-dev-tablet img{width:100%;border-radius:3.2% / 2.3%}
+
+/* Texto + dispositivos */
+.ap-case-duo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:72px;align-items:center;max-width:var(--page-max);margin-left:auto;margin-right:auto}
+.ap-case-duo--wide{grid-template-columns:minmax(0,4fr) minmax(0,8fr)}
+.ap-case-split{align-items:end}
+.ap-case-duo .ap-dev-laptop{width:100%}
+.ap-case-duo__copy h2{margin:0;font-family:var(--font-text);font-weight:400;font-size:clamp(38px, 4.6cqw, 68px);line-height:1;letter-spacing:-0.04em}
+.ap-case-duo__copy p{max-width:46ch;margin:28px 0 0;font-family:var(--font-oswald);font-size:19px;line-height:1.6;color:var(--case-copy-on-dark)}
+.ap-case-split .ap-case-duo__copy p{margin:0}
+.ap-case-duo__copy .ap-case-mono{display:block;margin-bottom:var(--space-6);color:var(--case-copy-on-dark)}
+.ap-case-stage--light .ap-case-duo__copy p,.ap-case-stage--light .ap-case-duo__copy .ap-case-mono{color:var(--ink-secondary)}
+.ap-case-duo__devices{position:relative;padding:0 0 72px 88px}
+.ap-case-duo__devices .ap-dev-tablet{width:100%}
+.ap-case-duo__devices .ap-dev-phone{position:absolute;left:0;bottom:0;width:34%}
+
+/* Laptop con teléfono encima */
+.ap-case-combo{position:relative;max-width:1120px;margin-left:auto;margin-right:auto;padding-bottom:56px}
+.ap-case-combo .ap-dev-laptop{width:86%;margin:0}
+.ap-case-combo .ap-dev-phone{position:absolute;right:0;bottom:0;width:23%}
+
+/* Fila de teléfonos */
+.ap-case-phones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px, 4.5cqw, 72px);align-items:start;max-width:1080px;margin:0 auto}
+.ap-case-phones .ap-dev-phone{width:100%}
+.ap-case-phones .ap-dev-phone:nth-child(2){margin-top:var(--space-24)}
+
+/* Fichas de texto (cómo está armado un proyecto sin capturas) */
+.ap-case-cols{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--space-6);max-width:var(--page-max);margin-left:auto;margin-right:auto;padding:0;list-style:none}
+.ap-case-col{padding-top:var(--space-6);border-top:var(--stroke-hairline) solid currentColor}
+.ap-case-col .ap-case-mono{display:block;color:var(--case-copy-on-dark)}
+.ap-case-col h3{margin:var(--space-4) 0 0;font-family:var(--font-text);font-weight:400;font-size:clamp(28px, 2.6cqw, 36px);line-height:1.05;letter-spacing:-0.03em}
+.ap-case-col p{margin:var(--space-3) 0 0;font-family:var(--font-oswald);font-size:17px;line-height:1.5;color:var(--case-copy-on-dark)}
+
+/* Siguiente proyecto */
+.ap-case-next{padding:176px var(--case-gutter) 0;text-align:center}
+.ap-case-next__link{display:inline-flex;flex-direction:column;align-items:center;text-decoration:none}
+.ap-case-next__label{color:var(--ink-secondary)}
+.ap-case-next__title{margin:20px 0 0;font-family:var(--font-text);font-weight:400;font-size:clamp(64px, 13cqw, 200px);line-height:.9;letter-spacing:-0.055em;transition:opacity var(--dur-move) var(--ease-in-out)}
+.ap-case-next__thumb{position:relative;overflow:hidden;width:min(72cqw, 380px);aspect-ratio:4 / 3;margin-top:var(--case-gutter);background:var(--case-next);transition:transform var(--dur-move) var(--ease-in-out)}
+.ap-case-next__thumb img{position:absolute;left:50%;top:18%;width:42%;border:5px solid var(--case-device);border-radius:20px;transform:translateX(-50%)}
+.ap-case-next__thumb--logo img{top:50%;width:30%;border:0;border-radius:0;transform:translate(-50%,-50%)}
+.ap-case-next__link:hover .ap-case-next__thumb{transform:scale(1.02)}
+.ap-case-next__link:hover .ap-case-next__title{opacity:.6}
+.ap-case-all{display:inline-flex;align-items:center;gap:10px;min-height:var(--target-lg);margin-top:72px;padding:0 28px;border:var(--stroke-hairline) solid var(--border-strong);border-radius:var(--radius-pill);text-decoration:none;font-family:var(--font-oswald);font-size:18px;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
+.ap-case-all:hover{background:var(--action);color:var(--on-action)}
+
+/* Pie */
+.ap-case-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-6);padding:var(--space-section) var(--case-gutter) 36px}
+.ap-case-bottom div{display:flex;flex-direction:column;gap:10px}
+.ap-case-bottom div:last-child{align-items:flex-end}
+.ap-case-bottom .ap-case-mono{color:var(--ink-secondary)}
+.ap-case-bottom p{margin:0;font-family:var(--font-oswald);font-size:17px}
+.ap-case-bottom a{display:inline-flex;align-items:center;min-height:var(--target-min);text-decoration:none}
+.ap-case-bottom a:hover{text-decoration:underline;text-underline-offset:5px}
+
+@media (prefers-reduced-motion: reduce){.ap-case *{transition:none !important}}
+
+/* Tablet y escritorio angosto */
+@container (max-width: 999px){
+  .ap-case-duo,.ap-case-duo--wide{grid-template-columns:1fr;gap:56px}
+  .ap-case-split{gap:var(--space-6)}
+  .ap-case-duo__devices{width:100%;max-width:640px;margin:0 auto}
+  .ap-case-facts,.ap-case-cols{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:var(--case-gutter)}
+}
+
+/* Teléfono */
+@container (max-width: 719px){
+  .ap-case{--case-gutter:var(--space-4);--case-head-top:56px}
+  .ap-case-top{font-size:16px}
+  .ap-case-top__nav{gap:var(--space-4)}
+  .ap-case-hide-sm{display:none !important}
+  .ap-case-fabwrap{padding-right:var(--space-4)}
+  .ap-case-fab{width:var(--target-lg);height:var(--target-lg)}
+  .ap-case-head__inner{padding-left:0}
+  .ap-case-title{font-size:clamp(48px, 15.5cqw, 80px)}
+  .ap-case-meta{grid-template-columns:1fr;gap:28px;margin-top:var(--space-12)}
+  .ap-case-meta dt{padding-bottom:var(--space-3);margin-bottom:var(--space-3)}
+  .ap-case-cover{padding:0;margin-top:120px}
+  .ap-case-cover__band{aspect-ratio:4 / 5}
+  .ap-case-cover--solo .ap-case-cover__band{aspect-ratio:1 / 1}
+  .ap-case-cta{right:var(--space-4);width:124px;height:124px;font-size:16px}
+  .ap-case-cover__badge{top:auto;bottom:var(--space-4);left:var(--space-4);z-index:5;background:rgba(0,0,0,.35)}
+  .ap-case-cover__brand{top:16%}
+  .ap-case-cover--solo .ap-case-cover__brand{top:0}
+  .ap-case-lockup--rumbo{flex-direction:column;gap:14px}
+  .ap-case-cover__phones{width:112%;gap:4%}
+  .ap-case-cover__phones .ap-dev-phone{width:30%;margin-bottom:-26%}
+  .ap-case-cover__phones .ap-dev-phone:nth-child(2){width:33%;margin-bottom:-12%}
+  .ap-case-intro{padding:104px var(--case-gutter) 88px}
+  .ap-case-intro__grid{grid-template-columns:1fr;gap:var(--space-6)}
+  .ap-case-intro__side{order:2}
+  .ap-case-facts{margin-top:var(--space-16);gap:20px}
+  .ap-case-cols{grid-template-columns:1fr}
+  .ap-case-stage{padding:var(--space-16) var(--case-gutter)}
+  .ap-case-stage__item + .ap-case-stage__item{margin-top:80px}
+  .ap-case-split + .ap-case-stage__item{margin-top:var(--space-12)}
+  .ap-dev-laptop__lid{border-radius:10px 10px 0 0}
+  .ap-dev-laptop__base{border-radius:0 0 10px 10px}
+  .ap-case-cap{grid-template-columns:1fr;gap:6px;margin-top:var(--space-6)}
+  .ap-case-cap p{font-size:17px}
+  .ap-case-duo__devices{padding:0 0 40px 40px}
+  .ap-case-phones{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:var(--space-4);margin:0 calc(-1 * var(--case-gutter));padding:0 var(--case-gutter) var(--space-2);scroll-padding:0 var(--case-gutter);scrollbar-width:none}
+  .ap-case-phones::-webkit-scrollbar{display:none}
+  .ap-case-phones .ap-dev-phone{flex:0 0 66%;margin-top:0 !important;scroll-snap-align:start}
+  .ap-case-combo{padding-bottom:var(--case-gutter)}
+  .ap-case-combo .ap-dev-laptop{width:92%}
+  .ap-case-combo .ap-dev-phone{right:-4px;width:30%}
+  .ap-case-next{padding-top:112px}
+  .ap-case-all{margin-top:56px}
+  .ap-case-bottom{padding:88px var(--case-gutter) var(--space-6)}
+}

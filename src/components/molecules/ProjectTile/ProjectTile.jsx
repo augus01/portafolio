@@ -6,7 +6,8 @@ import { Tag } from '../../atoms/Tag';
 // para alinearse con el proyecto vecino. `logo.image` es un logotipo completo; `logo.symbol` + `logo.wordmark`
 // compone símbolo y nombre en la fuente de la marca (`logo.brand`). Logo y capturas son decorativos: el nombre
 // del proyecto va en el h3. `badge` es un sello opcional en la esquina de la portada (p. ej., AWS Skill Builder);
-// es decorativo porque el premio ya va escrito en el Tag del pie.
+// es decorativo porque el premio ya va escrito en el Tag del pie. Con `href`, el nombre es el enlace a la página del
+// proyecto y su área se extiende a todo el proyecto (portada incluida).
 function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, wordmark }) {
   if (image) {
     return <img className={`ap-gal__logo ap-gal__logo--${brand}`} src={image} width={width} height={height} alt="" decoding="async" loading="lazy" />;
@@ -19,7 +20,7 @@ function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, 
   );
 }
 
-export function ProjectTile({ name, description, role, award, badge, logo, shots = [], className }) {
+export function ProjectTile({ name, href, description, role, award, badge, logo, shots = [], className }) {
   return (
     <article className={['ap-gal__item', `ap-gal__item--${logo.brand}`, className].filter(Boolean).join(' ')}>
       <div className="ap-gal__tile">
@@ -34,7 +35,7 @@ export function ProjectTile({ name, description, role, award, badge, logo, shots
         ))}
         <Logo {...logo} />
       </div>
-      <h3 className="ap-gal__name subheading">{name}</h3>
+      <h3 className="ap-gal__name subheading">{href ? <a className="ap-gal__link" href={href}>{name}</a> : name}</h3>
       <p className="ap-gal__desc lead">{description}</p>
       <div className="ap-gal__foot">
         <p className="ap-gal__role meta">{role}</p>

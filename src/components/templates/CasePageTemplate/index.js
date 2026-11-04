@@ -1,0 +1,1 @@
+export { CasePageTemplate } from './CasePageTemplate';

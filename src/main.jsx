@@ -7,17 +7,20 @@ import './styles/index.css';
 const forced = parsePerfParam(window.location.search);
 if (forced !== null) forcePerfTier(forced);
 
-// Dos páginas en un mismo bundle: el landing en / y "Visita mi oficina" en /oficina/.
-// Cada una se descarga aparte, así el landing no carga la oficina ni la oficina el hero.
-const isOffice = /^\/oficina\/?$/.test(window.location.pathname);
-const load = isOffice
+// Varias páginas en un mismo bundle: el landing en /, "Visita mi oficina" en /oficina/ y la página de cada
+// proyecto en /proyectos/<slug>/. Cada una se descarga aparte, así el landing no carga la oficina ni los proyectos.
+const path = window.location.pathname;
+const caseSlug = (path.match(/^\/proyectos\/([a-z0-9-]+)\/?$/) || [])[1];
+const load = /^\/oficina\/?$/.test(path)
   ? import('./components/pages/OfficePage').then((m) => m.OfficePage)
-  : import('./components/pages/HomePage').then((m) => m.HomePage);
+  : caseSlug
+    ? import('./components/pages/ProjectPage').then((m) => m.ProjectPage)
+    : import('./components/pages/HomePage').then((m) => m.HomePage);
 
 load.then((Page) => {
   createRoot(document.getElementById('root')).render(
     <StrictMode>
-      <Page />
+      <Page slug={caseSlug} />
     </StrictMode>
   );
 });
