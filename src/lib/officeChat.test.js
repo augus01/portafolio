@@ -29,8 +29,9 @@ test('answer: el tema elige al agente', () => {
 
 test('answer: dos temas de agentes distintos se completan', () => {
   const out = answer('¿Qué hizo en Rumbo a Casa con AWS?', opts());
-  assert.deepEqual(out.map((r) => r.agent), ['arquitecto', 'stack']);
-  assert.match(out[1].text, /^Y para completar: /);
+  assert.deepEqual(out.map((r) => r.agent), ['arquitecto', 'arquitecto', 'stack']);
+  assert.equal(out[1].handoff, true);
+  assert.equal(out[2].text, chat.topics.find((t) => t.agent === 'stack' && t.rx.test('aws')).text);
 });
 
 test('answer: sin tema responde recepción', () => {
@@ -43,7 +44,7 @@ test('answer: el agente al que le hablaron pasa la palabra si no es su tema', ()
   assert.equal(out[0].agent, 'stack');
   assert.match(out[0].text, /arquitecto/);
   assert.equal(out[1].agent, 'arquitecto');
-  assert.ok(out.length <= 3);
+  assert.ok(out.length <= 4);
 });
 
 test('greeting retoma la última pregunta salvo que fuera un contacto', () => {
@@ -75,4 +76,18 @@ test('answer: si quien habló sabe del tema, no hay derivación', () => {
   const out = answer('¿Qué es Inkvibe?', { ...opts(), from: 'arquitecto', handoff: chat.handoff });
   assert.equal(out[0].agent, 'arquitecto');
   assert.ok(!out.some((r) => r.handoff));
+});
+
+test('answer: si le preguntan a stack algo que también es suyo, responde él y anuncia a arquitecto', () => {
+  const out = answer('¿Qué tecnologías usó en Rumbo a Casa?', { ...opts('stack'), handoff: chat.handoff, handoffMore: chat.handoffMore });
+  assert.deepEqual(out.map((r) => r.agent), ['stack', 'stack', 'arquitecto']);
+  assert.equal(out[1].handoff, true);
+  assert.match(out[1].text, /Arquitecto .* te cuenta el resto/);
+});
+
+test('answer: cada cambio de agente lleva un aviso antes', () => {
+  const out = answer('¿Qué hizo en la hackathon de AWS?', { ...opts(), from: 'recepcion', handoff: chat.handoff, handoffMore: chat.handoffMore });
+  for (let i = 1; i < out.length; i++) {
+    if (out[i].agent !== out[i - 1].agent) assert.equal(out[i - 1].handoff, true, `falta aviso antes de ${out[i].agent}`);
+  }
 });

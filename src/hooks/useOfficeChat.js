@@ -119,7 +119,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
     sceneRef.current.say(from ? { [from]: '…' } : {});
     timerRef.current = setTimeout(() => {
-      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, handoff: chat.handoff });
+      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, handoff: chat.handoff, handoffMore: chat.handoffMore });
       push(replies.map((r) => msg(r.agent, r.text)), { typing: false });
       bubbles(replies);
     }, TYPING_MS);

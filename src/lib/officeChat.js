@@ -22,26 +22,32 @@ export function isConfirm(text) {
 
 /**
  * Respuestas a una pregunta: el agente del primer tema que calza y, si hay otro tema de otro agente, este completa.
- * Sin tema, responde recepción. Si el visitante le habló a un agente (`to`, o el último que habló, `from`) que no sabe
- * del tema, ese agente pasa la palabra con `handoff(agente)` y esa respuesta va marcada con `handoff: true`.
- * Devuelve como máximo 3 respuestas `{ agent, text }`.
+ * Si el visitante le habló a un agente (`to`, o el último que habló, `from`) y la pregunta también es de su tema, él
+ * responde primero; si no sabe del tema, pasa la palabra con `handoff(agente)`. Cada vez que la palabra pasa a otro
+ * agente hay un aviso (marcado `handoff: true`): `handoff` al derivar, `handoffMore` cuando otro completa.
+ * Sin tema, responde recepción. Devuelve como máximo 4 respuestas `{ agent, text, handoff? }`.
  */
-export function answer(question, { topics, agents, to, from, noMatch, handoff }) {
+export function answer(question, { topics, agents, to, from, noMatch, handoff, handoffMore }) {
   const n = normalize(question);
   const hits = topics.filter((t) => t.rx.test(n));
+  const asked = to || from;
   const out = [];
   if (!hits.length) out.push({ agent: 'recepcion', text: noMatch });
   else {
-    out.push({ agent: hits[0].agent, text: hits[0].text });
-    const other = hits.find((h) => h.agent !== hits[0].agent);
-    if (other) out.push({ agent: other.agent, text: 'Y para completar: ' + other.text.charAt(0).toLowerCase() + other.text.slice(1) });
+    const main = hits.find((h) => h.agent === asked) || hits[0];
+    out.push({ agent: main.agent, text: main.text });
+    const other = hits.find((h) => h.agent !== main.agent);
+    if (other) {
+      const next = agents[other.agent];
+      out.push({ agent: main.agent, handoff: true, text: handoffMore ? handoffMore(next) : `${next.name} te cuenta el resto.` });
+      out.push({ agent: other.agent, text: other.text });
+    }
   }
-  const asked = to || from;
   if (asked && out[0].agent !== asked) {
     const next = agents[out[0].agent];
     out.unshift({ agent: asked, handoff: true, text: handoff ? handoff(next) : `Eso lo sabe mejor ${next.name}. Te paso con él.` });
   }
-  return out.slice(0, 3);
+  return out.slice(0, 4);
 }
 
 /** Saludo de recepción: si el visitante ya vino y preguntó algo (que no era un contacto), lo retoma. */

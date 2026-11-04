@@ -55,6 +55,8 @@ export const chat = {
   typingTo: (name) => `${name} está escribiendo…`,
   // Cuando la pregunta es de otro agente: quien la recibe lo dice y la cámara viaja al escritorio del otro.
   handoff: (to) => `Esa pregunta es para ${to.name}, que sabe de ${to.topic}. Te llevo a su escritorio.`,
+  // Cuando otro agente completa la respuesta: el que habló lo anuncia antes de que la cámara viaje.
+  handoffMore: (to) => `${to.name.charAt(0).toUpperCase() + to.name.slice(1)} sabe de ${to.topic} y te cuenta el resto. Te llevo con él.`,
   typingAll: 'La oficina está pensando…',
   placeholder: (name) => `Pregúntale algo a ${name}`,
   placeholderAll: 'la oficina',
