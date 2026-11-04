@@ -34,7 +34,8 @@ export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents
       const l = last.current;
       if (l.mode !== 'iso') engine.setMode(l.mode);
       engine.select(l.select);
-      engine.say(l.say);
+      // Al montar una oficina (también al cambiarla) se parte en la vista general, sin acercarse a nadie.
+      engine.say(l.say, { focus: false });
       engine.speak(l.speak);
     })().catch(() => { if (!cancelled) setFailed(true); });
     return () => {
@@ -44,7 +45,7 @@ export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents
   }, [stageRef, canvasRef, labelsRef, themeId, agents]);
 
   const control = useMemo(() => ({
-    say(map) { last.current.say = map; engineRef.current?.say(map); },
+    say(map, opts) { last.current.say = map; engineRef.current?.say(map, opts); },
     speak(id) { last.current.speak = id; engineRef.current?.speak(id); },
     select(id) { last.current.select = id; engineRef.current?.select(id); },
     setMode(m) { last.current.mode = m; setModeState(m); engineRef.current?.setMode(m); },

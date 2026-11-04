@@ -37,15 +37,15 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   });
 
   // Globos sobre cada agente, anillo en el último que habló y aviso para lectores de pantalla.
-  const bubbles = useCallback((replies) => {
+  const bubbles = useCallback((replies, opts) => {
     const s = sceneRef.current;
-    s.say(bubbleMap(replies));
+    s.say(bubbleMap(replies), opts);
     s.speak(replies.length ? replies[replies.length - 1].agent : null);
     if (replies.length) setState((st) => ({ ...st, live: replies.map((r) => `${agents[r.agent].name}: ${r.text}`).join(' ') }));
   }, [agents]);
 
-  // El saludo de recepción aparece en su globo apenas carga la oficina.
-  useEffect(() => { bubbles([{ agent: 'recepcion', text: state.greet }]); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // El saludo de recepción aparece en su globo apenas carga la oficina, con la oficina entera a la vista (sin zoom).
+  useEffect(() => { bubbles([{ agent: 'recepcion', text: state.greet }], { focus: false }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => () => clearTimeout(timerRef.current), []);
 
   const push = (list, patch) => setState((st) => ({ ...st, msgs: st.msgs.concat(list), ...(patch || {}) }));

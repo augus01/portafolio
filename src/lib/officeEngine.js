@@ -306,8 +306,9 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     select(id) { active = byId(id); kick(); },
     // Anillo sobre el agente que acaba de responder.
     speak(id) { speaking = byId(id); kick(); },
-    // say({ arquitecto: 'texto' }): muestra esos globos y oculta los demás.
-    say(map) {
+    // say({ arquitecto: 'texto' }, { focus }): muestra esos globos y oculta los demás. Con `focus: false` la cámara
+    // queda en la vista general (primera vista de cada oficina).
+    say(map, opts) {
       AG.forEach((a) => {
         const s = says[a.id];
         const t = map && map[a.id];
@@ -317,7 +318,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
       });
       // Un solo agente hablando (o escribiendo): la cámara se le acerca. Varios a la vez: vista general.
       const talking = AG.filter((a) => says[a.id].on);
-      focus = mode === 'iso' && talking.length === 1 ? talking[0] : null;
+      focus = mode === 'iso' && talking.length === 1 && !(opts && opts.focus === false) ? talking[0] : null;
       frameGoal();
       kick();
     },
