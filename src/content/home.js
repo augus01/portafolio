@@ -2,6 +2,8 @@
 // Superpoderes (cómo construyo) → Proyectos (la prueba) → Contacto (recepción, que te lleva a la oficina).
 
 export const nav = {
+  // Logo "apinto" en negro a la izquierda de la nav: lleva al inicio.
+  brand: { label: 'Augusto Pinto, ir al inicio', href: '/' },
   items: [
     { label: 'Sobre mí', href: '#sobre-mi' },
     { label: 'Superpoderes', href: '#superpoderes' },

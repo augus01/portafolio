@@ -1,12 +1,15 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '../../atoms/Icon';
 import { Pill } from '../../atoms/Pill';
+import { Logo } from '../../atoms/Logo';
 
 // Un ítem `external` abre en otra pestaña.
 const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener noreferrer' } : null);
 
 // Navegación en píldoras flotantes; en contenedores de menos de 600px se pliega en un botón de menú.
-export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'down', label = 'Principal', className }) {
+// `brand` ({ href, label }) agrega a la izquierda el logo "apinto" en negro como enlace al inicio; en ventanas
+// angostas pasa al monograma "ap" (layout.css).
+export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', label = 'Principal', className }) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
   const rootRef = useRef(null);
@@ -36,7 +39,13 @@ export function NavBar({ items, actions = [], tone = 'light', menuPlacement = 'd
   );
 
   return (
-    <div ref={rootRef} className={['ap-nav', `ap-nav--${tone}`, className].filter(Boolean).join(' ')}>
+    <div ref={rootRef} className={['ap-nav', `ap-nav--${tone}`, brand && 'ap-nav--brand', className].filter(Boolean).join(' ')}>
+      {brand && (
+        <a className="ap-nav__brand" href={brand.href} aria-label={brand.label}>
+          <Logo tone="dark" height={32} decorative className="ap-nav__logo" />
+          <Logo variant="monogram" tone="dark" height={32} decorative className="ap-nav__mono" />
+        </a>
+      )}
       <nav aria-label={label} className="ap-nav__bar">
         <ul className="ap-nav__group">{items.map(pill)}</ul>
         {actions.length > 0 && <ul className="ap-nav__group ap-nav__group--end">{actions.map(pill)}</ul>}

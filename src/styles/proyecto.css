@@ -5,9 +5,9 @@
    Se adapta con container queries (1000px y 720px de contenedor). Lo que no tiene token está en variables --case-*
    (excepciones documentadas en design-system/INTEGRACION.md). */
 
-.ap-case{container-type:inline-size;position:relative;min-width:320px;overflow-x:clip;background:var(--surface-canvas);color:var(--ink-primary);font-family:var(--font-text);-webkit-font-smoothing:antialiased;
+.ap-case{container-type:inline-size;padding-top:var(--nav-band);position:relative;min-width:320px;overflow-x:clip;background:var(--surface-canvas);color:var(--ink-primary);font-family:var(--font-text);-webkit-font-smoothing:antialiased;
   --font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;--ink-highlight-muted:#a3a3a8;
-  --case-gutter:40px;--case-head-top:112px;--case-wide-max:1280px;--case-copy-on-dark:rgba(255,255,255,.86);
+  --case-gutter:40px;--case-head-top:112px;--case-head-pad:80px;--case-wide-max:1280px;--case-copy-on-dark:rgba(255,255,255,.86);
   --case-light:#efeee9;--case-device:#0e0f12;--case-device-edge:#2b2d33;--case-laptop-base:#c3c6cc;--case-laptop-base-shade:#9a9ea6;--case-laptop-notch:#a9adb5;--case-laptop-cam:#26282e;
   --case-device-shadow:0 28px 56px -12px rgba(14,15,18,.4);--case-fab-shadow:0 12px 32px rgba(14,15,18,.18);
   --case-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--case-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
@@ -21,23 +21,19 @@ body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case-stage--brand :focus-visible,.ap-case-stage--accent :focus-visible,.ap-case--dark-tint .ap-case-stage--tint :focus-visible{outline-color:var(--focus-ring-on-dark)}
 .ap-case-mono{font-family:var(--font-mono);font-size:.75rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
 
-/* Barra superior */
-.ap-case-top{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-6) var(--case-gutter) 0;font-family:var(--font-oswald);font-size:17px}
-.ap-case-top a{display:inline-flex;align-items:center;min-height:var(--target-min);text-decoration:none}
-.ap-case-top__nav{display:flex;gap:28px}
-.ap-case-top__nav a{position:relative}
-.ap-case-top__nav a[aria-current="page"]::after{content:"";position:absolute;left:50%;bottom:var(--space-1);width:5px;height:5px;border-radius:var(--radius-pill);background:currentColor;transform:translateX(-50%)}
-.ap-case-top__nav a:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-color:var(--ink-highlight-muted)}
+/* Nav del landing en la página de proyecto: sin el paso guiado del hero, siempre visible y en su versión clara. */
+.ap-page--case .ap-navwrap.is-static{animation:none}
+.ap-page--case .ap-navwrap.is-static .ap-nav,.ap-page--case .ap-navwrap.is-static .ap-mnav{opacity:1;pointer-events:auto}
 
-/* Botón redondo para volver a proyectos: sigue al scroll */
-.ap-case-fabwrap{position:sticky;top:20px;z-index:var(--z-nav);display:flex;justify-content:flex-end;height:0;padding-right:var(--space-6)}
+/* Botón redondo para volver a proyectos: sigue al scroll, justo bajo la nav (--nav-band de .ap-page). */
+.ap-case-fabwrap{position:sticky;top:var(--nav-band);z-index:var(--z-nav);display:flex;justify-content:flex-end;height:0;padding-right:var(--space-6)}
 .ap-case-fab{display:flex;align-items:center;justify-content:center;width:64px;height:64px;margin-top:var(--space-4);border-radius:var(--radius-pill);background:var(--action);color:var(--on-action) !important;text-decoration:none;box-shadow:var(--case-fab-shadow);transition:transform var(--dur-press) var(--ease-out)}
 .ap-case-fab:hover{transform:scale(1.06)}
 .ap-case-fab:active{transform:scale(var(--scale-press))}
 
 /* Cabecera: título gigante y fila de datos */
 .ap-case-wrap{max-width:var(--page-max);margin:0 auto;padding:0 var(--case-gutter)}
-.ap-case-head{padding-top:var(--case-head-top)}
+.ap-case-head{padding-top:var(--case-head-pad)}
 .ap-case-head__inner{padding-left:clamp(0px, 7cqw, 104px)}
 .ap-case-eyebrow{margin:0 0 var(--space-6);color:var(--ink-secondary)}
 .ap-case-title{margin:0;font-family:var(--font-text);font-weight:400;font-size:clamp(56px, 10.5cqw, 152px);line-height:.94;letter-spacing:-0.05em}
@@ -176,10 +172,7 @@ body:has(.ap-case){background:var(--surface-canvas)}
 
 /* Teléfono */
 @container (max-width: 719px){
-  .ap-case{--case-gutter:var(--space-4);--case-head-top:56px}
-  .ap-case-top{font-size:16px}
-  .ap-case-top__nav{gap:var(--space-4)}
-  .ap-case-hide-sm{display:none !important}
+  .ap-case{--case-gutter:var(--space-4);--case-head-top:56px;--case-head-pad:56px}
   .ap-case-fabwrap{padding-right:var(--space-4)}
   .ap-case-fab{width:var(--target-lg);height:var(--target-lg)}
   .ap-case-head__inner{padding-left:0}

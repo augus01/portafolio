@@ -1,19 +1,29 @@
 // Páginas dedicadas de cada proyecto (/proyectos/<slug>/), según las páginas de caso del artefacto "Hero · Augusto Pinto"
 // (4 nov 2026: Rumbo a Casa e Inkvibe, escritorio y móvil). Zam no tiene página en el artefacto ni capturas todavía:
 // usa la misma estructura con su logo y cómo está armado, solo con hechos ya publicados en el sitio.
-// Sin imports: vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build.
+// vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build (por eso solo importa contenido plano).
+import { nav as landingNav, mobileMenu as landingMenu } from './home.js';
 
 const PHONE = { width: 387, height: 784 };
 const dir = '/proyectos/casos';
 
+// La misma nav del landing (píldoras en escritorio, barra y menú en móvil), con las anclas apuntando al landing y
+// Proyectos marcado como sección actual.
+const toLanding = (item) => ({ ...item, href: item.href.startsWith('#') ? `/${item.href}` : item.href, current: item.href === '#proyectos' });
+
 // Textos compartidos de la página de caso.
 export const casePage = {
-  home: { label: '© Augusto Pinto', href: '/' },
-  nav: [
-    { label: 'Proyectos', href: '/#proyectos', current: true },
-    { label: 'Sobre mí', href: '/#sobre-mi', hideSm: true },
-    { label: 'Contacto', href: '/#contacto' },
-  ],
+  nav: {
+    brand: landingNav.brand,
+    items: landingNav.items.map(toLanding),
+    actions: landingNav.actions.map(toLanding),
+  },
+  mobileMenu: {
+    ...landingMenu,
+    links: landingMenu.links.map(toLanding),
+    cta: toLanding(landingMenu.cta),
+    secondary: toLanding(landingMenu.secondary),
+  },
   back: { label: 'Volver a proyectos', href: '/#proyectos' },
   projectLabel: 'El proyecto',
   linksLabel: 'Enlaces del proyecto',
