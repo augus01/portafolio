@@ -85,6 +85,17 @@ Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un compo
 - Autor único: la cuenta del usuario (augus01). **Sin `Co-Authored-By` ni otros colaboradores.**
 - Repo: https://github.com/augus01/portafolio.git (rama `main`).
 
+## Chat de la oficina con IA (chat-agentes)
+Los agentes de `/oficina/` responden con Claude Haiku 4.5 en Bedrock, detrás de API Gateway y Lambda, con un tope de gasto de USD 10 al mes. **Antes de tocar el chat, su infraestructura o los presupuestos de AWS, leer:**
+1. `docs/chat-agentes.md` — cómo funciona: recorrido de un mensaje, contrato de la API, derivación entre agentes, archivos, infraestructura, costos, budgets y estado actual.
+2. `docs/superpowers/plans/2026-11-05-chat-agentes.md` — plan de implementación con las tareas pendientes y sus verificaciones.
+
+Reglas:
+- Todo lo del chat se llama `chat-agentes` (stack, Lambda, tabla, API, budget, perfil `chat-agentes-haiku`) y lleva las etiquetas `project=portafolio` y `componente=chat-agentes`.
+- El contenido de los agentes sale solo de `src/content/office.js`; `infra/lambda/contenido.json` se regenera con `node scripts/chat-agentes-contenido.mjs`.
+- El chat de reglas (`answer()`) es siempre el respaldo; sin `VITE_CHAT_API_URL` el sitio funciona igual.
+- Desplegar, cambiar budgets o etiquetas, o tocar Amplify genera cambios o gasto en AWS: se confirma con el usuario antes.
+
 ## Pendiente de definir
 - Feature creativa: **"Visita mi oficina"**, página propia `/oficina/` (maqueta 3D con cuatro oficinas y chat con los tres agentes); la pista visible es "Pasa a la oficina" en Contacto. Falta definir a qué correo llega el recado de recepción (`leadEmail` en `src/content/office.js`) o un envío real con Lambda + SES.
 - Contenido real: historia, skills, proyectos (hoy hay lorem ipsum del artefacto aprobado)
