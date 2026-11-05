@@ -1,0 +1,76 @@
+{
+  "agentes": {
+    "recepcion": {
+      "name": "recepción",
+      "topic": "quién es Augusto y cómo dejarle un recado",
+      "intro": "Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado."
+    },
+    "arquitecto": {
+      "name": "arquitecto",
+      "topic": "los proyectos de Augusto",
+      "intro": "Soy arquitecto. Conozco los proyectos de Augusto: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?"
+    },
+    "stack": {
+      "name": "stack",
+      "topic": "las tecnologías con que construye Augusto",
+      "intro": "Soy stack. Sé con qué tecnologías construye Augusto, de la interfaz a la nube. Pregúntame por una."
+    }
+  },
+  "temas": [
+    {
+      "agent": "arquitecto",
+      "text": "Zam es la caja, el inventario y las finanzas del minimarket de barrio: una app para el cajero y un panel web para el dueño. El backend va en NestJS con Fastify, por módulos (inventario, ventas, proveedores); la web en Next.js y la app en Expo. Todo en TypeScript, sobre Postgres en Supabase con Prisma."
+    },
+    {
+      "agent": "arquitecto",
+      "text": "Inkvibe es el marketplace del tatuaje para Latinoamérica. Augusto es el único desarrollador frontend: arma la web con React y Next.js, con las InkCards de los artistas, sus portafolios y el flujo para cotizar y reservar."
+    },
+    {
+      "agent": "arquitecto",
+      "text": "Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales y cita el decreto detrás de cada respuesta. Ganó la categoría Social Good en la hackathon AWS Zero to Shipped."
+    },
+    {
+      "agent": "arquitecto",
+      "text": "En Lexinova, una plataforma LegalTech multi-tenant hecha sobre Cloudflare, Augusto ve integraciones y arquitectura, y mantiene en Railway el worker que trabaja con datos del Poder Judicial."
+    },
+    {
+      "agent": "stack",
+      "text": "Para IA usa Python: scripts, datos y prototipos de agentes, camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes."
+    },
+    {
+      "agent": "stack",
+      "text": "En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify. Además trabaja con Cloudflare y Railway."
+    },
+    {
+      "agent": "stack",
+      "text": "Frontend con React y Next.js, backend con Node.js y NestJS, TypeScript de punta a punta, Postgres con Prisma, y nube en AWS, Cloudflare y Railway. Python para IA."
+    },
+    {
+      "agent": "arquitecto",
+      "text": "Sus proyectos principales: Rumbo a Casa (subsidios habitacionales, ganó en AWS), Inkvibe (marketplace de tatuajes), Zam (caja e inventario para minimarkets) y Lexinova (LegalTech). ¿Cuál te cuento?"
+    },
+    {
+      "agent": "recepcion",
+      "text": "Es la función creativa del portafolio: somos tres agentes que conocemos el trabajo de Augusto. Arriba puedes cambiar la oficina según la serie."
+    },
+    {
+      "agent": "recepcion",
+      "text": "¡Hola! Pregúntame quién es Augusto, o pídele a arquitecto un proyecto y a stack una tecnología."
+    },
+    {
+      "agent": "recepcion",
+      "text": "¡De nada! Si quieres que Augusto te escriba, dime y tomo tus datos."
+    },
+    {
+      "agent": "recepcion",
+      "text": "Augusto Pinto estudia Ingeniería Civil Informática en Chile y va camino a ser AI Engineer. Construye productos reales: Rumbo a Casa, Inkvibe, Zam y Lexinova."
+    }
+  ],
+  "derivar": {
+    "recepcion": "Esa pregunta es para recepción, que sabe de quién es Augusto y cómo dejarle un recado. Te llevo a su escritorio.",
+    "arquitecto": "Esa pregunta es para arquitecto, que sabe de los proyectos de Augusto. Te llevo a su escritorio.",
+    "stack": "Esa pregunta es para stack, que sabe de las tecnologías con que construye Augusto. Te llevo a su escritorio."
+  },
+  "derivarDesconocido": "Eso no lo sé yo. Recepción puede dejarle tu pregunta a Augusto. Te llevo a su escritorio.",
+  "sinRespuesta": "Esa no la tengo clara. Prueba preguntándole a arquitecto por los proyectos o a stack por las tecnologías, o déjame tus datos y Augusto te responde."
+}
