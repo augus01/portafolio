@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { answer, bubbleMap, greeting, isConfirm, isEmail, leadMailto, wantsContact } from '../lib/officeChat';
+import { historialParaApi, pedirRespuesta } from '../lib/chatAgentesApi';
 
 const STORE = 'ap-office-visit';
 const TYPING_MS = 550;
@@ -24,6 +25,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   const timerRef = useRef(0);
   const seqRef = useRef(0);
   const lastRef = useRef(null);
+  const vivoRef = useRef(true);
   const msg = (who, text) => ({ id: ++idRef.current, who, text });
 
   const [state, setState] = useState(() => {
@@ -63,7 +65,10 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
 
   // El saludo de recepción aparece en su globo apenas carga la oficina, con la oficina entera a la vista (sin zoom).
   useEffect(() => { bubbles([{ agent: 'recepcion', text: state.greet }], { focus: false }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => () => { clearTimeout(timerRef.current); clearTimeout(seqRef.current); }, []);
+  useEffect(() => {
+    vivoRef.current = true;
+    return () => { vivoRef.current = false; clearTimeout(timerRef.current); clearTimeout(seqRef.current); };
+  }, []);
 
   const push = (list, patch) => setState((st) => ({ ...st, msgs: st.msgs.concat(list), ...(patch || {}) }));
   // Aviso de paso a recepción: si estabas con arquitecto o stack (elegido o el último que habló), él lo dice primero y
@@ -133,11 +138,19 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     clearTimeout(seqRef.current);
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
     sceneRef.current.say(from ? { [from]: '…' } : {});
-    timerRef.current = setTimeout(() => {
-      const replies = answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
+    const local = () => answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
+    // Con VITE_CHAT_API_URL pide la respuesta a la IA; si no hay URL o falla (null), responde con las reglas locales.
+    // En todo caso espera al menos TYPING_MS para que los puntos se vean.
+    const espera = new Promise((resolve) => { timerRef.current = setTimeout(resolve, TYPING_MS); });
+    Promise.all([
+      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs) }),
+      espera,
+    ]).then(([remotas]) => {
+      if (!vivoRef.current) return;
+      const replies = remotas || local();
       push(replies.map((r) => msg(r.agent, r.text)), { typing: false });
       bubbles(replies);
-    }, TYPING_MS);
+    });
   };
 
   const pickVisitor = (v) => {
