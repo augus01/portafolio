@@ -25,7 +25,7 @@
 - No tocar: app Amplify `ps2-room-portfolio` (`d5w3zjhtyz0vy`), stacks `PortfolioApi`, `RumboACasa`, `CDKToolkit`, budget `casafy`. App del portfolio: `d21d1ifzfdin9a`.
 - Nombres exactos: stack `chat-agentes`, Lambda `chat-agentes`, tabla `chat-agentes-gasto`, rol `chat-agentes-lambda`, política `chat-agentes-freno`, perfil `chat-agentes-haiku`, API `chat-agentes`, budget `chat-agentes`, bucket `chat-agentes-despliegue-810249680029`, log group `/aws/lambda/chat-agentes`.
 - Etiquetas exactas: `project=portafolio`, `componente=chat-agentes` (minúsculas, con guion).
-- Valores fijos: mensaje ≤ 500, historial ≤ 6, `maxTokens` 300, Lambda 10 s, concurrencia 2, throttling 2/s ráfaga 5, logs 7 días, timeout del sitio 8000 ms, tope interno USD 8, budget USD 10, avisos 50 % y 90 %.
+- Valores fijos: mensaje ≤ 500, historial ≤ 6, `maxTokens` 300, Lambda 10 s, sin concurrencia reservada (límite de la cuenta: 10; ver docs/chat-agentes.md), throttling 2/s ráfaga 5, logs 7 días, timeout del sitio 8000 ms, tope interno USD 8, budget USD 10, avisos 50 % y 90 %.
 - CORS solo para `https://main.d21d1ifzfdin9a.amplifyapp.com`, `http://localhost:5173` y `http://localhost:4173`.
 - Sin dependencias nuevas en `package.json`; la Lambda usa el SDK que trae el runtime.
 - El sitio sin `VITE_CHAT_API_URL` funciona exactamente como hoy. Ningún fallo de la API deja un error propio en la consola (las respuestas de corte son 200 con `respaldo: true`).
