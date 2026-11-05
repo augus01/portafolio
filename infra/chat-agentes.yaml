@@ -1,0 +1,260 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: chat-agentes - agentes de la oficina con Bedrock (Claude Haiku 4.5) y costo acotado
+
+Parameters:
+  TopeUsd:
+    Type: Number
+    Default: 8
+    Description: Tope interno mensual en USD; al llegar, la Lambda responde con respaldo
+  LimiteBudgetUsd:
+    Type: Number
+    Default: 10
+    Description: Limite mensual del budget chat-agentes en USD
+  CorreoAlertas:
+    Type: String
+    Default: augustojpintob@gmail.com
+    Description: Correo que recibe los avisos del budget
+  FiltroBudget:
+    Type: String
+    Default: etiqueta
+    AllowedValues: [etiqueta, servicio]
+    Description: Filtro del budget, por etiqueta componente=chat-agentes o por el servicio de Haiku
+  PerfilSistemaArn:
+    Type: String
+    Description: ARN del perfil de inferencia de sistema us.anthropic.claude-haiku-4-5-20251001-v1:0
+
+Conditions:
+  FiltroPorEtiqueta: !Equals [!Ref FiltroBudget, etiqueta]
+
+Resources:
+  ChatInferenceProfile:
+    Type: AWS::Bedrock::ApplicationInferenceProfile
+    Properties:
+      InferenceProfileName: chat-agentes-haiku
+      Description: Perfil de inferencia etiquetado de chat-agentes
+      ModelSource:
+        CopyFrom: !Ref PerfilSistemaArn
+      Tags:
+        - Key: project
+          Value: portafolio
+        - Key: componente
+          Value: chat-agentes
+
+  GastoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: chat-agentes-gasto
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: mes
+          AttributeType: S
+      KeySchema:
+        - AttributeName: mes
+          KeyType: HASH
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: chat-agentes-lambda
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: chat-agentes-acceso
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: bedrock:InvokeModel
+                Resource:
+                  - !GetAtt ChatInferenceProfile.InferenceProfileArn
+                  - !Ref PerfilSistemaArn
+                  - arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+                  - arn:aws:bedrock:us-east-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+                  - arn:aws:bedrock:us-west-2::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
+                  - dynamodb:UpdateItem
+                Resource: !GetAtt GastoTable.Arn
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/chat-agentes
+      RetentionInDays: 7
+
+  ChatFunction:
+    Type: AWS::Lambda::Function
+    DependsOn: LogGroup
+    Properties:
+      FunctionName: chat-agentes
+      Runtime: nodejs22.x
+      Handler: chat-agentes.handler
+      Code: lambda/
+      Role: !GetAtt LambdaRole.Arn
+      Timeout: 10
+      MemorySize: 256
+      ReservedConcurrentExecutions: 2
+      Environment:
+        Variables:
+          MODELO_ARN: !GetAtt ChatInferenceProfile.InferenceProfileArn
+          TABLA: !Ref GastoTable
+          TOPE_USD: !Ref TopeUsd
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: chat-agentes
+      ProtocolType: HTTP
+      CorsConfiguration:
+        AllowOrigins:
+          - https://main.d21d1ifzfdin9a.amplifyapp.com
+          - http://localhost:5173
+          - http://localhost:4173
+        AllowMethods: [POST]
+        AllowHeaders: [content-type]
+        MaxAge: 600
+
+  ApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref HttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt ChatFunction.Arn
+      PayloadFormatVersion: '2.0'
+
+  ChatRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: POST /chat
+      Target: !Sub integrations/${ApiIntegration}
+
+  ApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref HttpApi
+      StageName: $default
+      AutoDeploy: true
+      DefaultRouteSettings:
+        ThrottlingRateLimit: 2
+        ThrottlingBurstLimit: 5
+
+  ApiInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ChatFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:${AWS::Partition}:execute-api:${AWS::Region}:${AWS::AccountId}:${HttpApi}/*/POST/chat
+
+  FrenoPolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      ManagedPolicyName: chat-agentes-freno
+      Description: Niega Bedrock; el budget chat-agentes la adjunta al rol de la Lambda al llegar al 100 por ciento
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Deny
+            Action: bedrock:*
+            Resource: '*'
+
+  BudgetActionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: chat-agentes-budget-accion
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: budgets.amazonaws.com
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals:
+                aws:SourceAccount: '810249680029'
+      Policies:
+        - PolicyName: chat-agentes-freno-adjuntar
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - iam:AttachRolePolicy
+                  - iam:DetachRolePolicy
+                Resource: !GetAtt LambdaRole.Arn
+                Condition:
+                  ArnEquals:
+                    iam:PolicyARN: !Ref FrenoPolicy
+
+  ChatBudget:
+    Type: AWS::Budgets::Budget
+    Properties:
+      Budget:
+        BudgetName: chat-agentes
+        BudgetType: COST
+        TimeUnit: MONTHLY
+        BudgetLimit:
+          Amount: !Ref LimiteBudgetUsd
+          Unit: USD
+        CostTypes:
+          IncludeCredit: false
+          IncludeRefund: false
+        CostFilters:
+          !If
+            - FiltroPorEtiqueta
+            - TagKeyValue:
+                - user:componente$chat-agentes
+            - Service:
+                - Claude Haiku 4.5 (Amazon Bedrock Edition)
+      NotificationsWithSubscribers:
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: 50
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref CorreoAlertas
+        - Notification:
+            NotificationType: ACTUAL
+            ComparisonOperator: GREATER_THAN
+            Threshold: 90
+            ThresholdType: PERCENTAGE
+          Subscribers:
+            - SubscriptionType: EMAIL
+              Address: !Ref CorreoAlertas
+
+  ChatBudgetAction:
+    Type: AWS::Budgets::BudgetsAction
+    DependsOn: ChatBudget
+    Properties:
+      BudgetName: chat-agentes
+      ActionType: APPLY_IAM_POLICY
+      ActionThreshold:
+        Type: PERCENTAGE
+        Value: 100
+      NotificationType: ACTUAL
+      ApprovalModel: AUTOMATIC
+      ExecutionRoleArn: !GetAtt BudgetActionRole.Arn
+      Definition:
+        IamActionDefinition:
+          PolicyArn: !Ref FrenoPolicy
+          Roles:
+            - !Ref LambdaRole
+      Subscribers:
+        - Type: EMAIL
+          Address: !Ref CorreoAlertas
+
+Outputs:
+  ApiUrl:
+    Description: URL del chat para VITE_CHAT_API_URL
+    Value: !Sub https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com/chat
