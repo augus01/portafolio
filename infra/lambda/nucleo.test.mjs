@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { validarPeticion, costoUsd, armarSistema, armarMensajes, interpretarRespuesta } from './nucleo.mjs';
+import { validarPeticion, costoUsd, armarSistema, armarMensajes, interpretarRespuesta, crearHandler, mesDe } from './nucleo.mjs';
 const contenido = JSON.parse(readFileSync(new URL('./contenido.json', import.meta.url)));
 
 test('validarPeticion acepta una petición normal', () => {
@@ -67,4 +67,57 @@ test('interpretarRespuesta rechaza agente inválido y texto sin JSON', () => {
   assert.equal(interpretarRespuesta('{"agente":"augusto","texto":"hola"}', { pedido: null, contenido }), null);
   assert.equal(interpretarRespuesta('Hola, soy stack.', { pedido: null, contenido }), null);
   assert.equal(interpretarRespuesta('{"agente":"stack","texto":""}', { pedido: null, contenido }), null);
+});
+
+const ev = (b) => ({ body: JSON.stringify(b) });
+const falsos = (over = {}) => {
+  const llamadas = { invocar: 0, sumado: [] };
+  const deps = {
+    contenido, topeUsd: 8, ahora: () => new Date('2026-11-15T12:00:00Z'),
+    leerGasto: async () => 0,
+    sumarGasto: async (mes, usd) => { llamadas.sumado.push([mes, usd]); },
+    invocar: async () => { llamadas.invocar++; return { texto: '{"agente":"stack","texto":"Usa React."}', inputTokens: 1000, outputTokens: 100 }; },
+    ...over,
+  };
+  return { h: crearHandler(deps), llamadas };
+};
+
+test('respuesta normal suma el gasto del mes', async () => {
+  const { h, llamadas } = falsos();
+  const r = await h(ev({ mensaje: '¿qué stack usa?' }));
+  assert.equal(r.statusCode, 200);
+  assert.equal(JSON.parse(r.body).replies[0].agent, 'stack');
+  assert.equal(llamadas.sumado[0][0], '2026-11');
+  assert.ok(Math.abs(llamadas.sumado[0][1] - 0.0015) < 1e-9);
+});
+test('petición inválida no gasta', async () => {
+  const { h, llamadas } = falsos();
+  assert.equal((await h({ body: 'no-json' })).statusCode, 400);
+  assert.equal((await h(ev({ mensaje: '' }))).statusCode, 400);
+  assert.equal(llamadas.invocar, 0);
+});
+test('al llegar al tope responde respaldo sin invocar', async () => {
+  const { h, llamadas } = falsos({ leerGasto: async () => 8 });
+  assert.deepEqual(JSON.parse((await h(ev({ mensaje: 'hola' }))).body), { respaldo: true, motivo: 'tope' });
+  assert.equal(llamadas.invocar, 0);
+});
+test('si no se puede leer el gasto, no invoca', async () => {
+  const { h, llamadas } = falsos({ leerGasto: async () => { throw new Error('dynamo'); } });
+  assert.equal(JSON.parse((await h(ev({ mensaje: 'hola' }))).body).respaldo, true);
+  assert.equal(llamadas.invocar, 0);
+});
+test('error de Bedrock o formato raro da respaldo', async () => {
+  const caido = falsos({ invocar: async () => { throw new Error('AccessDenied'); } });
+  assert.equal(JSON.parse((await caido.h(ev({ mensaje: 'hola' }))).body).motivo, 'error');
+  const raro = falsos({ invocar: async () => ({ texto: 'sin json', inputTokens: 10, outputTokens: 10 }) });
+  assert.equal(JSON.parse((await raro.h(ev({ mensaje: 'hola' }))).body).motivo, 'formato');
+  assert.equal(raro.llamadas.sumado.length, 1);
+});
+test('si falla sumar el gasto, igual responde', async () => {
+  const { h } = falsos({ sumarGasto: async () => { throw new Error('dynamo'); } });
+  assert.ok(JSON.parse((await h(ev({ mensaje: 'hola' }))).body).replies);
+});
+test('el gasto se lleva por mes UTC', () => {
+  assert.equal(mesDe(new Date('2026-11-30T23:59:59Z')), '2026-11');
+  assert.equal(mesDe(new Date('2026-12-01T00:00:00Z')), '2026-12');
 });

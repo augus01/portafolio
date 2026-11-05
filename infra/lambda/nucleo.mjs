@@ -98,3 +98,55 @@ export function interpretarRespuesta(texto, { pedido, contenido }) {
   }
   return [{ agent: obj.agente, text }];
 }
+
+export function mesDe(fecha) {
+  return fecha.toISOString().slice(0, 7);
+}
+
+const respuesta = (statusCode, cuerpo) => ({
+  statusCode,
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify(cuerpo),
+});
+const respaldo = (motivo) => respuesta(200, { respaldo: true, motivo });
+
+export function crearHandler({ invocar, leerGasto, sumarGasto, ahora, topeUsd, contenido }) {
+  return async (event) => {
+    let body;
+    try {
+      body = JSON.parse(event?.body);
+    } catch {
+      return respuesta(400, { error: 'peticion-invalida' });
+    }
+    const p = validarPeticion(body);
+    if (!p.ok) return respuesta(400, { error: 'peticion-invalida' });
+
+    const mes = mesDe(ahora());
+    let gasto;
+    try {
+      gasto = await leerGasto(mes);
+    } catch (e) {
+      console.error('no se pudo leer el gasto', e);
+      return respaldo('error');
+    }
+    if (!(gasto < topeUsd)) return respaldo('tope');
+
+    let salida;
+    try {
+      salida = await invocar(armarSistema(contenido), armarMensajes({ historial: p.historial, mensaje: p.mensaje }));
+    } catch (e) {
+      console.error('falló la invocación a Bedrock', e);
+      return respaldo('error');
+    }
+
+    try {
+      await sumarGasto(mes, costoUsd(salida));
+    } catch (e) {
+      console.error('no se pudo sumar el gasto', e);
+    }
+
+    const replies = interpretarRespuesta(salida.texto, { pedido: p.agente, contenido });
+    if (!replies) return respaldo('formato');
+    return respuesta(200, { replies });
+  };
+}
