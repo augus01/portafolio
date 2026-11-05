@@ -4,8 +4,9 @@ export const AGENTES = ['recepcion', 'arquitecto', 'stack'];
 export const MAX_MENSAJE = 500;
 export const MAX_HISTORIAL = 6;
 export const MAX_RESPUESTA = 600;
-export const PRECIO_ENTRADA_USD_MTOK = 1;
-export const PRECIO_SALIDA_USD_MTOK = 5;
+// Precio de Haiku 4.5 en Bedrock (USD 1 / USD 5 global) con el 10 % extra de los perfiles regionales "us.": el contador nunca se queda corto.
+export const PRECIO_ENTRADA_USD_MTOK = 1.1;
+export const PRECIO_SALIDA_USD_MTOK = 5.5;
 
 const QUIENES = [...AGENTES, 'visitor'];
 

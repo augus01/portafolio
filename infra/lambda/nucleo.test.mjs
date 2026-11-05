@@ -23,9 +23,9 @@ test('validarPeticion sanea el historial', () => {
   assert.equal(r.historial.at(-1).texto, 'm49');
   assert.equal(validarPeticion({ mensaje: 'hola', historial: 'no' }).historial.length, 0);
 });
-test('costoUsd con precios de Haiku 4.5', () => {
-  assert.equal(costoUsd({ inputTokens: 1_000_000, outputTokens: 0 }), 1);
-  assert.equal(costoUsd({ inputTokens: 0, outputTokens: 1_000_000 }), 5);
+test('costoUsd con precios de Haiku 4.5 regional', () => {
+  assert.equal(costoUsd({ inputTokens: 1_000_000, outputTokens: 0 }), 1.1);
+  assert.equal(costoUsd({ inputTokens: 0, outputTokens: 1_000_000 }), 5.5);
 });
 test('armarSistema incluye agentes, hechos y reglas', () => {
   const s = armarSistema(contenido);
@@ -88,7 +88,7 @@ test('respuesta normal suma el gasto del mes', async () => {
   assert.equal(r.statusCode, 200);
   assert.equal(JSON.parse(r.body).replies[0].agent, 'stack');
   assert.equal(llamadas.sumado[0][0], '2026-11');
-  assert.ok(Math.abs(llamadas.sumado[0][1] - 0.0015) < 1e-9);
+  assert.ok(Math.abs(llamadas.sumado[0][1] - 0.00165) < 1e-9);
 });
 test('petición inválida no gasta', async () => {
   const { h, llamadas } = falsos();
