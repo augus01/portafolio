@@ -101,7 +101,6 @@ Resources:
       Role: !GetAtt LambdaRole.Arn
       Timeout: 10
       MemorySize: 256
-      ReservedConcurrentExecutions: 2
       Environment:
         Variables:
           MODELO_ARN: !GetAtt ChatInferenceProfile.InferenceProfileArn
