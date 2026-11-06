@@ -37,11 +37,11 @@ test('armarSistema incluye agentes, hechos y reglas', () => {
 test('armarSistema incluye las reglas de cada agente y el agente pedido', () => {
   const s = armarSistema(contenido, 'stack');
   for (const r of contenido.agentes.recepcion.reglas) assert.ok(s.includes(r));
-  assert.match(s, /le está hablando a stack/);
+  assert.match(s, /Eres stack \(stack\)/);
   assert.match(s, /saludos y agradecimientos/i);
   assert.match(s, /"sigue"/);
   assert.match(s, /ese responde primero/);
-  assert.doesNotMatch(armarSistema(contenido), /le está hablando a/);
+  assert.doesNotMatch(armarSistema(contenido), /te está hablando a ti/);
 });
 test('sigue encadena con aviso', () => {
   const r = interpretarRespuesta('{"agente":"arquitecto","texto":"Inkvibe es…","sigue":{"agente":"stack","texto":"Está hecho con Next.js."}}', { pedido: null, contenido });
@@ -169,4 +169,7 @@ test('ayuda sin agente pedido la da recepción y descarta sigue', () => {
 test('una pregunta de otro territorio deriva como antes', () => {
   const r = interpretarRespuesta('{"intencion":"pregunta","agente":"stack","texto":"x"}', { pedido: 'arquitecto', contenido });
   assert.deepEqual(r.map((x) => [x.agent, !!x.handoff]), [['arquitecto', true], ['stack', false]]);
+});
+test('con agente pedido, el saludo va con la voz de ese agente', () => {
+  assert.match(armarSistema(contenido, 'stack'), /te presentas como stack, que sabe de/);
 });
