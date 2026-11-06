@@ -287,8 +287,19 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
       v.set(a.pos[0], a.mesh.position.y + 0.5, a.pos[2]).project(cam);
       const x = (v.x + 1) / 2 * w, y = (1 - v.y) / 2 * h;
       const bw = s.el.offsetWidth, bh = s.el.offsetHeight;
-      const cx = Math.max(bw / 2 + 8, Math.min(w - bw / 2 - 8, x));
-      const top = Math.max(8, y - bh - 16);
+      let cx = Math.max(bw / 2 + 8, Math.min(w - bw / 2 - 8, x));
+      // Sin zoom, un globo alto no se mete bajo el selector de serie: se corre a su lado y, si no cabe, baja hasta su borde.
+      let minTop = 8;
+      const sw = stage.querySelector('.ap-ofsw--stage');
+      if (sw && y - bh - 16 < sw.offsetTop + sw.offsetHeight + 8) {
+        const swL = sw.offsetLeft, swR = sw.offsetLeft + sw.offsetWidth;
+        if (cx - bw / 2 < swR + 8 && cx + bw / 2 > swL - 8) {
+          const side = swR + 8 + bw / 2;
+          if (side + bw / 2 + 8 <= w && x - (side - bw / 2) >= 18) cx = side;
+          else minTop = sw.offsetTop + sw.offsetHeight + 8;
+        }
+      }
+      const top = Math.max(minTop, y - bh - 16);
       s.el.style.transform = `translate(${Math.round(cx - bw / 2)}px, ${Math.round(top)}px)`;
       s.el.style.setProperty('--tail', Math.round(Math.max(18, Math.min(bw - 18, bw / 2 + (x - cx)))) + 'px');
     });
@@ -308,17 +319,16 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     select(id) { active = byId(id); kick(); },
     // Anillo sobre el agente que acaba de responder.
     speak(id) { speaking = byId(id); kick(); },
-    // say({ arquitecto: 'texto' }, { focus }): muestra esos globos y oculta los demás. Con `focus: false` la cámara
-    // queda en la vista general (primera vista de cada oficina).
-    // El globo solo se ve con la cámara acercada: la cámara va al último agente que habló (el último del mapa) y
-    // solo su globo se muestra; las demás respuestas quedan en el historial.
+    // say({ arquitecto: 'texto' }, { focus }): muestra el globo del último agente del mapa (el que habla) y oculta los
+    // demás; las otras respuestas quedan en el historial. Con `focus: false` la cámara queda en la vista general; si no,
+    // se acerca a ese agente (en la vista isométrica).
     say(map, opts) {
       const ids = Object.keys(map || {}).filter((id) => map[id]);
       const last = ids.length ? byId(ids[ids.length - 1]) : null;
       focus = mode === 'iso' && last && !(opts && opts.focus === false) ? last : null;
       AG.forEach((a) => {
         const s = says[a.id];
-        s.on = a === focus; s.tx.textContent = s.on ? map[a.id] : '';
+        s.on = a === last; s.tx.textContent = s.on ? map[a.id] : '';
         s.el.classList.toggle('is-on', s.on);
         if (!s.on) a.tagEl.style.display = '';
       });
@@ -327,7 +337,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     },
     // Esc: vuelve a la vista general y oculta el globo.
     unfocus() {
-      if (!focus) return false;
+      if (!focus && !AG.some((a) => says[a.id].on)) return false;
       focus = null;
       AG.forEach((a) => { const s = says[a.id]; s.on = false; s.tx.textContent = ''; s.el.classList.remove('is-on'); a.tagEl.style.display = ''; });
       frameGoal();
