@@ -163,7 +163,9 @@ Desde el artefacto **"Hero · Augusto Pinto"** y su propuesta "Agentes en el sit
 | Movimiento < 300 ms y solo por acción | Mirada, pestañeo y flotación en bucle; el plano entra en 450ms | `--agent-pop-ease` |
 | Radios y sombras | Plano de 20px con la sombra de la ficha de Superpoderes; velo `rgba(14,15,18,.42)` con desenfoque de 4px | `src/styles/agentes.css` |
 
-Chat de la oficina (mismo día): recepción es la principal (saluda, recibe la primera pregunta y deriva al que sabe) y la cámara solo se acerca a un agente al elegirlo; mientras conversan queda en la vista general, con el globo del que habla (`hooks/useOfficeChat.js`, `say()` de `lib/officeEngine.js`).
+Chat de la oficina (mismo día): recepción es la principal (saluda, recibe la primera pregunta y deriva al que sabe) y la cámara solo se acerca a un agente si lo eliges antes de empezar a hablar; desde tu primer mensaje queda en la vista general, con el globo del que habla (`hooks/useOfficeChat.js`, `say()` de `lib/officeEngine.js`).
+
+La conversación sigue el lienzo **"Chat B · Elige con quién hablar"** del mismo artefacto: "¿Con quién quieres hablar?" y una tarjeta por agente (molécula `OfficeAgentCard`, organismo `OfficeChatDock`, `card` de cada agente y `chat.pick` en `src/content/office.js`). La de quien conversas (al entrar, recepción) es la ancha, con la marca "Conversando", el hilo con los globos en el color de cada agente, la ficha del recado, los chips y la caja para escribir; las otras ofrecen dos preguntas listas y "Hablar con …" en su color. Bajo 900px la tarjeta abierta va arriba a lo ancho y las otras quedan como dos botones. La maqueta sube y se aleja para quedar entera sobre las tarjetas (`--off-room-lift`, `--off-room-zoom` en `.ap-off__stage`, que lee `officeEngine.js`). El pie de la oficina y el pie del sitio llevan a los tres agentes en 3D (`mountAgentTrio`).
 
 ## Excepción aprobada (modo liviano de rendimiento)
 
