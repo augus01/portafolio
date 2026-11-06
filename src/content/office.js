@@ -29,20 +29,47 @@ export const stage = {
 };
 
 // Los tres agentes, con su nombre en minúsculas (su color, el del personaje, vive en src/styles/oficina.css).
-// `intro` es lo que dice cada uno al hacerle clic; `topic`, lo que sabe (para cuando otro agente te deriva a él).
+// `intro` es lo que dice cada uno al hacerle clic; `topic`, lo que sabe (para cuando otro agente te deriva a él);
+// `rules`, su territorio: el chat de reglas lo respeta con los temas de abajo y la IA las recibe en su prompt.
+// Fuente del contenido: docs/perfil-augusto.md (CV y LinkedIn, solo lo profesional).
 export const agents = {
   recepcion: { id: 'recepcion', name: 'recepción', topic: 'quién es Augusto y cómo dejarle un recado',
-    intro: 'Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.' },
-  arquitecto: { id: 'arquitecto', name: 'arquitecto', topic: 'los proyectos de Augusto',
-    intro: 'Soy arquitecto. Conozco los proyectos de Augusto: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?' },
-  stack: { id: 'stack', name: 'stack', topic: 'las tecnologías con que construye Augusto',
-    intro: 'Soy stack. Sé con qué tecnologías construye Augusto, de la interfaz a la nube. Pregúntame por una.' },
+    intro: 'Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.',
+    rules: [
+      'Recepción habla solo de Augusto como persona y profesional: quién es, qué estudia, cómo trabaja, su experiencia y su meta.',
+      'Recepción no nombra proyectos ni tecnologías; lo más que dice es que Augusto trabajó como desarrollador frontend en Inkvibe.',
+      'Si preguntan qué ha hecho Augusto o por un proyecto, eso es de arquitecto; si preguntan cómo está construido algo, es de stack.',
+      'Las organizaciones donde Augusto trabaja fuera de la informática no se nombran: se dice "en las organizaciones donde se desempeña Augusto".',
+      'Recepción toma el recado de quien quiera hablar con Augusto y nunca da teléfono, correo ni dirección.',
+    ] },
+  arquitecto: { id: 'arquitecto', name: 'arquitecto', topic: 'qué es cada proyecto y qué logra',
+    intro: 'Soy arquitecto. Te cuento qué es cada proyecto de Augusto y qué logra: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?',
+    rules: [
+      'Arquitecto habla solo de los proyectos: qué es cada uno, para quién es, su objetivo y qué logra (premios, alcance, rol de Augusto).',
+      'Arquitecto no nombra tecnologías, frameworks ni servicios: cómo está construido un proyecto es de stack.',
+      'Si preguntan quién es Augusto o cómo trabaja, eso es de recepción.',
+    ] },
+  stack: { id: 'stack', name: 'stack', topic: 'cómo está construido cada proyecto',
+    intro: 'Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.',
+    rules: [
+      'Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.',
+      'Stack siempre amarra una tecnología al proyecto donde Augusto la usó; nunca da una lista suelta. La única excepción es Python para IA.',
+      'Stack describe un proyecto en una frase como mucho: qué es y qué logra es de arquitecto.',
+      'Si preguntan quién es Augusto, eso es de recepción.',
+    ] },
 };
+
+// Palabras de implementación: con ellas una pregunta por un proyecto es de stack (y no de arquitecto).
+const IMPL = String.raw`como (esta|lo|la|fue|se)|hech[oa] con|construid|armad|stack|tecnolog|arquitectura|implement|framework|codigo|backend|frontend|base de datos`;
+// Palabras de "qué es": con ellas la pregunta también es de arquitecto aunque traiga implementación.
+const QUE = String.raw`que es|de que se trata|para que|objetivo|que logr|que hace|que gano|premio`;
+const deStack = (nombres) => new RegExp(`(?=.*(${nombres}))(?=.*(${IMPL}))`);
+const soloImpl = new RegExp(`^(?!.*(${QUE})).*(${IMPL})`);
 
 export const chat = {
   regionLabel: 'Habla con la oficina',
-  welcome: '¡Bienvenido! Yo atiendo, arquitecto sabe de proyectos y stack de tecnologías. ¿Qué te trae por aquí?',
-  noMatch: 'Esa no la tengo clara. Prueba preguntándole a arquitecto por los proyectos o a stack por las tecnologías, o déjame tus datos y Augusto te responde.',
+  welcome: '¡Bienvenido! Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. ¿Qué te trae por aquí?',
+  noMatch: 'Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde.',
   visitorsLabel: '¿Qué te trae por aquí?',
   suggestionsLabel: 'Preguntas sugeridas',
   leadOptionsLabel: 'Opciones del recado',
@@ -69,34 +96,94 @@ export const chat = {
   // Quién visita: cada opción trae la respuesta de recepción y tres preguntas sugeridas.
   visitors: [
     { id: 'reclutador', label: 'Busco talento',
-      reply: 'Perfecto. Augusto estudia Ingeniería Civil Informática en Chile y va camino a ser AI Engineer. Pregunta lo que quieras y, si te interesa conversar con él, yo tomo tus datos.',
-      sugs: ['¿Qué ha construido?', '¿Qué sabe de IA y AWS?', '¿Está disponible para una práctica?'] },
+      reply: 'Perfecto. Augusto estudia Ingeniería Civil Informática y va camino a ser AI Engineer. Pregúntame por él, a arquitecto por sus proyectos y a stack por cómo los construyó; si quieres conversar con él, tomo tus datos.',
+      sugs: ['¿Quién es Augusto?', '¿Qué ha construido?', '¿Cómo lo contacto?'] },
     { id: 'cliente', label: 'Tengo un proyecto',
-      reply: '¡Bien! Arquitecto te puede mostrar proyectos parecidos al tuyo. Cuando quieras, yo tomo tus datos para que Augusto te escriba.',
-      sugs: ['¿Qué tipo de proyectos hace?', '¿Cómo funciona Rumbo a Casa?', 'Quiero contactarlo'] },
+      reply: '¡Bien! Arquitecto te muestra proyectos parecidos al tuyo y stack cómo están construidos. Cuando quieras, yo tomo tus datos para que Augusto te escriba.',
+      sugs: ['¿Qué tipo de proyectos hace?', '¿Qué es Rumbo a Casa?', 'Quiero contactarlo'] },
     { id: 'colega', label: 'Soy colega',
-      reply: '¡Hola, colega! Stack te cuenta con qué construye y arquitecto cómo lo arma.',
-      sugs: ['¿Cómo está armado Zam?', '¿Qué stack usa?', '¿Qué hizo en la hackathon de AWS?'] },
+      reply: '¡Hola, colega! Arquitecto te cuenta qué hace cada proyecto y stack cómo está construido.',
+      sugs: ['¿Cómo está hecho Zam?', '¿Cómo está hecho Inkvibe?', '¿Qué hizo en la hackathon de AWS?'] },
     { id: 'curioso', label: 'Solo miro',
       reply: 'Bienvenido. Gira la maqueta, cambia la oficina según la serie o pregunta lo que quieras.',
       sugs: ['¿Quién es Augusto?', '¿Qué es Inkvibe?', '¿Qué es esta oficina?'] },
   ],
   // Frases que abren el recado para Augusto (se comparan en minúsculas y sin tildes).
-  leadRx: /(contrat|practica|pasant|disponib|propuesta|cotiz|presupuesto|reuni|agend|contact|escribirle|hablar con (el|augusto)|tengo un proyecto|hire|internship|get in touch)/,
-  // Temas: el primero que calza responde; si calza otro de otro agente, ese completa.
+  leadRx: /(contrat|disponib|propuesta|cotiz|presupuesto|reuni|agend|contact|escribirle|hablar con (el|augusto)|tengo un proyecto|hire|get in touch)/,
+  // Saludos y agradecimientos: los responde el agente al que le hablas, con su voz, sin derivar (sin agente, recepción).
+  small: {
+    greetRx: /^[¡!\s]*(hola|holi|buenas|buenos dias|buenas tardes|buenas noches|hello|hi|hey|que tal)\b[\s!.,¡?]*(.{0,12})$/,
+    thanksRx: /^[¡!\s]*(gracias|muchas gracias|mil gracias|thanks|thank you)/,
+    greet: {
+      recepcion: '¡Hola! Soy recepción. Pregúntame quién es Augusto o, si quieres hablar con él, te tomo el recado.',
+      arquitecto: '¡Hola! Soy arquitecto. Pregúntame qué es cada proyecto de Augusto y qué logra.',
+      stack: '¡Hola! Soy stack. Pregúntame cómo está construido un proyecto de Augusto.',
+    },
+    thanks: {
+      recepcion: '¡De nada! Si quieres que Augusto te escriba, dime y tomo tus datos.',
+      arquitecto: '¡De nada! Si quieres conocer otro proyecto, pregúntame.',
+      stack: '¡De nada! Si quieres saber cómo está hecho otro proyecto, pregúntame.',
+    },
+  },
+  // Temas (se comparan en minúsculas y sin tildes): responde el del agente al que le hablas; si no, arquitecto antes
+  // que stack; si calza otro de otro agente, ese completa. `unless` descarta el tema: así "¿cómo está hecho Inkvibe?"
+  // va solo a stack y "¿qué es Inkvibe?" solo a arquitecto.
   topics: [
-    { rx: /zam|helix|erp|minimarket|caja|inventario/, agent: 'arquitecto', text: 'Zam es la caja, el inventario y las finanzas del minimarket de barrio: una app para el cajero y un panel web para el dueño. El backend va en NestJS con Fastify, por módulos (inventario, ventas, proveedores); la web en Next.js y la app en Expo. Todo en TypeScript, sobre Postgres en Supabase con Prisma.' },
-    { rx: /inkvibe|tatu/, agent: 'arquitecto', text: 'Inkvibe es el marketplace del tatuaje para Latinoamérica. Augusto es el único desarrollador frontend: arma la web con React y Next.js, con las InkCards de los artistas, sus portafolios y el flujo para cotizar y reservar.' },
-    { rx: /rumbo|subsidio|hackathon|zero to shipped/, agent: 'arquitecto', text: 'Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales y cita el decreto detrás de cada respuesta. Ganó la categoría Social Good en la hackathon AWS Zero to Shipped.' },
-    { rx: /lexinova|legal|pjud/, agent: 'arquitecto', text: 'En Lexinova, una plataforma LegalTech multi-tenant hecha sobre Cloudflare, Augusto ve integraciones y arquitectura, y mantiene en Railway el worker que trabaja con datos del Poder Judicial.' },
-    { rx: /\bia\b|\bai\b|inteligencia|agente|python|bedrock|llm/, agent: 'stack', text: 'Para IA usa Python: scripts, datos y prototipos de agentes, camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes.' },
-    { rx: /aws|nube|cloud|lambda|amplify/, agent: 'stack', text: 'En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify. Además trabaja con Cloudflare y Railway.' },
-    { rx: /tecnolog|stack|lenguaje|react|next|node|typescript|postgres|docker|framework|herramient|sabe usar/, agent: 'stack', text: 'Frontend con React y Next.js, backend con Node.js y NestJS, TypeScript de punta a punta, Postgres con Prisma, y nube en AWS, Cloudflare y Railway. Python para IA.' },
-    { rx: /proyecto|construid|hecho|hizo|trabajos?\b|portafolio/, agent: 'arquitecto', text: 'Sus proyectos principales: Rumbo a Casa (subsidios habitacionales, ganó en AWS), Inkvibe (marketplace de tatuajes), Zam (caja e inventario para minimarkets) y Lexinova (LegalTech). ¿Cuál te cuento?' },
-    { rx: /oficina|serie|mad men|soprano|odisea|2001|agentes?\b/, agent: 'recepcion', text: 'Es la función creativa del portafolio: somos tres agentes que conocemos el trabajo de Augusto. Arriba puedes cambiar la oficina según la serie.' },
-    { rx: /^(hola|buenas|hello|hi|hey)[\s!.,]*(.{0,12})$/, agent: 'recepcion', text: '¡Hola! Pregúntame quién es Augusto, o pídele a arquitecto un proyecto y a stack una tecnología.' },
-    { rx: /^(gracias|muchas gracias|thanks)/, agent: 'recepcion', text: '¡De nada! Si quieres que Augusto te escriba, dime y tomo tus datos.' },
-    { rx: /quien es|quien eres|estudia|que busca|sobre el\b|de donde/, agent: 'recepcion', text: 'Augusto Pinto estudia Ingeniería Civil Informática en Chile y va camino a ser AI Engineer. Construye productos reales: Rumbo a Casa, Inkvibe, Zam y Lexinova.' },
+    // stack: cómo está construido cada proyecto (nombre del proyecto + palabra de implementación).
+    { rx: deStack('rumbo|subsidio|hackathon'), agent: 'stack',
+      text: 'Rumbo a Casa corre sobre AWS: CloudFront sirve la web, Lambda atiende las consultas, DynamoDB guarda los datos y Polly le pone voz. El asistente usa Bedrock con un motor de reglas que cita el decreto detrás de cada respuesta.' },
+    { rx: deStack('inkvibe|tatu|inkcard'), agent: 'stack',
+      text: 'Inkvibe está hecho con Next.js (App Router), React 18 y TypeScript, con Tailwind, Mantine, TanStack Query, Firebase Auth y pruebas en Vitest. Augusto lo ordenó feature-first con Clean Architecture, guards por rol desde el día uno y metas de LCP bajo 2,5 s y CLS bajo 0,1 en móvil. Cada funcionalidad pasa por una spec en OpenSpec antes de implementarse con Claude Code y Cursor.' },
+    { rx: deStack('zam|minimarket|inventario'), agent: 'stack',
+      text: 'Zam tiene el backend en NestJS con Fastify, por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura. La web va en Next.js y la app en Expo, todo en TypeScript, sobre Postgres en Supabase con Prisma y Firebase Auth para dueños y cajeros.' },
+    { rx: deStack('lexinova|legal|pjud'), agent: 'stack',
+      text: 'Lexinova está construida Cloudflare-first, y Augusto ve sus integraciones y su arquitectura. Además mantiene en Railway el worker que trabaja con los datos del Poder Judicial.' },
+    { rx: deStack('portafolio|este sitio|esta (web|pagina|oficina)|el chat|los agentes'), agent: 'stack',
+      text: 'Este portafolio está hecho con React y Vite, con la oficina en 3D, y se despliega en AWS Amplify. El chat de los agentes usa Claude Haiku 4.5 en Bedrock detrás de API Gateway y Lambda, con un tope de gasto mensual.' },
+    // stack: tecnologías, siempre amarradas al proyecto donde las usó.
+    { rx: /\bia\b|\bai\b|inteligencia artificial|python|bedrock|llm|machine learning/, agent: 'stack',
+      unless: /ai engineer/,
+      text: 'Para IA Augusto usa Python: scripts, datos y prototipos de agentes, camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes, y en este portafolio los agentes responden con Claude en Bedrock.' },
+    { rx: /aws|amazon|nube|cloud|lambda|amplify|dynamo/, agent: 'stack',
+      text: 'En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify con el chat sobre API Gateway y Lambda. Lexinova, en cambio, vive en Cloudflare y Railway.' },
+    { rx: /react|next|tailwind|mantine|tanstack|frontend|interfaz/, agent: 'stack',
+      text: 'React y Next.js son su base de frontend: con ellos construye, como único desarrollador frontend, la web de Inkvibe (App Router, Tailwind, Mantine y TanStack Query) y el panel web de Zam.' },
+    { rx: /nest|node|fastify|backend|\bapi\b|servidor/, agent: 'stack',
+      text: 'El backend de Zam lo hizo en NestJS con Fastify sobre Node.js, organizado por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura.' },
+    { rx: /postgres|prisma|supabase|base de datos|sql|firestore|firebase/, agent: 'stack',
+      text: 'Los datos de Zam viven en Postgres sobre Supabase, con Prisma para el esquema y las migraciones, y Firebase Auth para dueños y cajeros. En Inkvibe usa Firebase Auth con guards por rol y sincroniza la moderación con Firestore.' },
+    { rx: /typescript|javascript|\bts\b/, agent: 'stack',
+      text: 'TypeScript va de punta a punta en Zam (backend NestJS, web Next.js y app Expo) y en la web de Inkvibe.' },
+    { rx: /cloudflare|railway|worker/, agent: 'stack',
+      text: 'En Lexinova trabaja con una plataforma construida Cloudflare-first y mantiene en Railway el worker que procesa los datos del Poder Judicial.' },
+    { rx: /tecnolog|stack|lenguaje|herramient|sabe usar|que usa|con que (construye|trabaja|programa)|framework/, agent: 'stack',
+      text: 'Depende del proyecto: Inkvibe va en Next.js, React y TypeScript; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare y Railway. ¿Cuál te detallo?' },
+    // arquitecto: qué es cada proyecto y qué logra (si la pregunta es solo de implementación, `unless` la deja a stack).
+    { rx: /rumbo|subsidio|hackathon|zero to shipped|vivienda/, agent: 'arquitecto', unless: soloImpl,
+      text: 'Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales (DS49, DS1, DS19 y DS52) y cita el decreto detrás de cada respuesta. Augusto es co-creador y el proyecto ganó la categoría Social Good en la hackathon AWS Zero to Shipped.' },
+    { rx: /inkvibe|tatu|inkcard/, agent: 'arquitecto', unless: soloImpl,
+      text: 'Inkvibe es el primer marketplace digital del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar. Augusto fue el único desarrollador frontend y entregó cuatro superficies en 9 semanas: la InkCard para la bio de Instagram, proyectada como el mayor canal de tráfico; el panel de los estudios; el backoffice interno y la web pública por ciudad y estilo.' },
+    { rx: /zam|helix|erp|minimarket|caja|inventario/, agent: 'arquitecto', unless: soloImpl,
+      text: 'Zam es la caja, el inventario y las finanzas del minimarket de barrio: el cajero vende desde una app y el dueño revisa ventas, catálogo, gastos y stock en un panel web. Es un proyecto propio de Augusto y está en desarrollo.' },
+    { rx: /lexinova|legal|pjud/, agent: 'arquitecto', unless: soloImpl,
+      text: 'Lexinova es una plataforma LegalTech multi-tenant para el trabajo legal. Augusto se encarga de sus integraciones y su arquitectura, incluido el módulo que trabaja con la información del Poder Judicial.' },
+    { rx: /portafolio|este sitio|esta (web|pagina)/, agent: 'arquitecto', unless: soloImpl,
+      text: 'Este portafolio cuenta quién es Augusto, cómo construye y qué ha hecho, y su función creativa es esta oficina: tres agentes que conocen su trabajo y responden con IA.' },
+    { rx: /proyecto|ha construido|ha hecho|que hizo|que ha creado|trabajos\b|en que ha trabajado/, agent: 'arquitecto',
+      unless: /rumbo|subsidio|hackathon|inkvibe|tatu|zam|minimarket|lexinova|legal|portafolio|como (esta|lo|la|fue|se)|tecnolog|stack/,
+      text: 'Sus proyectos principales: Rumbo a Casa (subsidios habitacionales, ganó en la hackathon de AWS), Inkvibe (marketplace del tatuaje), Zam (caja e inventario para minimarkets) y Lexinova (LegalTech). ¿Cuál te cuento?' },
+    // recepción: Augusto como persona y profesional, sin proyectos ni tecnologías.
+    { rx: /oficina|serie|mad men|soprano|odisea|2001|que agentes/, agent: 'recepcion', unless: soloImpl,
+      text: 'Es la función creativa de este sitio: yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. Arriba puedes cambiar la oficina según la serie.' },
+    { rx: /como trabaja|forma de trabajar|habilidad|fortaleza|blandas|personalidad|como es (el|augusto)|productiv|en equipo|metodolog/, agent: 'recepcion',
+      text: 'Augusto es organizado y proactivo: se anticipa a los problemas, propone soluciones y busca estrategias concretas que mejoren la eficiencia del equipo. Define la estructura antes de escribir código, trabaja con especificaciones y mide lo que construye. Se apoya en la comunicación efectiva, el pensamiento crítico y la gestión del tiempo.' },
+    { rx: /experiencia|donde (ha )?trabaj|trabaja en|laboral|empleo|clientes?\b|atencion|nps/, agent: 'recepcion',
+      text: 'Trabajó como desarrollador frontend en Inkvibe. Además, en las organizaciones donde se desempeña Augusto trabaja de cara al cliente: analiza indicadores NPS para evaluar la experiencia y resuelve reclamos con un enfoque empático y ágil, así que entiende al usuario final porque lo atiende todos los días.' },
+    { rx: /meta|objetivo profesional|futuro|ai engineer|que busca|aspira|a que se quiere dedicar/, agent: 'recepcion',
+      text: 'Augusto va camino a ser AI Engineer: quiere construir productos con IA aplicada a situaciones de la vida real, que resuelvan un trámite, una duda o una decisión concreta. Lo que lo mueve es hacer el producto que más ayude a las personas.' },
+    { rx: /quien es|quien eres|sobre (el|augusto)|de donde|edad|cuantos anos|estudia|universidad|carrera|augusto/, agent: 'recepcion',
+      unless: /ha hecho|ha construido|proyecto/,
+      text: 'Augusto Pinto tiene 21 años y estudia Ingeniería Civil Informática en la Universidad San Sebastián, en cuarto año, en Santiago de Chile. Va camino a ser AI Engineer y construye productos completos, desde la pantalla hasta la arquitectura.' },
   ],
   // Recepción toma los datos de a uno y arma la ficha del recado.
   lead: {
