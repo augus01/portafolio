@@ -231,4 +231,6 @@
   .ap-ofc.is-open .ap-ofc__blurb{display:none}
   .ap-ofc__thread{max-height:132px}
 }
+/* Teléfono: la maqueta se centra en el hueco libre (officeEngine.js) y se acerca un poco para usar el ancho. */
+@media (max-width: 559px){.ap-off__stage{--off-room-zoom:.98}}
 @media (prefers-reduced-motion: reduce){.ap-ofc__go.label{transition:none}}

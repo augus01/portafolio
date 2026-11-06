@@ -159,7 +159,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   const baseSize = () => 7.2 * zoom * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
   const frameGoal = () => {
     if (focus) {
-      goal.target.set(focus.pos[0], focus.pos[1] + FOCUS_Y, focus.pos[2]);
+      goal.target.set(focus.pos[0], focus.pos[1] + (stage.clientWidth < 560 ? 0.1 : FOCUS_Y), focus.pos[2]);
       goal.size = baseSize() * FOCUS;
       goal.lift = focusLift;
       goal.shift = focusShift;
@@ -295,7 +295,9 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     // Globos sobre la cabeza del agente sin salirse del recuadro; la colita sigue apuntando al agente.
     // En pantallas angostas se apilan arriba, a lo ancho y bajo el selector de serie, para no tapar la maqueta.
     const narrow = w < 560;
-    let stackY = 60;
+    const swEl = stage.querySelector('.ap-ofsw--stage');
+    const headBottom = swEl ? swEl.offsetTop + swEl.offsetHeight : 52;
+    let stackY = headBottom + 8;
     AG.forEach((a) => {
       const s = says[a.id];
       if (!s.on) return;
@@ -349,6 +351,14 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
       s.el.style.transform = `translate(${Math.round(cx - bw / 2)}px, ${Math.round(top)}px)`;
       s.el.style.setProperty('--tail', Math.round(Math.max(18, Math.min(bw - 18, bw / 2 + (x - cx)))) + 'px');
     });
+    // En pantallas angostas la maqueta (o el agente, de cerca) se centra en el hueco libre entre la cabecera y los
+    // globos de arriba y la conversación del pie, así no queda pegada arriba ni tapada por el globo.
+    if (narrow) {
+      const dock = stage.querySelector('.ap-ofd');
+      const floor = dock ? dock.getBoundingClientRect().top - stage.getBoundingClientRect().top - 8 : h - 8;
+      const ceil = stackY;
+      if (floor - ceil > 80) goal.lift = Math.max(-0.3, Math.min(0.45, 0.5 - (ceil + floor) / 2 / h));
+    }
     off.raf = requestAnimationFrame(frame);
   };
   function kick() { if (!off.raf && off.visible && !document.hidden) off.raf = requestAnimationFrame(frame); }
