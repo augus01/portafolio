@@ -5,7 +5,7 @@
 
 :root{
   /* Recepción: medidas de la referencia, escaladas con la nav. */
-  --pk-window:52px;--pk-head-w:60px;--pk-head-h:66px;--pk-head-right:6px;--pk-head-sink:-40px;--pk-lift:-5px;--pk-duck:34px;
+  --pk-window:52px;--pk-head-w:60px;--pk-head-h:66px;--pk-head-right:6px;--pk-head-sink:-30px;--pk-lift:-5px;--pk-duck:34px;
   --pk-move:240ms;--pk-duck-move:160ms;
   /* Stack en la ficha: globo en el tono claro de su naranja y nombre en su naranja oscuro. */
   --stk-say:#fdeee5;--stk-who:#8a3a10;

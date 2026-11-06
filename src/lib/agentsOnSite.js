@@ -147,7 +147,8 @@ export function mountReceptionPeek(canvases) {
       if (p) {
         const b = cv.getBoundingClientRect();
         gx = clamp((p.x - (b.left + b.width / 2)) / 320);
-        gy = clamp((p.y - (b.top + b.height * 0.4)) / 320);
+        // Hacia abajo inclina poco la cabeza: el cursor suele estar bajo la barra y los ojos no deben esconderse tras ella.
+        gy = Math.min(0.2, clamp((p.y - (b.top + b.height * 0.4)) / 320));
       } else if (!still) gx = idleX(t);
       pose(A, L, gx, gy, t, still);
       r.render(scene, cam);
