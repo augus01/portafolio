@@ -254,10 +254,11 @@
 
 /* Pie (ajuste del 4 nov 2026, referencia pedida por Augusto): fondo --surface-inverse a todo el ancho; arriba la pregunta
    grande con la llamada a la oficina y su círculo de flecha, a la derecha los menús en mayúsculas; una línea y abajo los
-   tres agentes de colores, el año y la nota del despliegue. Lo que no tiene token está en variables --foot-*. */
+   tres agentes de colores, el año y la nota del despliegue. Lo que no tiene token está en variables --foot-*.
+   Relleno superior y separación más bajos (6 nov 2026) para que, al final de la página, la nav no choque con el pie. */
 .ap-foot{--foot-title-size:clamp(48px, 6.4vw, 104px);--foot-cta-size:clamp(22px, 2.6vw, 40px);--foot-nav-size:clamp(22px, 2.4vw, 34px);
-  --foot-circle:clamp(56px, 5.4vw, 76px);--foot-small:.8125rem;--foot-agent:44px;--foot-pad:clamp(64px, 9vw, 152px)}
-.ap-foot .ap-foot__inner{display:flex;flex-direction:column;gap:clamp(48px, 6vw, 88px);max-width:var(--page-max);margin:0 auto;padding:var(--foot-pad) var(--space-8) var(--space-12)}
+  --foot-circle:clamp(56px, 5.4vw, 76px);--foot-small:.8125rem;--foot-agent:44px;--foot-pad:clamp(48px, 5vw, 96px)}
+.ap-foot .ap-foot__inner{display:flex;flex-direction:column;gap:clamp(40px, 4.5vw, 72px);max-width:var(--page-max);margin:0 auto;padding:var(--foot-pad) var(--space-8) var(--space-12)}
 .ap-foot a{color:inherit;text-decoration:none}
 .ap-foot a:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring-on-dark);outline-offset:var(--focus-ring-offset);border-radius:var(--radius-sm)}
 .ap-foot__top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:var(--space-12) var(--space-8)}
