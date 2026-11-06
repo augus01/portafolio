@@ -204,8 +204,9 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
 
   // Entra a la vista cercana con `id`: la cámara se le acerca y queda solo su tarjeta.
   const focusOn = (id) => {
+    // Al entrar a otro agente el historial parte cerrado: se abre de nuevo con "Historial".
+    if (focusRef.current !== id) setState((st) => ({ ...st, focus: id, histOpen: false }));
     focusRef.current = id;
-    setState((st) => (st.focus === id ? st : { ...st, focus: id }));
   };
 
   // Elegir un agente ("Hablar con …" o clic en la maqueta; con `fromScene` el clic vino de la maqueta, que ya lo marcó):
@@ -227,7 +228,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   function unfocus() {
     clearTimeout(seqRef.current);
     focusRef.current = null;
-    setState((st) => ({ ...st, focus: null, to: null }));
+    // Salir de la vista cercana cierra el historial.
+    setState((st) => ({ ...st, focus: null, to: null, histOpen: false }));
     sceneRef.current.select(null);
     sceneRef.current.speak(null);
     sceneRef.current.unfocus();
