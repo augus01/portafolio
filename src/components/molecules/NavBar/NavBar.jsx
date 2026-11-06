@@ -62,13 +62,13 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
         <ul className="ap-nav__group">{items.map(pill)}</ul>
         {(actions.length > 0 || langToggle) && (
           <ul className="ap-nav__group ap-nav__group--end">
-            {/* Interruptor de idioma EN | ES. */}
+            {actions.map(pill)}
+            {/* Interruptor de idioma EN | ES, al final de la cápsula (después de Contacto). */}
             {langToggle && (
               <li>
                 <LangSwitch current={langToggle.current} label={langToggle.label} onToggle={langToggle.onSelect} />
               </li>
             )}
-            {actions.map(pill)}
           </ul>
         )}
         {/* Píldora con icono y texto, como en el landing aprobado (ver design-system/INTEGRACION.md). */}
