@@ -3,7 +3,8 @@ import { useEffect } from 'react';
 /**
  * Monta a stack leyendo (Three.js, `lib/stackReader.js`) en `stageRef` mientras su puesto de la cinta está cerca de
  * la pantalla y lo libera al salir, para no acumular contextos WebGL. Three.js se descarga aparte. Si el navegador no
- * tiene contextos libres, reintenta mientras siga a la vista; sin WebGL el puesto queda vacío.
+ * tiene contextos libres, reintenta unas pocas veces (cada intento fallido deja un error en la consola) y después se
+ * rinde hasta que el puesto vuelva a entrar; sin WebGL el puesto queda vacío.
  * `cheer` (lib/techMarquee.js, createCheer) avisa cuando el cursor pasa por un logo: stack salta de emoción.
  */
 export function useStackReader(stageRef, scare, cheer) {
@@ -14,18 +15,19 @@ export function useStackReader(stageRef, scare, cheer) {
     let near = false;
     let cancelled = false;
     let retry = 0;
+    let tries = 0;
     const off = cheer ? cheer.on((text) => { if (reader) reader.cheer(text); }) : null;
     const tryMount = () => {
       if (reader || !near || cancelled) return;
       import('../lib/stackReader').then(({ mountStackReader }) => {
         if (cancelled || reader || !near) return;
         reader = mountStackReader(stage, { scare });
-        if (!reader) retry = setTimeout(tryMount, 500);
+        if (!reader && ++tries < 4) retry = setTimeout(tryMount, 1000);
       }).catch(() => { /* sin stack 3D */ });
     };
     const io = new IntersectionObserver((es) => {
       near = es[0].isIntersecting;
-      if (near) tryMount();
+      if (near) { tries = 0; tryMount(); }
       else {
         clearTimeout(retry);
         if (reader) { reader.dispose(); reader = null; }
