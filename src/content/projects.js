@@ -248,18 +248,9 @@ export const cases = [
         ],
       },
       {
-        tone: 'tint', label: 'Próxima etapa',
-        blocks: [
-          { type: 'split', n: '05 — Próxima etapa', title: 'Ver la tienda como la ve un supermercado.',
-            text: 'El plan es armar la tienda en 3D, estante por estante: qué hay en cada uno, dónde compran más los clientes y cuándo se va a vaciar un producto, para pedirlo antes de que falte.' },
-          { type: 'laptop', shot: { src: `${dir}/zam-web-mapa-3d.webp`, alt: 'Próxima etapa, imagen referencial: planta 3D del minimarket con zonas de calor de compra y el estante de lácteos seleccionado' },
-            caption: { n: '06 — Próxima etapa · imagen referencial', text: 'Zonas de calor sobre la planta y el aviso de quiebre en el estante donde ocurre. Todavía no está construido.' } },
-        ],
-      },
-      {
         tone: 'brand', label: 'Cómo está armado',
         blocks: [
-          { type: 'split', n: '07 — Arquitectura', title: 'Un backend por módulos, dos pantallas encima.',
+          { type: 'split', n: '05 — Arquitectura', title: 'Un backend por módulos, dos pantallas encima.',
             text: 'El backend corre en NestJS con Fastify y separa cada módulo en dominio, aplicación e infraestructura. La web y la app hablan el mismo lenguaje que el servidor.' },
           { type: 'columns',
             items: [
@@ -268,6 +259,15 @@ export const cases = [
               { n: 'Backend', title: 'NestJS + Fastify', text: 'Módulos de inventario, ventas y proveedores, en capas de dominio, aplicación e infraestructura.' },
               { n: 'Datos e identidad', title: 'Postgres + Firebase', text: 'Tiendas, catálogo, stock, ventas y proveedores en Postgres sobre Supabase con Prisma; Firebase Auth para dueños y cajeros.' },
             ] },
+        ],
+      },
+      {
+        tone: 'light', label: 'Próxima etapa',
+        blocks: [
+          { type: 'split', n: '06 — Próxima etapa', title: 'Ver la tienda como la ve un supermercado.',
+            text: 'El plan es armar la tienda en 3D, estante por estante: qué hay en cada uno, dónde compran más los clientes y cuándo se va a vaciar un producto, para pedirlo antes de que falte.' },
+          { type: 'laptop', shot: { src: `${dir}/zam-web-mapa-3d.webp`, alt: 'Próxima etapa, imagen referencial: planta 3D del minimarket con zonas de calor de compra y el estante de lácteos seleccionado' },
+            caption: { n: '07 — Próxima etapa · imagen referencial', text: 'Zonas de calor sobre la planta y el aviso de quiebre en el estante donde ocurre. Todavía no está construido.' } },
         ],
       },
     ],
