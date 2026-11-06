@@ -5,7 +5,9 @@
 
 :root{
   /* Recepción: medidas de la referencia, escaladas con la nav. */
-  --pk-window:52px;--pk-head-w:60px;--pk-head-h:66px;--pk-head-right:6px;--pk-head-sink:-30px;--pk-lift:-5px;--pk-duck:34px;
+  --pk-window:52px;--pk-head-w:50px;--pk-head-h:55px;--pk-head-right:8px;--pk-head-sink:-25px;
+  /* Alto que recepción necesita sobre la barra (asomada, mirando abajo y con el cursor encima): la nav baja eso. */
+  --pk-reach:42px;--pk-lift:-5px;--pk-duck:34px;
   --pk-move:240ms;--pk-duck-move:160ms;
   /* Stack en la ficha: globo en el tono claro de su naranja y nombre en su naranja oscuro. */
   --stk-say:#fdeee5;--stk-who:#8a3a10;
@@ -28,7 +30,7 @@
 .ap-nav--dark .ap-pk:focus-visible{outline-color:var(--focus-ring-on-dark)}
 @media (hover: hover){.ap-navwrap .ap-nav .ap-nav__bar .ap-pk:hover .ap-pill{background:var(--surface-sunken)}}
 /* La nav baja lo justo para que la cabeza no se corte contra el borde de la pantalla. */
-@media (min-width: 600px){.ap-navwrap{top:max(var(--space-6), calc(30px * var(--nav-scale, 1)))}}
+@media (min-width: 600px){.ap-navwrap{top:max(var(--space-6), calc(var(--pk-reach) * var(--nav-scale, 1)))}}
 
 /* Barra móvil: Contacto queda junto al menú, apoyada abajo para dejarle espacio a recepción, más chica, asomando. */
 .ap-mnav__peek{margin-left:auto;align-self:flex-end;--nav-scale:.72;--pk-head-sink:-26px}
