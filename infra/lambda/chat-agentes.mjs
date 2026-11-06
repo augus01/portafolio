@@ -18,7 +18,7 @@ export const handler = crearHandler({
       modelId: process.env.MODELO_ARN,
       system: [{ text: sistema }],
       messages: mensajes,
-      inferenceConfig: { maxTokens: 300, temperature: 0.3 },
+      inferenceConfig: { maxTokens: 500, temperature: 0.3 },
     }));
     return {
       texto: (r.output?.message?.content ?? []).map((c) => c.text ?? '').join(''),

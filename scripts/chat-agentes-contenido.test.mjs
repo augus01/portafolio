@@ -11,5 +11,7 @@ test('construirContenido toma agentes, temas y derivaciones de office.js', () =>
   assert.equal(c.derivar.stack, chat.handoff(agents.stack));
   assert.equal(c.derivarDesconocido, chat.handoffUnknown);
   assert.equal(c.sinRespuesta, chat.noMatch);
+  assert.deepEqual(c.agentes.stack.reglas, agents.stack.rules);
+  assert.equal(c.derivarMas.stack, chat.handoffMore(agents.stack));
   assert.doesNotThrow(() => JSON.parse(JSON.stringify(c)));
 });

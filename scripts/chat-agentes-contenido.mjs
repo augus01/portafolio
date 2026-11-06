@@ -5,14 +5,17 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 export function construirContenido({ agents, chat }) {
   const agentes = {};
   const derivar = {};
+  const derivarMas = {};
   for (const [id, a] of Object.entries(agents)) {
-    agentes[id] = { name: a.name, topic: a.topic, intro: a.intro };
+    agentes[id] = { name: a.name, topic: a.topic, intro: a.intro, reglas: a.rules };
     derivar[id] = chat.handoff(a);
+    derivarMas[id] = chat.handoffMore(a);
   }
   return {
     agentes,
     temas: chat.topics.map(({ agent, text }) => ({ agent, text })),
     derivar,
+    derivarMas,
     derivarDesconocido: chat.handoffUnknown,
     sinRespuesta: chat.noMatch,
   };

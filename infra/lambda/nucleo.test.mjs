@@ -34,6 +34,30 @@ test('armarSistema incluye agentes, hechos y reglas', () => {
   assert.match(s, /no lo sé/i);
   assert.match(s, /"agente"/);
 });
+test('armarSistema incluye las reglas de cada agente y el agente pedido', () => {
+  const s = armarSistema(contenido, 'stack');
+  for (const r of contenido.agentes.recepcion.reglas) assert.ok(s.includes(r));
+  assert.match(s, /le está hablando a stack/);
+  assert.match(s, /saludos y agradecimientos/i);
+  assert.match(s, /"sigue"/);
+  assert.doesNotMatch(armarSistema(contenido), /le está hablando a/);
+});
+test('sigue encadena con aviso', () => {
+  const r = interpretarRespuesta('{"agente":"arquitecto","texto":"Inkvibe es…","sigue":{"agente":"stack","texto":"Está hecho con Next.js."}}', { pedido: null, contenido });
+  assert.deepEqual(r.map((x) => [x.agent, !!x.handoff]), [['arquitecto', false], ['arquitecto', true], ['stack', false]]);
+  assert.equal(r[1].text, contenido.derivarMas.stack);
+  assert.equal(r[2].text, 'Está hecho con Next.js.');
+});
+test('sigue tras derivar deja como máximo 4 respuestas', () => {
+  const r = interpretarRespuesta('{"agente":"arquitecto","texto":"Inkvibe es…","sigue":{"agente":"stack","texto":"Next.js."}}', { pedido: 'recepcion', contenido });
+  assert.deepEqual(r.map((x) => x.agent), ['recepcion', 'arquitecto', 'arquitecto', 'stack']);
+});
+test('sigue inválido, del mismo agente o con sabe:false se descarta', () => {
+  for (const s of ['{"agente":"stack","texto":""}', '{"agente":"arquitecto","texto":"x"}', '{"agente":"augusto","texto":"x"}', '"x"']) {
+    assert.equal(interpretarRespuesta(`{"agente":"arquitecto","texto":"Hola.","sigue":${s}}`, { pedido: null, contenido }).length, 1, s);
+  }
+  assert.equal(interpretarRespuesta('{"agente":"recepcion","sabe":false,"texto":"No lo sé.","sigue":{"agente":"stack","texto":"x"}}', { pedido: null, contenido }).length, 1);
+});
 test('armarMensajes empieza con user y alterna', () => {
   const m = armarMensajes({ historial: [{ quien: 'recepcion', texto: 'Bienvenido' }, { quien: 'visitor', texto: 'hola' }, { quien: 'visitor', texto: '¿y Zam?' }], mensaje: 'cuéntame' });
   assert.equal(m[0].role, 'user');
