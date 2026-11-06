@@ -153,7 +153,11 @@
 .ap-gal-title.display{margin:0;font-family:var(--gal-title-font);font-weight:400;font-size:var(--gal-title-size);line-height:var(--gal-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .ap-gal-title span{color:var(--gal-muted)}
 .ap-gal-count.meta,.ap-gal__role.meta{margin:0;font-family:var(--gal-text-font);font-size:var(--gal-meta-size);font-weight:400;color:var(--ink-secondary)}
-.ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gal-gap);row-gap:var(--space-16)}
+/* Cada proyecto es una subgrilla de 4 filas (portada, nombre, bajada, rol) alineadas entre columnas. La galería usa el
+   mismo espacio entre filas que la subgrilla (--space-2): si fuera mayor, Chrome suma la diferencia a cada fila del
+   proyecto y abre huecos bajo el nombre y la bajada. La separación entre filas de proyectos (--space-16) va como margen. */
+.ap-gal{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--gal-gap);row-gap:var(--space-2)}
+.ap-gal__item:nth-child(n+3){margin-top:calc(var(--space-16) - var(--space-2))}
 .ap-gal__item{display:grid;grid-row:span 4;grid-template-rows:subgrid;row-gap:var(--space-2);color:var(--ink-primary)}
 /* Último proyecto solo en su fila (impar): ocupa la fila entera pero con el ancho de una columna, al centro. */
 .ap-gal__item:last-child:nth-child(odd){grid-column:1 / -1;justify-self:center;width:calc((100% - var(--gal-gap)) / 2)}
@@ -204,6 +208,7 @@
 /* El rol es información, no un tramo de título: va en --ink-secondary (≈8:1) y no en el gris editorial (≈2,4:1). */
 @container (max-width: 719px){
   .ap-gal{grid-template-columns:1fr}
+  .ap-gal__item:nth-child(n+2){margin-top:calc(var(--space-16) - var(--space-2))}
   .ap-gal__item:last-child:nth-child(odd){width:auto;justify-self:stretch}
 }
 @media (prefers-reduced-motion: reduce){.ap-gal__logo,.ap-gal__lockup,.ap-gal__shot{transition:none}}

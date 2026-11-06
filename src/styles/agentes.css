@@ -69,7 +69,10 @@
    sube al pasar el cursor. Las filas de la galería se separan lo justo para que no tape al proyecto de arriba. */
 .ap-gal__item{position:relative}
 .ap-gal__item .ap-gal__tile{z-index:1}
-.ap-gal:has(.ap-arq){row-gap:calc(var(--space-16) + var(--arq-peek-h) * .5)}
+/* Arquitecto asoma sobre la portada: la fila siguiente baja medio alto de su ventana más (margen, no row-gap: la galería
+   usa subgrilla y un row-gap mayor abriría huecos dentro de cada proyecto, layout.css). */
+.ap-gal:has(.ap-arq) .ap-gal__item:nth-child(n+3){margin-top:calc(var(--space-16) - var(--space-2) + var(--arq-peek-h) * .5)}
+@container (max-width: 719px){.ap-gal:has(.ap-arq) .ap-gal__item:nth-child(n+2){margin-top:calc(var(--space-16) - var(--space-2) + var(--arq-peek-h) * .5)}}
 .ap-arq{appearance:none;-webkit-appearance:none;position:absolute;z-index:0;right:clamp(16px,6%,28px);top:calc(var(--arq-peek-h) * -1);width:var(--arq-peek-w);height:var(--arq-peek-h);margin:0;padding:0;border:0;background:transparent;cursor:pointer;overflow:visible;border-radius:var(--radius-lg) var(--radius-lg) 0 0;color:var(--ink-primary)}
 .ap-arq__gl{position:absolute;left:0;top:0;display:block;width:var(--arq-peek-w);height:var(--arq-peek-w);pointer-events:none}
 .ap-arq:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:4px}
