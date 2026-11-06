@@ -148,11 +148,12 @@ body:has(.hab-pop.is-open) .ap-navwrap,body:has(.arq-pop.is-open) .ap-navwrap{vi
 @media (prefers-reduced-motion: reduce){.hab-rd__say{transition:none}}
 
 /* Enlace a la oficina con un agente (atoms/AgentLink, 6 nov 2026): el mismo para recepción, stack y arquitecto. Fondo del
-   color del agente, letras blancas y borde negro; solo cambia el color. Los márgenes van en la clase de cada lugar. */
+   color del agente, letras blancas (negras en recepción) y borde negro; solo cambia el color. Los márgenes van en la clase de cada lugar. */
 .ap-agl.label{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--target-min);padding:0 18px;box-sizing:border-box;
   border:var(--off-stroke) solid var(--ink-primary);border-radius:var(--radius-pill);background:var(--agl-bg, var(--action));color:var(--ink-on-dark);
   font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:transform var(--dur-press) var(--ease-out)}
-.ap-agl[data-agent="recepcion"]{--agl-bg:var(--ap-agent-recepcion)}
+/* Sobre el amarillo de recepción el blanco no se lee (≈1,7:1): ahí las letras van en negro. */
+.ap-agl[data-agent="recepcion"]{--agl-bg:var(--ap-agent-recepcion);color:var(--ap-agent-ink)}
 .ap-agl[data-agent="stack"]{--agl-bg:var(--ap-agent-stack)}
 .ap-agl[data-agent="arquitecto"]{--agl-bg:var(--ap-agent-arquitecto)}
 @media (hover: hover){.ap-agl.label:hover{transform:translateY(-2px)}}
