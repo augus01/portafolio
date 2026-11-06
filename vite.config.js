@@ -22,4 +22,7 @@ const staticRoutes = () => ({
 
 export default defineConfig({
   plugins: [react(), staticRoutes()],
+  // Siempre 5173: es el origen local que acepta la API del chat (CORS). Si está ocupado, falla en vez de saltar a otro puerto.
+  server: { port: 5173, strictPort: true },
+  preview: { port: 4173, strictPort: true },
 });
