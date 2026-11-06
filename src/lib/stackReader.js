@@ -128,7 +128,17 @@ export function mountStackReader(stage, opts) {
     kick();
   };
   var scare = function () { jumpWith('scare', opts.scare || '¡AAH! ¡Me asustaste!'); };
-  var cheer = function (txt) { jumpWith('cheer', txt); };
+  /* Emoción: no espera a que vuelva a leer. Si pasas de un logo a otro, el globo cambia al instante y, si ya aterrizó,
+     vuelve a saltar; un susto en curso no se interrumpe. */
+  var cheer = function (txt) {
+    if (S.mode === 'read') { jumpWith('cheer', txt); return; }
+    if (S.mode === 'wake' && S.kind !== 'cheer') return;
+    say(txt, 1600);
+    if (S.mode === 'wake' && now() - S.t0 < 0.72) return;
+    S.mode = 'wake'; S.kind = 'cheer'; S.t0 = now();
+    stage.classList.add('is-awake');
+    kick();
+  };
   stage.addEventListener('pointerenter', scare);
   stage.addEventListener('pointerdown', scare);
   /* Atento: sigue el cursor con la cabeza y los ojos */
@@ -194,7 +204,7 @@ export function mountStackReader(stage, opts) {
       if (tt > (happy ? 1.3 : 2.4)) { S.mode = attentive ? 'read' : 'calm'; S.t0 = t; stage.classList.remove('is-awake'); eyes.forEach(function (e) { e.pupil.scale.setScalar(1); }); }
     } else {
       /* Se calma: respira, mira alrededor un segundo y retoma el libro */
-      var c = tt / 1.4;
+      var c = tt / (S.kind === 'cheer' ? 0.6 : 1.4);
       headX = -0.15 + ease(c) * 0.9;
       eyeS = 1.0 - ease(c) * 0.55;
       headY = reduced ? 0 : Math.sin(c * Math.PI * 2) * 0.35 * (1 - ease(c));
