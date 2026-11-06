@@ -146,3 +146,27 @@ test('el gasto se lleva por mes UTC', () => {
   assert.equal(mesDe(new Date('2026-11-30T23:59:59Z')), '2026-11');
   assert.equal(mesDe(new Date('2026-12-01T00:00:00Z')), '2026-12');
 });
+
+test('armarSistema pide la intención y da la regla de ayuda', () => {
+  const s = armarSistema(contenido, 'arquitecto');
+  assert.match(s, /"intencion"/);
+  for (const i of ['saludo', 'gracias', 'ayuda', 'pregunta', 'recado']) assert.ok(s.includes(i), i);
+  assert.match(s, /qué preguntas puede aclarar/);
+  assert.match(s, /cómo funciona la oficina/);
+});
+test('ayuda la responde el agente pedido aunque el modelo elija a otro', () => {
+  const r = interpretarRespuesta('{"intencion":"ayuda","agente":"recepcion","texto":"Puedo contarte…"}', { pedido: 'arquitecto', contenido });
+  assert.deepEqual(r, [{ agent: 'arquitecto', text: 'Puedo contarte…' }]);
+});
+test('un saludo con sabe:false igual lo responde el agente pedido', () => {
+  const r = interpretarRespuesta('{"intencion":"saludo","agente":"recepcion","sabe":false,"texto":"¡Hola!"}', { pedido: 'stack', contenido });
+  assert.deepEqual(r, [{ agent: 'stack', text: '¡Hola!' }]);
+});
+test('ayuda sin agente pedido la da recepción y descarta sigue', () => {
+  const r = interpretarRespuesta('{"intencion":"ayuda","agente":"stack","texto":"x","sigue":{"agente":"arquitecto","texto":"y"}}', { pedido: null, contenido });
+  assert.deepEqual(r, [{ agent: 'recepcion', text: 'x' }]);
+});
+test('una pregunta de otro territorio deriva como antes', () => {
+  const r = interpretarRespuesta('{"intencion":"pregunta","agente":"stack","texto":"x"}', { pedido: 'arquitecto', contenido });
+  assert.deepEqual(r.map((x) => [x.agent, !!x.handoff]), [['arquitecto', true], ['stack', false]]);
+});
