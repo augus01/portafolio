@@ -28,7 +28,7 @@
       "intro": "Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.",
       "reglas": [
         "Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.",
-        "Stack siempre amarra una tecnología al proyecto donde Augusto la usó; nunca da una lista suelta. La única excepción es Python para IA.",
+        "Stack siempre amarra una tecnología al proyecto donde Augusto la usó; nunca da una lista suelta. La única excepción es Python, su base para aprender la lógica de programación.",
         "Stack describe un proyecto en una frase como mucho: qué es y qué logra es de arquitecto.",
         "Si preguntan quién es Augusto, eso es de recepción."
       ]
@@ -41,15 +41,15 @@
     },
     {
       "agent": "stack",
-      "text": "Inkvibe está hecho con Next.js (App Router), React 18 y TypeScript, con Tailwind, Mantine, TanStack Query, Firebase Auth y pruebas en Vitest. Augusto lo ordenó feature-first con Clean Architecture, guards por rol desde el día uno y metas de LCP bajo 2,5 s y CLS bajo 0,1 en móvil. Cada funcionalidad pasa por una spec en OpenSpec antes de implementarse con Claude Code y Cursor."
+      "text": "Inkvibe está hecho con Next.js (App Router), React y TypeScript, con Tailwind, Mantine, Material UI y TanStack Query. El blog corre en Payload CMS y los datos en Postgres sobre Supabase con Prisma; usa Docker y despliega servicios en Railway. Augusto lo ordenó feature-first con Clean Architecture, guards por rol desde el día uno y metas de LCP bajo 2,5 s y CLS bajo 0,1 en móvil. Cada funcionalidad pasa por una spec en OpenSpec antes de implementarse con Claude Code y Cursor."
     },
     {
       "agent": "stack",
-      "text": "Zam tiene el backend en NestJS con Fastify, por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura. La web va en Next.js y la app en Expo, todo en TypeScript, sobre Postgres en Supabase con Prisma y Firebase Auth para dueños y cajeros."
+      "text": "Zam tiene el backend en NestJS con Fastify, por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura. La web va en Next.js con Material UI y la app en Expo, todo en TypeScript, sobre Postgres en Supabase con Prisma, Firebase Auth para dueños y cajeros y Docker para levantar los servicios."
     },
     {
       "agent": "stack",
-      "text": "Lexinova está construida Cloudflare-first, y Augusto ve sus integraciones y su arquitectura. Además mantiene en Railway el worker que trabaja con los datos del Poder Judicial."
+      "text": "Lexinova está construida Cloudflare-first, con los datos en Supabase, y Augusto ve sus integraciones y su arquitectura."
     },
     {
       "agent": "stack",
@@ -57,15 +57,15 @@
     },
     {
       "agent": "stack",
-      "text": "Para IA Augusto usa Python: scripts, datos y prototipos de agentes, camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes, y en este portafolio los agentes responden con Claude en Bedrock."
+      "text": "Python fue la base con la que Augusto entendió la lógica de programación, y va camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes, y en este portafolio los agentes responden con Claude en Bedrock."
     },
     {
       "agent": "stack",
-      "text": "En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify con el chat sobre API Gateway y Lambda. Lexinova, en cambio, vive en Cloudflare y Railway."
+      "text": "En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify con el chat sobre API Gateway y Lambda. Lexinova, en cambio, vive en Cloudflare, e Inkvibe despliega servicios en Railway."
     },
     {
       "agent": "stack",
-      "text": "React y Next.js son su base de frontend: con ellos construye, como único desarrollador frontend, la web de Inkvibe (App Router, Tailwind, Mantine y TanStack Query) y el panel web de Zam."
+      "text": "React y Next.js son su base de frontend: con ellos construye, como único desarrollador frontend, la web de Inkvibe (App Router, Tailwind, Mantine, Material UI y TanStack Query) y el panel web de Zam con Material UI. Este portafolio también está hecho en React."
     },
     {
       "agent": "stack",
@@ -73,7 +73,7 @@
     },
     {
       "agent": "stack",
-      "text": "Los datos de Zam viven en Postgres sobre Supabase, con Prisma para el esquema y las migraciones, y Firebase Auth para dueños y cajeros. En Inkvibe usa Firebase Auth con guards por rol y sincroniza la moderación con Firestore."
+      "text": "Los datos de Inkvibe y Zam viven en Postgres sobre Supabase, con Prisma para el esquema y las migraciones; Lexinova también guarda sus datos en Supabase. En Zam, Firebase Auth maneja el inicio de sesión de dueños y cajeros."
     },
     {
       "agent": "stack",
@@ -81,11 +81,11 @@
     },
     {
       "agent": "stack",
-      "text": "En Lexinova trabaja con una plataforma construida Cloudflare-first y mantiene en Railway el worker que procesa los datos del Poder Judicial."
+      "text": "En Lexinova trabaja con una plataforma construida Cloudflare-first, con los datos en Supabase. Railway lo usa para desplegar servicios de Inkvibe."
     },
     {
       "agent": "stack",
-      "text": "Depende del proyecto: Inkvibe va en Next.js, React y TypeScript; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare y Railway. ¿Cuál te detallo?"
+      "text": "Depende del proyecto: Inkvibe va en Next.js, React y TypeScript con Postgres y Prisma; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare con Supabase. ¿Cuál te detallo?"
     },
     {
       "agent": "arquitecto",
@@ -101,7 +101,7 @@
     },
     {
       "agent": "arquitecto",
-      "text": "Lexinova es una plataforma LegalTech multi-tenant para el trabajo legal. Augusto se encarga de sus integraciones y su arquitectura, incluido el módulo que trabaja con la información del Poder Judicial."
+      "text": "Lexinova es una plataforma LegalTech multi-tenant para el trabajo legal. Augusto se encarga de sus integraciones y su arquitectura."
     },
     {
       "agent": "arquitecto",
