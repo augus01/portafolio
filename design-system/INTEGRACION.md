@@ -147,6 +147,24 @@ Ajuste del 4 nov 2026: sin los botones de vista (Isométrica / Planta) ni los de
 
 Componentes: átomos `OfficeButton` y `PageWipe`; moléculas `OfficeThemeSwitch`, `OfficeLeadCard`, `OfficeChatHistory`, `OfficeSwapCover`; organismos `ContactSection`, `Office`, `OfficeChatDock`, `OfficeHeader`; plantilla `OfficePageTemplate`; página `OfficePage`. Lógica en `hooks/useOfficeScene.js`, `useOfficeChat.js`, `useThemeSwap.js`, `usePageWipe.js`, `useContactDesk.js` y `lib/officeEngine.js`, `officeThemes.js`, `officeKit.js`, `contactDesk.js`, `officeChat.js`. El build copia `dist/index.html` a `dist/oficina/index.html` (`vite.config.js`) y `main.jsx` elige la página por la ruta.
 
+## Excepciones aprobadas (los agentes en el sitio)
+
+Desde el artefacto **"Hero · Augusto Pinto"** y su propuesta "Agentes en el sitio" (6 nov 2026), cada agente de la oficina aparece donde vive su tema, con la misma figura 3D de la oficina (Three.js r128, cargado aparte; lógica en `src/lib/agentsOnSite.js` y `hooks/useAgentsOnSite.js`, estilos en `src/styles/agentes.css`). Siempre asoman, nunca tapan el contenido y al tocarlos llevan a lo suyo. Sin WebGL los lienzos quedan vacíos y todo sigue funcionando; con `prefers-reduced-motion` o el nivel mínimo de rendimiento quedan quietos.
+
+- **recepción** asoma hasta los ojos por detrás de la píldora Contacto de la nav (átomo `PeekPill`, ítem con `peek` en `nav.actions`), te sigue con la mirada y pestañea; sube al pasar el cursor. Al tocarla se agacha, la página baja a Contacto y saluda desde su escritorio (evento `ap:recepcion-saluda`). Mientras Contacto está en pantalla se queda agachada. En móvil la píldora Contacto va junto al menú.
+- **stack** está en la ficha de cada tecnología (`SkillCard`), a la derecha del logo y mirándolo. Responde preguntas listas (`skills.ask`, por logo) en un hilo y "Seguir con stack en la oficina" abre `/oficina/?agente=stack&pregunta=…`.
+- **arquitecto** asoma por el borde superior de cada portada de Proyectos (átomo `ArchitectPeek`) y abre el plano del proyecto (organismo `ArchitectPlan`, `plan` en cada proyecto): piezas en línea y repartidas, su explicación en el globo de arquitecto 3D y "Seguir con arquitecto en la oficina".
+- La oficina lee `agente` y `pregunta` de la URL (`lib/officeLink.js`): ese agente te recibe y la pregunta queda escrita.
+
+| Regla del sistema | Excepción | Variable |
+| --- | --- | --- |
+| Monocromo | Agentes en su color (`--ap-agent-*`); globo de stack `#fdeee5` con su nombre en `#8a3a10`; botón y pieza elegida del plano en el azul de arquitecto, `#2443b0` al pasar el cursor | `--stk-say`, `--stk-who`, `--arq-hover` |
+| Proporciones del sistema | Cabeza de recepción 60 × 66px en una ventana de 52px (escaladas con la nav; 72% en móvil); arquitecto en un lienzo de 120px, botón de 120 × 100px; plano de 600px de ancho | `--pk-*`, `--arq-peek-*`, `--arq-pop-w` |
+| Movimiento < 300 ms y solo por acción | Mirada, pestañeo y flotación en bucle; el plano entra en 450ms | `--agent-pop-ease` |
+| Radios y sombras | Plano de 20px con la sombra de la ficha de Superpoderes; velo `rgba(14,15,18,.42)` con desenfoque de 4px | `src/styles/agentes.css` |
+
+Chat de la oficina (mismo día): recepción es la principal (saluda, recibe la primera pregunta y deriva al que sabe) y la cámara solo se acerca a un agente al elegirlo; mientras conversan queda en la vista general, con el globo del que habla (`hooks/useOfficeChat.js`, `say()` de `lib/officeEngine.js`).
+
 ## Excepción aprobada (modo liviano de rendimiento)
 
 Aprobada el 2 nov 2026: en equipos o navegadores que no dan abasto (p. ej. Opera GX con GX Control, WebGL sin GPU), la página baja de calidad sola y mantiene todas las animaciones. Lógica en `src/lib/perfTier.js`: el ticker de GSAP mide la fluidez y, si la media de 60 cuadros supera 24 ms (~42 fps) o el renderizador WebGL es por software, sube un nivel. El nivel nunca baja y se publica en `<html data-perf="lite|min">`.
