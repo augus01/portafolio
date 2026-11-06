@@ -80,7 +80,7 @@ function pose(A, L, gx, gy, t, still) {
   A.g.rotation.y = L.lx * 0.55;
   A.g.rotation.z = still ? 0 : -L.lx * 0.06;
   A.head.rotation.x = L.ly * 0.28;
-  A.eyes.forEach((e) => { e.pupil.position.x = L.lx * 0.022; e.pupil.position.y = -L.ly * 0.02; });
+  A.eyes.forEach((e) => { e.pupil.position.x = L.lx * 0.022; e.pupil.position.y = -L.ly * (L.ly > 0 ? 0.03 : 0.02); });
   let sy = 1;
   if (!still) {
     if (L.blinkT < 0 && t > L.blinkAt) L.blinkT = t;
@@ -147,10 +147,11 @@ export function mountReceptionPeek(canvases) {
       if (p) {
         const b = cv.getBoundingClientRect();
         gx = clamp((p.x - (b.left + b.width / 2)) / 320);
-        // Hacia abajo inclina poco la cabeza: el cursor suele estar bajo la barra y los ojos no deben esconderse tras ella.
-        gy = Math.min(0.2, clamp((p.y - (b.top + b.height * 0.4)) / 320));
+        gy = clamp((p.y - (b.top + b.height * 0.4)) / 320);
       } else if (!still) gx = idleX(t);
       pose(A, L, gx, gy, t, still);
+      // Al mirar hacia abajo se asoma un poco más, así los ojos no se esconden tras la barra.
+      A.g.position.y = Math.max(0, L.ly) * 0.16;
       r.render(scene, cam);
       const ctx = cv.getContext('2d');
       ctx.clearRect(0, 0, W, H);
@@ -204,14 +205,14 @@ export function mountArchitectPeeks(items, isOpen) {
       if (p) {
         const b = it.canvas.getBoundingClientRect();
         gx = clamp((p.x - (b.left + b.width / 2)) / 260);
-        // Como recepción: hacia abajo inclina poco, para que los ojos no se escondan tras la portada.
-        gy = Math.min(0.15, clamp((p.y - (b.top + b.height * 0.6)) / 260));
+        gy = clamp((p.y - (b.top + b.height * 0.6)) / 260);
       } else if (!still) gx = Math.sin(t * 0.7 + it.phase) * 0.7;
       pose(A, it.look, gx, gy, t + it.phase, still);
       A.g.rotation.y = it.look.lx * 0.45;
       A.g.rotation.x = it.look.ly * 0.18;
       A.g.rotation.z = 0;
-      A.g.position.y = -0.33 + it.rise * 0.22 + (still ? 0 : Math.sin(t * 1.6 + it.phase) * 0.008);
+      // Al mirar hacia abajo se asoma un poco más, así los ojos no se esconden tras la portada.
+      A.g.position.y = -0.33 + it.rise * 0.22 + Math.max(0, it.look.ly) * (1 - it.rise) * 0.09 + (still ? 0 : Math.sin(t * 1.6 + it.phase) * 0.008);
       r.render(scene, cam);
       it.ctx.clearRect(0, 0, it.canvas.width, it.canvas.height);
       it.ctx.drawImage(r.domElement, 0, 0, it.canvas.width, it.canvas.height);
