@@ -68,6 +68,20 @@ test('projects: los mismos slugs en los dos idiomas (las rutas no cambian)', () 
 });
 
 test('home: la píldora de idioma lleva al otro idioma', () => {
-  assert.deepEqual(enHome.langToggle, { label: 'ES', ariaLabel: 'Ver en español', target: 'es' });
-  assert.deepEqual(esHome.langToggle, { label: 'EN', ariaLabel: 'View in English', target: 'en' });
+  assert.deepEqual(enHome.langToggle, { label: 'ES', ariaLabel: 'ES, ver en español', target: 'es' });
+  assert.deepEqual(esHome.langToggle, { label: 'EN', ariaLabel: 'EN, view in English', target: 'en' });
+});
+
+test('inglés natural: contracciones en lo que dicen los agentes y la misma carrera en todo el sitio', async () => {
+  const enOffice = await import('./en/office.js');
+  const todo = [...strings(enOffice.chat, 'chat'), ...strings(enOffice.agents, 'agents'), ...strings(enHome.contact, 'contact'), ...strings(enHome.about, 'about')];
+  const rigidas = todo.filter(([, t]) => /\b(Let us|I do not|You are|I am|I will|does not)\b/.test(t)).map(([p, t]) => `${p}: ${t}`);
+  assert.deepEqual(rigidas, []);
+  assert.deepEqual(todo.filter(([, t]) => /Ingenier/.test(t)).map(([p]) => p), []);
+});
+
+test('inglés: sin contracciones al final de una cláusula ("who he’s,", "what it’s and")', async () => {
+  const enOffice = await import('./en/office.js');
+  const todo = [...strings(enOffice, 'office'), ...strings(enHome, 'home'), ...strings(enProjects, 'projects')];
+  assert.deepEqual(todo.filter(([, t]) => /\b(who|what|where) (he|it|she)’s[,.;:?!]|\b(who|what) (he|it)’s and\b/.test(t)).map(([p, t]) => `${p}: ${t}`), []);
 });

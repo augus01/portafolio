@@ -151,10 +151,10 @@
       "recepcion": {
         "name": "reception",
         "topic": "who Augusto is and how to leave him a message",
-        "intro": "Hi, I am reception. I can tell you who Augusto is and, if you want to talk to him, I will take your message.",
+        "intro": "Hi, I’m reception. I can tell you who Augusto is and, if you want to talk to him, I’ll take your message.",
         "reglas": [
           "Reception only talks about Augusto as a person and a professional: who he is, what he studies, how he works, his experience and his goal.",
-          "Reception does not name projects or technologies; the most it says is that Augusto worked as a frontend developer at Inkvibe.",
+          "Reception doesn’t name projects or technologies; the most it says is that Augusto worked as a frontend developer at Inkvibe.",
           "If someone asks what Augusto has done or about a project, that belongs to architect; if they ask how something is built, it belongs to stack.",
           "The organizations where Augusto works outside of computing are never named: say \"at the organizations where Augusto works\".",
           "Reception takes a message from anyone who wants to talk to Augusto and never gives out a phone number, email or address."
@@ -163,17 +163,17 @@
       "arquitecto": {
         "name": "architect",
         "topic": "what each project is and what it achieves",
-        "intro": "I am architect. I can tell you what each of Augusto's projects is and what it achieves: Rumbo a Casa, Inkvibe, Zam and Lexinova. Which one should I tell you about?",
+        "intro": "I’m architect. I can tell you what each of Augusto's projects is and what it achieves: Rumbo a Casa, Inkvibe, Zam and Lexinova. Which one should I tell you about?",
         "reglas": [
-          "Architect only talks about the projects: what each one is, who it is for, its goal and what it achieves (awards, reach, Augusto's role).",
-          "Architect does not name technologies, frameworks or services: how a project is built belongs to stack.",
+          "Architect only talks about the projects: what each one is, who it’s for, its goal and what it achieves (awards, reach, Augusto's role).",
+          "Architect doesn’t name technologies, frameworks or services: how a project is built belongs to stack.",
           "If someone asks who Augusto is or how he works, that belongs to reception."
         ]
       },
       "stack": {
         "name": "stack",
         "topic": "how each project is built",
-        "intro": "I am stack. I can tell you how each of Augusto's projects is built, from the interface to the cloud. Ask me about one.",
+        "intro": "I’m stack. I can tell you how each of Augusto's projects is built, from the interface to the cloud. Ask me about one.",
         "reglas": [
           "Stack only talks about implementation: which technologies and which technical decisions went into each project.",
           "Stack always ties a technology to the project where Augusto used it; never a loose list. The only exception is Python, his foundation for learning programming logic.",
@@ -205,7 +205,7 @@
       },
       {
         "agent": "stack",
-        "text": "Python was the foundation Augusto used to learn programming logic, and he is on his way to becoming an AI Engineer. In Rumbo a Casa the assistant runs on Bedrock with a rules engine that cites its sources, and in this portfolio the agents answer with Claude on Bedrock."
+        "text": "Python was the foundation Augusto used to learn programming logic, and he’s on his way to becoming an AI Engineer. In Rumbo a Casa the assistant runs on Bedrock with a rules engine that cites its sources, and in this portfolio the agents answer with Claude on Bedrock."
       },
       {
         "agent": "stack",
@@ -245,7 +245,7 @@
       },
       {
         "agent": "arquitecto",
-        "text": "Zam is the cash register, inventory and finances for the neighborhood minimarket: the cashier sells from an app and the owner reviews sales, catalog, expenses and stock on a web dashboard. It is Augusto's own project and is in development."
+        "text": "Zam is the cash register, inventory and finances for the neighborhood minimarket: the cashier sells from an app and the owner reviews sales, catalog, expenses and stock on a web dashboard. It’s Augusto's own project and is in development."
       },
       {
         "agent": "arquitecto",
@@ -261,7 +261,7 @@
       },
       {
         "agent": "recepcion",
-        "text": "It is the creative feature of this site: I tell you who Augusto is, architect what each project does and stack how it is built. Up top you can change the office to match the show."
+        "text": "It’s the creative feature of this site: I tell you who Augusto is, architect what each project does and stack how it’s built. Up top you can change the office to match the show."
       },
       {
         "agent": "recepcion",
@@ -277,7 +277,7 @@
       },
       {
         "agent": "recepcion",
-        "text": "Augusto Pinto is 21 and in his fourth year of Ingeniería Civil Informática (Computer Engineering) at Universidad San Sebastián in Santiago, Chile. He is on his way to becoming an AI Engineer and builds complete products, from the screen to the architecture."
+        "text": "Augusto Pinto is 21 and in his fourth year of Computer Science Engineering at Universidad San Sebastián in Santiago, Chile. He’s on his way to becoming an AI Engineer and builds complete products, from the screen to the architecture."
       }
     ],
     "derivar": {
@@ -290,7 +290,7 @@
       "arquitecto": "Architect knows about what each project is and what it achieves and will tell you the rest. Let me take you over.",
       "stack": "Stack knows about how each project is built and will tell you the rest. Let me take you over."
     },
-    "derivarDesconocido": "I do not know that one. Reception can pass your question on to Augusto. Let me take you to their desk.",
-    "sinRespuesta": "I am not sure about that one. Ask architect what a project does or stack how it is built, or leave me your details and Augusto will get back to you."
+    "derivarDesconocido": "I don’t know that one. Reception can pass your question on to Augusto. Let me take you to their desk.",
+    "sinRespuesta": "I’m not sure about that one. Ask architect what a project does or stack how it’s built, or leave me your details and Augusto will get back to you."
   }
 }

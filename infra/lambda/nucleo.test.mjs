@@ -202,3 +202,10 @@ test('el handler usa el contenido del idioma pedido', async () => {
   const sinLang = JSON.parse((await h(ev({ mensaje: 'que es zam?', agente: 'stack' }))).body);
   assert.equal(sinLang.replies[0].text, todo.es.derivar.arquitecto);
 });
+test('armarSistema en inglés no le da al modelo frases en español para copiar', () => {
+  const s = armarSistema(todo.en, null, 'en');
+  assert.doesNotMatch(s, /recepción de Augusto|"no lo sé"/);
+  assert.match(s, /reception of Augusto|reception, architect and stack/);
+  assert.match(s, /"I don't know"/);
+  assert.match(armarSistema(todo.es), /"no lo sé"/);
+});

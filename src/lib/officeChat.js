@@ -17,7 +17,7 @@ export function isEmail(text) {
 
 /** "sí", "enviar", "ok", "yes", "send"… confirman el recado (español o inglés). */
 export function isConfirm(text) {
-  return /^(si|enviar|envialo|ok|dale|listo|yes|yep|yeah|send|sure)/.test(normalize(text));
+  return /^(si|enviar|envialo|ok|okay|dale|listo|yes|yep|yeah|send|sure)\b/.test(normalize(text));
 }
 
 /**
@@ -69,6 +69,9 @@ const CORTESIA = /^(hola|holi|buenas|hey|hi|hello|gracias|thanks|thank you|ok|ok
  * true si el texto es una pregunta explícita (con signo de interrogación). Solo eso saca del recado: una necesidad o
  * un nombre pueden calzar con un tema ("Tengo un proyecto…", "Ernesto") y siguen siendo datos.
  */
+// Frases con que el visitante se presenta antes de su nombre, en inglés y español.
+const PRESENTA = /^\s*(my name is|my name's|i'm|i am|it's|this is|me llamo|mi nombre es|soy)\s+/i;
+
 export function isQuestion(text) {
   return /[¿?]/.test(String(text || ''));
 }
@@ -92,10 +95,13 @@ export function leadNext(lead, text, { isQuestion: esPregunta }) {
   }
   if (esPregunta(t)) return { lead: L, say: 'exit' };
   if (L.step === 'name') {
-    const primera = n.split(/\s+/)[0];
-    const valido = /^[\p{L}' -]{2,60}$/u.test(t) && !CORTESIA.test(n) && !CORTESIA.test(primera);
+    // "My name is Ana", "I'm Ana", "Me llamo Ana", "Soy Ana": el nombre es lo que sigue.
+    const nombre = t.replace(PRESENTA, '').trim();
+    const nn = normalize(nombre).replace(/[¡!.,]/g, '').trim();
+    const primera = nn.split(/\s+/)[0];
+    const valido = /^[\p{L}' -]{2,60}$/u.test(nombre) && !CORTESIA.test(nn) && !CORTESIA.test(primera);
     if (!valido) return { lead: L, say: 'badName' };
-    return { lead: { ...L, name: capitalizar(t), step: 'need' }, say: 'need' };
+    return { lead: { ...L, name: capitalizar(nombre), step: 'need' }, say: 'need' };
   }
   if (L.step === 'need') {
     if (CORTESIA.test(n) || n.split(/\s+/).filter(Boolean).length < 3) return { lead: L, say: 'badNeed' };

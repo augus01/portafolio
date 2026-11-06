@@ -325,3 +325,25 @@ test('en: ningún texto lleva caracteres del español', () => {
   const permitidos = /Ingeniería Civil Informática|Universidad San Sebastián/g;
   for (const t of textos) assert.doesNotMatch(t.replace(permitidos, ''), /[áéíóúñ¿¡]/i, t);
 });
+
+test('leadRx en inglés: preguntas normales no abren el recado', () => {
+  for (const q of ['How do quotes work in Inkvibe?', 'Is Rumbo a Casa available in English?', 'How does Lambda handle each message?', 'What is the budget of the chat?', 'Is the site available on mobile?']) {
+    assert.equal(wantsContact(q, en.chat.leadRx), false, q);
+  }
+});
+test('leadRx en inglés: pedir contacto sí abre el recado', () => {
+  for (const q of ['I want to hire him', 'Is he available for work?', 'I want to leave him a message', 'Can I get a quote?', 'I have a project for him', 'How can I get in touch?']) {
+    assert.equal(wantsContact(q, en.chat.leadRx), true, q);
+  }
+});
+test('recado: el nombre se toma sin "my name is", "I\'m" ni "me llamo"', () => {
+  const casos = [['My name is John Smith', 'John Smith'], ["I'm Sarah", 'Sarah'], ['i am ana maria', 'Ana Maria'], ['Me llamo Ernesto', 'Ernesto'], ['Soy Paula', 'Paula'], ['Sarah', 'Sarah']];
+  for (const [t, name] of casos) assert.equal(leadNext({ step: 'name' }, t, { isQuestion }).lead.name, name, t);
+});
+test('isConfirm exige la palabra completa', () => {
+  assert.equal(isConfirm('Surely not'), false);
+  assert.equal(isConfirm('Sending it later'), false);
+  assert.equal(isConfirm('sí'), true);
+  assert.equal(isConfirm('send'), true);
+  assert.equal(isConfirm('okay'), true);
+});

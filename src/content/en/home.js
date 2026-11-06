@@ -16,7 +16,7 @@ export const nav = {
 };
 
 // Language pill: shows the language it switches to.
-export const langToggle = { label: 'ES', ariaLabel: 'Ver en español', target: 'es' };
+export const langToggle = { label: 'ES', ariaLabel: 'ES, ver en español', target: 'es' };
 
 export const meta = { documentTitle: 'Augusto Pinto · Portfolio' };
 
@@ -56,8 +56,8 @@ export const about = {
   ],
   paragraphs: [
     'As a teenager I was looking for a hobby, something interesting enough to study for real. I started with basic frontend bootcamps and found my foundation there: watching an idea turn into a screen someone can use. I never let go of that thread. Today I study Computer Science Engineering at Universidad San Sebastián, in my fourth year, and I keep building.',
-    'Now I build products with AI applied to real-life situations: technology that solves a paperwork process, a question or a concrete decision for someone. I am not interested in AI as a demo, but as the piece that makes a product actually help. Further down you will see what that looks like in practice.',
-    'What sets me apart is the drive to build the best product for people: the one that helps them most and changes their day. That is why I cover it end to end, from the visuals to the features and an architecture that holds the product up. That way of building has concrete pieces, and they are my superpowers.',
+    'Now I build products with AI applied to real-life situations: technology that solves a paperwork process, a question or a concrete decision for someone. I’m not interested in AI as a demo, but as the piece that makes a product actually help. Further down you’ll see what that looks like in practice.',
+    'What sets me apart is the drive to build the best product for people: the one that helps them most and changes their day. That’s why I cover it end to end, from the visuals to the features and an architecture that holds the product up. That way of building has concrete pieces, and they are my superpowers.',
   ],
 };
 
@@ -87,7 +87,7 @@ export const skills = {
     ],
     nextjs: [
       { q: 'What does the owner see in Zam?', a: 'Sales, catalog, expenses and stock of their corner store, all in one place.' },
-      { q: 'And in Inkvibe?', a: 'It is the foundation of the website, with App Router, Tailwind, Mantine and TanStack Query.' },
+      { q: 'And in Inkvibe?', a: 'It’s the foundation of the website, with App Router, Tailwind, Mantine and TanStack Query.' },
     ],
     nodejs: [
       { q: 'What modules does Zam have?', a: 'Inventory, sales and suppliers, each one in domain, application and infrastructure layers.' },
@@ -110,7 +110,7 @@ export const skills = {
       { q: 'Where else does he deploy?', a: 'On AWS, with Rumbo a Casa and this portfolio, and on Cloudflare, with Lexinova.' },
     ],
     javascript: [
-      { q: 'How did he start programming?', a: 'As a teenager, with basic frontend bootcamps: that is where he found what he loves, watching an idea turn into a screen someone can use.' },
+      { q: 'How did he start programming?', a: 'As a teenager, with basic frontend bootcamps: that’s where he found what he loves, watching an idea turn into a screen someone can use.' },
       { q: 'And what does he use most today?', a: 'TypeScript end to end, as in Zam and Inkvibe.' },
     ],
     prisma: [
@@ -174,7 +174,7 @@ export const skills = {
     ],
     [
       { name: 'JavaScript', logo: 'javascript', tint: '#F7DF1E', cat: 'Language',
-        desc: 'The language I started the web with, and it is still underneath all my work in the browser and in Node.',
+        desc: 'The language I started the web with, and it’s still underneath all my work in the browser and in Node.',
         projects: [] },
       { name: 'Prisma', logo: 'prisma', tint: '#2D3748', cat: 'ORM',
         desc: 'The ORM of Inkvibe and Zam: schema, migrations and typed queries on Postgres in Supabase.',
@@ -290,16 +290,16 @@ export const contact = {
   headline: {
     eyebrow: 'Contact',
     title: ['Stop by', 'reception'],
-    lead: 'Have a project, an opportunity or an idea with AI? There is no form here: stop by reception and say hi.',
+    lead: 'Have a project, an opportunity or an idea with AI? There’s no form here: stop by reception and say hi.',
   },
   enter: { label: 'Step into the office', href: '/oficina/' },
   meta: 'Chile · GMT−3',
   hint: 'Triple-click reception to go in',
   desk: {
-    lines: ['Hi! I am reception', 'Leave a message for Augusto', 'Coming to the office? I will take you', 'Ring the bell if you like'],
+    lines: ['Hi! I’m reception', 'Leave a message for Augusto', 'Coming to the office? I’ll take you', 'Ring the bell if you like'],
     follow: 'Follow me!',
-    greet: 'Hi, I am reception. How can I help?',
-    tickles: ['Haha, that tickles!', 'One more time and I will take you to the office'],
+    greet: 'Hi, I’m reception. How can I help?',
+    tickles: ['Haha, that tickles!', 'One more time and I’ll take you to the office'],
     ding: 'Ding! Coming',
     elsewhere: 'Over there too!',
   },
