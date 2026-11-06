@@ -142,7 +142,16 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   // y FOCUS_Y cuánto sobre el agente queda el centro, para que su globo entre arriba sin tocar el borde.
   let focus = null;
   const FOCUS = 0.36, FOCUS_Y = 0.3;
-  const baseSize = () => 7.2 * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
+  // La conversación ocupa el pie del escenario: --off-room-lift (fracción del alto) sube la maqueta y --off-room-zoom
+  // la aleja para que entre completa arriba (oficina.css). Se leen al cambiar el tamaño.
+  let lift = 0, zoom = 1;
+  const readFrame = () => {
+    const cs = getComputedStyle(stage);
+    lift = parseFloat(cs.getPropertyValue('--off-room-lift')) || 0;
+    zoom = parseFloat(cs.getPropertyValue('--off-room-zoom')) || 1;
+  };
+  readFrame();
+  const baseSize = () => 7.2 * zoom * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
   const frameGoal = () => {
     if (focus) {
       goal.target.set(focus.pos[0], focus.pos[1] + FOCUS_Y, focus.pos[2]);
@@ -160,6 +169,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   const resize = () => {
     const w = stage.clientWidth, h = stage.clientHeight;
     if (!w || !h) return;
+    readFrame();
     renderer.setSize(w, h);
     frameGoal();
   };
@@ -168,7 +178,8 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   const updateCamera = () => {
     const aspect = stage.clientWidth / stage.clientHeight || 1;
     cam.left = -view.size * aspect; cam.right = view.size * aspect;
-    cam.top = view.size; cam.bottom = -view.size;
+    const s = 2 * lift * view.size;
+    cam.top = view.size - s; cam.bottom = -view.size - s;
     cam.updateProjectionMatrix();
     const d = 40;
     cam.position.set(

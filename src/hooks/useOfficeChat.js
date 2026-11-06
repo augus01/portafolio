@@ -18,7 +18,7 @@ const writeStore = (patch) => { try { localStorage.setItem(STORE, JSON.stringify
 /**
  * Conversación común de la oficina: los tres agentes responden en un solo hilo y recepción toma el recado.
  * Recepción es la principal: saluda, recibe la primera pregunta y deriva al que sabe. La cámara solo se acerca a un
- * agente al elegirlo (antes de hablarle); mientras conversan queda en la vista general, con el globo del que habla.
+ * agente si lo eliges antes de empezar a hablar; desde tu primer mensaje queda en la vista general, con el globo del que habla.
  * `scene` es el control de useOfficeScene (globos y anillo del que habla). `link` ({ to, draft }) llega desde el landing
  * ("Seguir con stack en la oficina"): ese agente queda elegido y la pregunta escrita. Devuelve el estado y las acciones.
  */
@@ -141,16 +141,18 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     return true;
   };
 
-  const send = (raw) => {
+  // `opts.to` le habla a ese agente (pregunta lista de su tarjeta) aunque no estuviera elegido.
+  const send = (raw, opts) => {
     const text = String(raw || '').trim();
     if (!text || state.typing) return;
-    push([msg('visitor', text)], { draft: '' });
+    const toNow = opts && opts.to !== undefined ? opts.to : state.to;
+    push([msg('visitor', text)], { draft: '', to: toNow });
     const lead = state.lead;
-    if (leadOpen(lead) && leadInput(text, lead)) return;
+    if ((!opts || opts.to === undefined || opts.to === MAIN) && leadOpen(lead) && leadInput(text, lead)) return;
     askedRef.current = askedRef.current.concat(text);
     if (wantsContact(text, chat.leadRx)) { startLead(); return; }
     writeStore({ last: text.slice(0, 80) });
-    const to = state.to;
+    const to = toNow;
     const from = to || lastRef.current;
     setState((st) => ({ ...st, typing: true }));
     clearTimeout(seqRef.current);
@@ -188,8 +190,9 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   else if (!vis) { chips = chat.visitors.map((v) => ({ label: v.label, pick: () => pickVisitor(v) })); chipsLabel = chat.visitorsLabel; }
   else chips = vis.sugs.map((q) => ({ label: q, pick: () => send(q) }));
 
-  // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó. Es el único momento en que la cámara
-  // se acerca: dice su presentación de cerca y, al hablarle, vuelve a la vista general. Al soltarlo, vuelve a la vista general.
+  // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó. Antes de tu primer mensaje es el único
+  // momento en que la cámara se acerca: dice su presentación de cerca y, al hablarle, vuelve a la vista general. Una vez
+  // empezada la conversación, nunca más hay zoom. Al soltarlo, vuelve a la vista general.
   function pick(id, fromScene) {
     // Elegir a arquitecto o stack deja en pausa un recado en curso: lo que escribas va para ellos.
     setState((st) => ({ ...st, to: id || null, ...(id && id !== MAIN && leadOpen(st.lead) ? { lead: { ...st.lead, paused: true } } : {}) }));
@@ -198,7 +201,10 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     if (state.typing) return;
     const intro = agents[id].intro;
     push([msg(id, intro)]);
-    bubbles([{ agent: id, text: intro }], { focus: true });
+    // Zoom solo antes de empezar a hablar: si ya escribiste algo, el agente se presenta sin mover la cámara.
+    const talked = state.msgs.some((m) => m.who === 'visitor');
+    if (talked) sceneRef.current.unfocus();
+    bubbles([{ agent: id, text: intro }], { focus: !talked });
   }
 
   // Esc o soltar al agente: corta la secuencia de respuestas y vuelve a la vista general, sin globo.
@@ -212,12 +218,22 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   // Le hablas al agente elegido o, si no elegiste, al último que habló (al entrar, recepción).
   const lastAgent = [...state.msgs].reverse().find((m) => m.who !== 'visitor')?.who;
   const toName = state.to ? agents[state.to].name : null;
-  const withName = agents[state.to || lastAgent || MAIN]?.name || chat.placeholderAll;
+  // Agente con quien conversas: su tarjeta es la que se abre con el hilo y la caja para escribir.
+  const active = state.to || lastAgent || MAIN;
+  const withName = agents[active]?.name || chat.placeholderAll;
   const placeholder = inLead ? chat.lead.placeholders[state.lead.step] : chat.placeholder(withName);
 
   return {
     msgs: state.msgs,
     to: state.to,
+    active,
+    // Pregunta lista de la tarjeta de un agente: le habla a él directo, sin acercar la cámara.
+    ask: (id, q) => {
+      // Como al elegirlo: hablarle a arquitecto o stack deja en pausa un recado en curso.
+      if (id !== MAIN) setState((st) => (leadOpen(st.lead) ? { ...st, lead: { ...st.lead, paused: true } } : st));
+      sceneRef.current.select(id);
+      send(q, { to: id });
+    },
     typing: state.typing,
     typingText: toName ? chat.typingTo(toName) : chat.typingAll,
     lastMine: state.typing ? null : mine?.text || null,

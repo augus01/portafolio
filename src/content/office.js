@@ -30,10 +30,11 @@ export const stage = {
 
 // Los tres agentes, con su nombre en minúsculas (su color, el del personaje, vive en src/styles/oficina.css).
 // `intro` es lo que dice cada uno al hacerle clic; `topic`, lo que sabe (para cuando otro agente te deriva a él);
-// `rules`, su territorio: el chat de reglas lo respeta con los temas de abajo y la IA las recibe en su prompt.
+// `card`, su tarjeta en "¿Con quién quieres hablar?" (qué sabe y dos preguntas listas); `rules`, su territorio: el chat de reglas lo respeta con los temas de abajo y la IA las recibe en su prompt.
 // Fuente del contenido: docs/sensible/perfil-augusto.md (CV y LinkedIn, solo lo profesional).
 export const agents = {
   recepcion: { id: 'recepcion', name: 'recepción', topic: 'quién es Augusto y cómo dejarle un recado',
+    card: { blurb: 'Quién es Augusto y cómo dejarle un recado', questions: ['¿Quién es Augusto?', 'Quiero dejarle un recado'] },
     intro: 'Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.',
     rules: [
       'Recepción habla solo de Augusto como persona y profesional: quién es, qué estudia, cómo trabaja, su experiencia y su meta.',
@@ -43,6 +44,7 @@ export const agents = {
       'Recepción toma el recado de quien quiera hablar con Augusto y nunca da teléfono, correo ni dirección.',
     ] },
   arquitecto: { id: 'arquitecto', name: 'arquitecto', topic: 'qué es cada proyecto y qué logra',
+    card: { blurb: 'Los proyectos de Augusto y qué logra cada uno', questions: ['¿Qué ha construido?', '¿Qué es Rumbo a Casa?'] },
     intro: 'Soy arquitecto. Te cuento qué es cada proyecto de Augusto y qué logra: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?',
     rules: [
       'Arquitecto habla solo de los proyectos: qué es cada uno, para quién es, su objetivo y qué logra (premios, alcance, rol de Augusto).',
@@ -50,6 +52,7 @@ export const agents = {
       'Si preguntan quién es Augusto o cómo trabaja, eso es de recepción.',
     ] },
   stack: { id: 'stack', name: 'stack', topic: 'cómo está construido cada proyecto',
+    card: { blurb: 'Cómo está construido cada proyecto, de la interfaz a la nube', questions: ['¿Qué usa en AWS?', '¿Cómo está hecho Zam?'] },
     intro: 'Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.',
     rules: [
       'Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.',
@@ -68,6 +71,12 @@ const soloImpl = new RegExp(`^(?!.*(${QUE})).*(${IMPL})`);
 
 export const chat = {
   regionLabel: 'Habla con la oficina',
+  // Tarjetas de los tres agentes al pie de la maqueta (artefacto "Chat B · Elige con quién hablar").
+  pick: {
+    title: '¿Con quién quieres hablar?', lead: 'Cada agente sabe de algo distinto. Elige uno y pregúntale.',
+    talking: 'Conversando', talkTo: (name) => `Hablar con ${name}`, change: 'Cambiar de agente',
+    thread: (name) => `Conversación con ${name}`, input: (name) => `Tu pregunta para ${name}`,
+  },
   welcome: '¡Bienvenido! Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. ¿Qué te trae por aquí?',
   noMatch: 'Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde.',
   visitorsLabel: '¿Qué te trae por aquí?',

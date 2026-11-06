@@ -47,7 +47,7 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
           busy={swap.busy}
           onPick={swap.go}
         />
-        <OfficeChatDock chat={chat} texts={texts} historyId={historyId} leadNote={leadEmail ? texts.lead.noteMail : texts.lead.noteDraft} />
+        <OfficeChatDock chat={chat} texts={texts} agents={agents} historyId={historyId} leadNote={leadEmail ? texts.lead.noteMail : texts.lead.noteDraft} />
         <OfficeChatHistory
           id={historyId}
           open={chat.histOpen}
