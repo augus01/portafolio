@@ -40,8 +40,9 @@
 /* Píldora de idioma en la barra móvil: mismo tamaño y vidrio que Contacto; sin Contacto (proyectos), empuja a la derecha. */
 .ap-mnav__lang{margin-left:auto;align-self:flex-end;--nav-scale:.72}
 .ap-mnav__peek + .ap-mnav__lang{margin-left:0}
-.ap-mnav__peek .ap-pill,.ap-mnav .ap-mnav__lang.ap-pill{min-height:36px}
-.ap-mnav[data-tone="dark"] .ap-mnav__peek .ap-pill,.ap-mnav[data-tone="dark"] .ap-mnav__lang.ap-pill{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
+.ap-mnav__peek .ap-pill{min-height:36px}
+.ap-mnav .ap-mnav__lang.ap-lsw{min-height:36px}
+.ap-mnav[data-tone="dark"] .ap-mnav__peek .ap-pill,.ap-mnav[data-tone="dark"] .ap-mnav__lang.ap-lsw{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
 
 /* ---------- Stack en la ficha de cada tecnología ---------- */
 /* El logo a la izquierda y stack 3D (el de la oficina) a la derecha, mirándolo. */

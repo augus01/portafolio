@@ -3,6 +3,7 @@ import { Icon } from '../../atoms/Icon';
 import { Pill } from '../../atoms/Pill';
 import { PeekPill } from '../../atoms/PeekPill';
 import { Logo } from '../../atoms/Logo';
+import { LangSwitch } from '../../atoms/LangSwitch';
 
 // Un ítem `external` abre en otra pestaña.
 const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener noreferrer' } : null);
@@ -41,7 +42,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
   const pill = (item) => {
     const onClick = onNavigate && item.href.charAt(0) === '#' ? (e) => onNavigate(e, item.href) : undefined;
     return (
-      <li key={item.label}>
+      <li key={item.href}>
         {item.peek
           ? <PeekPill href={item.href} current={item.current} onClick={onClick}>{item.label}</PeekPill>
           : <Pill href={item.href} current={item.current} onClick={onClick} {...extProps(item)}>{item.label}</Pill>}
@@ -61,10 +62,10 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
         <ul className="ap-nav__group">{items.map(pill)}</ul>
         {(actions.length > 0 || langToggle) && (
           <ul className="ap-nav__group ap-nav__group--end">
-            {/* Píldora de idioma: muestra el idioma al que cambia y se anuncia completa ("View in English"). */}
+            {/* Interruptor de idioma EN | ES. */}
             {langToggle && (
               <li>
-                <Pill as="button" lang={langToggle.target} aria-label={langToggle.ariaLabel} onClick={langToggle.onSelect}>{langToggle.label}</Pill>
+                <LangSwitch current={langToggle.current} label={langToggle.label} onToggle={langToggle.onSelect} />
               </li>
             )}
             {actions.map(pill)}
@@ -87,7 +88,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
         <div id={panelId} className={`ap-nav__panel ap-nav__panel--${menuPlacement}`} hidden={!open}>
           <ul>
             {[...items, ...actions].map((item) => (
-              <li key={item.label}>
+              <li key={item.href}>
                 <a
                   className={['ap-nav__item', 'body', item.current && 'is-current'].filter(Boolean).join(' ')}
                   href={item.href}

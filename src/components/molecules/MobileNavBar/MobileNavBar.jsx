@@ -1,7 +1,7 @@
 import { Icon } from '../../atoms/Icon';
 import { Logo } from '../../atoms/Logo';
 import { PeekPill } from '../../atoms/PeekPill';
-import { Pill } from '../../atoms/Pill';
+import { LangSwitch } from '../../atoms/LangSwitch';
 
 // Barra móvil (bajo 600px): logo a la izquierda y botón de menú de solo icono a la derecha.
 // `tone="dark"` sobre el hero (transparente, icono blanco); `light` sobre la página (vidrio claro con línea inferior).
@@ -16,7 +16,7 @@ export function MobileNavBar({ tone = 'light', brand, peek, onNavigate, open, me
         <PeekPill href={peek.href} className="ap-mnav__peek" onClick={onNavigate ? (e) => onNavigate(e, peek.href) : undefined}>{peek.label}</PeekPill>
       )}
       {langToggle && (
-        <Pill as="button" className="ap-mnav__lang" lang={langToggle.target} aria-label={langToggle.ariaLabel} onClick={langToggle.onSelect}>{langToggle.label}</Pill>
+        <LangSwitch className="ap-mnav__lang" current={langToggle.current} label={langToggle.label} onToggle={langToggle.onSelect} />
       )}
       <button
         ref={buttonRef}

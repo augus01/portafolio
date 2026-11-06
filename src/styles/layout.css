@@ -304,3 +304,18 @@
   .ap-foot__bottom{flex-direction:column;align-items:flex-start}
   .ap-foot__note{text-align:left}
 }
+
+/* Interruptor de idioma EN | ES (6 nov 2026, reemplaza a la píldora de idioma): pista hundida con la perilla en tinta
+   bajo el idioma actual; se desliza con --dur-move. Mismo alto que las píldoras de la nav (escala con --nav-scale). */
+.ap-lsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-items:center;flex:none;box-sizing:border-box;
+  min-height:calc(var(--target-min) * var(--nav-scale, 1));padding:var(--space-1);margin:0;border:var(--stroke-hairline) solid var(--border-hairline);
+  border-radius:var(--radius-pill);background:var(--surface-sunken);color:var(--ink-primary);font-weight:500;cursor:pointer}
+.ap-lsw__opt{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;
+  padding-inline:calc(var(--space-3) * var(--nav-scale, 1));line-height:1;transition:color var(--dur-move) var(--ease-out)}
+.ap-lsw__thumb{position:absolute;top:var(--space-1);bottom:var(--space-1);left:var(--space-1);width:calc(50% - var(--space-1));
+  border-radius:var(--radius-pill);background:var(--action);transition:transform var(--dur-move) var(--ease-in-out)}
+.ap-lsw[data-lang="es"] .ap-lsw__thumb{transform:translateX(100%)}
+.ap-lsw[data-lang="en"] .ap-lsw__opt[lang="en"],.ap-lsw[data-lang="es"] .ap-lsw__opt[lang="es"]{color:var(--on-action)}
+.ap-lsw:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.ap-nav__group--end > li:has(> .ap-lsw){display:inline-flex;align-items:center;margin-inline:var(--space-1)}
+@media (prefers-reduced-motion: reduce){.ap-lsw__thumb,.ap-lsw__opt{transition:none}}

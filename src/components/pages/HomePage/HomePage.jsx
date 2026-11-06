@@ -9,7 +9,7 @@ import * as en from '../../../content/en/home';
 import { useLang } from '../../../hooks/useLang';
 import { pickLang } from '../../../lib/lang';
 
-// Portada en el idioma elegido (inglés por defecto); la píldora de idioma de la nav cambia todo sin recargar.
+// Portada en el idioma elegido (inglés por defecto); el interruptor de idioma de la nav cambia todo sin recargar.
 export function HomePage() {
   const { lang, toggle } = useLang();
   const { nav, mobileMenu, hero, about, skills, projects, contact, footer, langToggle, meta } = pickLang(lang, { en, es });

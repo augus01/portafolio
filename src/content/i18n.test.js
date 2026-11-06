@@ -67,9 +67,13 @@ test('projects: los mismos slugs en los dos idiomas (las rutas no cambian)', () 
   }
 });
 
-test('home: la píldora de idioma lleva al otro idioma', () => {
-  assert.deepEqual(enHome.langToggle, { label: 'ES', ariaLabel: 'ES, ver en español', target: 'es' });
-  assert.deepEqual(esHome.langToggle, { label: 'EN', ariaLabel: 'EN, view in English', target: 'en' });
+test('home: el interruptor de idioma marca el idioma de cada versión', () => {
+  assert.deepEqual(enHome.langToggle, { label: 'Spanish', current: 'en' });
+  assert.deepEqual(esHome.langToggle, { label: 'Español', current: 'es' });
+});
+
+test('home: la nav no lleva GitHub (queda en el menú móvil y el pie)', () => {
+  for (const home of [esHome, enHome]) assert.equal(home.nav.actions.some((a) => /github/.test(a.href)), false);
 });
 
 test('inglés natural: contracciones en lo que dicen los agentes y la misma carrera en todo el sitio', async () => {

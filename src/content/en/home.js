@@ -10,13 +10,12 @@ export const nav = {
     { label: 'Projects', href: '#proyectos' },
   ],
   actions: [
-    { label: 'GitHub', href: 'https://github.com/augus01', external: true },
     { label: 'Contact', href: '#contacto', peek: true },
   ],
 };
 
-// Language pill: shows the language it switches to.
-export const langToggle = { label: 'ES', ariaLabel: 'ES, ver en español', target: 'es' };
+// EN | ES language switch: current language and the name screen readers announce (on = Spanish).
+export const langToggle = { label: 'Spanish', current: 'en' };
 
 export const meta = { documentTitle: 'Augusto Pinto · Portfolio' };
 

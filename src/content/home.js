@@ -11,14 +11,13 @@ export const nav = {
     { label: 'Proyectos', href: '#proyectos' },
   ],
   actions: [
-    { label: 'GitHub', href: 'https://github.com/augus01', external: true },
     // Recepción asoma por detrás de esta píldora: al tocarla se agacha, la página baja a Contacto y saluda desde su escritorio.
     { label: 'Contacto', href: '#contacto', peek: true },
   ],
 };
 
-// Píldora de idioma: muestra el idioma al que cambia.
-export const langToggle = { label: 'EN', ariaLabel: 'EN, view in English', target: 'en' };
+// Interruptor de idioma EN | ES: idioma actual y nombre que anuncian los lectores de pantalla (activado = español).
+export const langToggle = { label: 'Español', current: 'es' };
 
 export const meta = { documentTitle: 'Augusto Pinto · Portafolio' };
 

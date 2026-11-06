@@ -35,7 +35,12 @@ export function useImmersiveScroll(rootRef, motionRef, onNavTone) {
       // Cada limpieza que no es de GSAP (oyentes, clases) se registra aquí y corre al revertir.
       const cleanups = [];
       // Sobre el hero la nav es transparente pero sigue en el orden de Tab: al recibir foco se muestra (CSS: .is-focus).
-      const onFocusIn = () => navWrap.classList.add('is-focus');
+      // Solo con foco de teclado: un clic (p. ej. en el interruptor de idioma) deja el foco en la nav y no debe mostrarla.
+      const onFocusIn = (e) => {
+        let keyboard = true;
+        try { keyboard = e.target.matches(':focus-visible'); } catch (err) { /* navegador sin :focus-visible */ }
+        if (keyboard) navWrap.classList.add('is-focus');
+      };
       const onFocusOut = (e) => { if (!navWrap.contains(e.relatedTarget)) navWrap.classList.remove('is-focus'); };
       navWrap.addEventListener('focusin', onFocusIn);
       navWrap.addEventListener('focusout', onFocusOut);
