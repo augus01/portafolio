@@ -1,0 +1,127 @@
+/* Los agentes salen de la oficina (artefacto "Hero · Augusto Pinto", 6 nov 2026): recepción asoma sobre Contacto en la
+   nav, stack conversa en la ficha de cada tecnología y arquitecto asoma por el borde de las portadas y abre el plano.
+   Colores de los agentes en --ap-agent-* (oficina.css); lo que no tiene token vive en variables --pk-*, --stk-* y --arq-*,
+   documentadas como excepción en design-system/INTEGRACION.md. */
+
+:root{
+  /* Recepción: medidas de la referencia, escaladas con la nav. */
+  --pk-window:52px;--pk-head-w:60px;--pk-head-h:66px;--pk-head-right:6px;--pk-head-sink:-40px;--pk-lift:-5px;--pk-duck:34px;
+  --pk-move:240ms;--pk-duck-move:160ms;
+  /* Stack en la ficha: globo en el tono claro de su naranja y nombre en su naranja oscuro. */
+  --stk-say:#fdeee5;--stk-who:#8a3a10;
+  /* Arquitecto: botón y pieza elegida en su azul; al pasar el cursor, un azul más oscuro. */
+  --arq-hover:#2443b0;--arq-peek-w:120px;--arq-peek-h:100px;--arq-pop-w:600px;
+  --agent-pop-ease:cubic-bezier(.2,.8,.2,1);
+}
+
+/* ---------- Recepción sobre Contacto ---------- */
+/* La cabeza vive detrás de la píldora; una ventana recortada termina en el borde superior de la barra, así solo asoma
+   hasta los ojos y el cuerpo nunca se ve a través del vidrio. */
+.ap-pk{position:relative;display:inline-flex;text-decoration:none;color:var(--ink-primary);border-radius:var(--radius-pill)}
+.ap-pk .ap-pk__pill{position:relative;z-index:1}
+.ap-pk__peek{position:absolute;z-index:0;left:0;right:0;bottom:calc(100% + var(--space-1) + var(--stroke-hairline));height:calc(var(--pk-window) * var(--nav-scale, 1));overflow:hidden;pointer-events:none}
+.ap-pk__head{position:absolute;display:block;right:calc(var(--pk-head-right) * var(--nav-scale, 1));bottom:calc(var(--pk-head-sink) * var(--nav-scale, 1));width:calc(var(--pk-head-w) * var(--nav-scale, 1));height:calc(var(--pk-head-h) * var(--nav-scale, 1));transition:transform var(--pk-move) var(--ease-out)}
+@media (hover: hover){.ap-pk:hover .ap-pk__head{transform:translateY(calc(var(--pk-lift) * var(--nav-scale, 1)))}}
+.ap-pk:focus-visible .ap-pk__head{transform:translateY(calc(var(--pk-lift) * var(--nav-scale, 1)))}
+.ap-pk.is-duck .ap-pk__head{transform:translateY(calc(var(--pk-duck) * var(--nav-scale, 1)));transition-duration:var(--pk-duck-move)}
+.ap-pk:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.ap-nav--dark .ap-pk:focus-visible{outline-color:var(--focus-ring-on-dark)}
+@media (hover: hover){.ap-navwrap .ap-nav .ap-nav__bar .ap-pk:hover .ap-pill{background:var(--surface-sunken)}}
+/* La nav baja lo justo para que la cabeza no se corte contra el borde de la pantalla. */
+@media (min-width: 600px){.ap-navwrap{top:max(var(--space-6), calc(30px * var(--nav-scale, 1)))}}
+
+/* Barra móvil: Contacto queda junto al menú, apoyada abajo para dejarle espacio a recepción, más chica, asomando. */
+.ap-mnav__peek{margin-left:auto;align-self:flex-end;--nav-scale:.72;--pk-head-sink:-26px}
+.ap-mnav__peek .ap-pk__peek{bottom:100%}
+.ap-mnav__peek .ap-pill{min-height:36px}
+.ap-mnav[data-tone="dark"] .ap-mnav__peek .ap-pill{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
+
+/* ---------- Stack en la ficha de cada tecnología ---------- */
+/* El logo a la izquierda y stack 3D (el de la oficina) a la derecha, mirándolo. */
+.hab-pop__stage--agent .hab-pop__float{margin-right:38%}
+.hab-pop__stage--agent .hab-pop__shadow{left:31%}
+.hab-pop__gl{position:absolute;z-index:2;right:2%;top:0;width:44%;height:100%;display:block;pointer-events:none}
+.hab-pop__thread{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.hab-pop__thread .hab-pop__desc.body{margin:0}
+.hab-pop__qa{display:flex;flex-direction:column;gap:10px}
+.hab-pop__say.body-sm{margin:0;align-self:flex-start;box-sizing:border-box;max-width:100%;padding:12px 14px;border-radius:4px 18px 18px 18px;background:var(--stk-say);color:var(--ink-primary);font:400 15px/1.5 var(--font-text);animation:agent-in 280ms var(--ease-out) both}
+.hab-pop__who.label{display:block;margin-bottom:var(--space-1);font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--stk-who)}
+.hab-pop__me.body-sm{margin:0;align-self:flex-end;max-width:85%;padding:10px 14px;border-radius:18px 18px 4px 18px;background:var(--surface-inverse);color:var(--ink-on-dark);font:400 15px/1.4 var(--font-text);animation:agent-in 280ms var(--ease-out) both}
+.hab-pop__ask{margin-top:var(--space-4);display:flex;flex-direction:column;gap:var(--space-2)}
+.hab-pop__ask .hab-pop__label.label{margin:0}
+.hab-pop__pills{display:flex;flex-wrap:wrap;gap:6px}
+.hab-pop__pill.body-sm{appearance:none;-webkit-appearance:none;min-height:40px;padding:var(--space-2) 14px;border:1.5px solid var(--ap-agent-stack);border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-primary);font:400 14px/1.25 var(--font-text);text-align:left;cursor:pointer;transition:transform var(--dur-press) var(--ease-out)}
+@media (hover: hover){.hab-pop__pill.body-sm:hover{background:var(--stk-say)}}
+.hab-pop__pill.body-sm:active{transform:scale(.97)}
+.hab-pop__pill.body-sm:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
+.hab-pop__btn.label{margin-top:18px;display:inline-flex;align-items:center;gap:10px;min-height:var(--target-min);padding:0 18px;box-sizing:border-box;border:2px solid var(--ink-primary);border-radius:var(--radius-pill);background:var(--ap-agent-stack);color:var(--ink-primary);font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:transform var(--dur-press) var(--ease-out)}
+.hab-pop__btn.label:active{transform:scale(.97)}
+.hab-pop__btn.label:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:3px}
+@keyframes agent-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (max-width: 719px){.hab-pop__stage--agent .hab-pop__float{margin-right:34%}}
+
+/* ---------- Arquitecto en las portadas ---------- */
+/* Asoma hasta los ojos por el borde superior de la portada (el cuerpo queda detrás de ella), te sigue con la mirada y
+   sube al pasar el cursor. Las filas de la galería se separan lo justo para que no tape al proyecto de arriba. */
+.ap-gal__item{position:relative}
+.ap-gal__item .ap-gal__tile{z-index:1}
+.ap-gal:has(.ap-arq){row-gap:calc(var(--space-16) + var(--arq-peek-h) * .5)}
+.ap-arq{appearance:none;-webkit-appearance:none;position:absolute;z-index:0;right:clamp(16px,6%,28px);top:calc(var(--arq-peek-h) * -1);width:var(--arq-peek-w);height:var(--arq-peek-h);margin:0;padding:0;border:0;background:transparent;cursor:pointer;overflow:visible;border-radius:var(--radius-lg) var(--radius-lg) 0 0;color:var(--ink-primary)}
+.ap-arq__gl{position:absolute;left:0;top:0;display:block;width:var(--arq-peek-w);height:var(--arq-peek-w);pointer-events:none}
+.ap-arq:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:4px}
+.ap-arq__tip.label{position:absolute;z-index:1;left:0;top:var(--space-2);padding:6px 10px;border-radius:var(--radius-md);background:var(--surface-inverse);color:var(--ink-on-dark);font:500 11px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translateX(4px);transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out);pointer-events:none}
+@media (hover: hover){.ap-arq:hover .ap-arq__tip{opacity:1;transform:none}}
+.ap-arq:focus-visible .ap-arq__tip{opacity:1;transform:none}
+
+/* Plano del proyecto: ventana centrada con velo, como la ficha de las tecnologías. Blanco liso, sin cuadrícula. */
+.arq-veil{position:fixed;inset:0;z-index:59;margin:0;padding:0;border:0;background:rgba(14,15,18,.42);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);cursor:pointer;opacity:0;visibility:hidden;transition:opacity 300ms,visibility 0s linear 300ms}
+.arq-veil.is-open{opacity:1;visibility:visible;transition:opacity 300ms,visibility 0s}
+.arq-pop{--font-oswald:"Oswald","Helvetica Neue",Arial,sans-serif;position:fixed;z-index:60;left:50%;top:50%;width:min(var(--arq-pop-w),calc(100vw - 24px));max-height:calc(100svh - 48px);overflow-y:auto;overscroll-behavior:contain;box-sizing:border-box;padding:var(--space-6);border-radius:20px;display:flex;flex-direction:column;gap:20px;color:var(--ink-primary);
+  background:var(--surface-raised);border:var(--stroke-hairline) solid var(--border-hairline);box-shadow:0 2px 6px rgba(14,15,18,.08),0 32px 80px rgba(14,15,18,.28);
+  opacity:0;transform:translate(-50%,-46%) scale(.94);visibility:hidden;transition:opacity 300ms,transform 450ms var(--agent-pop-ease),visibility 0s linear 450ms}
+.arq-pop.is-open{opacity:1;transform:translate(-50%,-50%);visibility:visible;transition:opacity 300ms,transform 450ms var(--agent-pop-ease),visibility 0s}
+.arq-pop__top{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--space-4)}
+.arq-pop__k.label{margin:0;font:500 12px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-primary)}
+.arq-pop__title.subheading{margin:6px 0 0;font-family:var(--font-oswald);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:0}
+.arq-pop__close{appearance:none;-webkit-appearance:none;flex:none;display:inline-flex;align-items:center;justify-content:center;width:var(--target-min);height:var(--target-min);padding:0;border:2px solid var(--ink-primary);border-radius:50%;background:var(--surface-raised);color:var(--ink-primary);cursor:pointer}
+.arq-pop__close:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:3px}
+.arq-pl{display:flex;flex-direction:column;align-items:center}
+.arq-pl__node.body{appearance:none;-webkit-appearance:none;box-sizing:border-box;min-width:180px;min-height:56px;padding:var(--space-2) var(--space-3);border:2px solid var(--ink-primary);border-radius:var(--radius-md);background:var(--surface-raised);color:var(--ink-primary);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;font:500 15px/1.2 var(--font-text);text-align:center;transition:transform var(--dur-press) var(--ease-out)}
+.arq-pl__node small.label{font:500 11px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase}
+.arq-pl__node.body:active{transform:scale(.97)}
+.arq-pl__node.body[aria-pressed="true"]{background:var(--ap-agent-arquitecto);border-color:var(--ap-agent-arquitecto);color:var(--ap-agent-arquitecto-ink)}
+.arq-pl__node.body:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:3px}
+.arq-pl__step{display:flex;flex-direction:column;align-items:center}
+.arq-pl__v{width:2px;height:22px;background:var(--ink-primary)}
+.arq-pl__split{position:relative;display:grid;grid-template-columns:repeat(var(--legs,4),minmax(0,1fr));gap:10px;width:100%;padding-top:22px}
+.arq-pl__split::before{content:"";position:absolute;top:0;left:calc(50% / var(--legs,4));right:calc(50% / var(--legs,4));height:2px;background:var(--ink-primary)}
+.arq-pl__leg{position:relative;display:flex;flex-direction:column;align-items:stretch}
+.arq-pl__leg::before{content:"";position:absolute;top:-22px;left:calc(50% - 1px);width:2px;height:22px;background:var(--ink-primary)}
+.arq-pl__leg .arq-pl__node.body{min-width:0;width:100%;padding:var(--space-2) 10px}
+.arq-pop__say{display:flex;align-items:flex-end;gap:10px}
+.arq-pop__fig{position:relative;flex:none;width:130px;height:160px}
+.arq-pop__gl{position:absolute;inset:0;display:block;width:100%;height:100%}
+.arq-pop__bubble.body{flex:1 1 auto;margin:0 0 var(--space-4);padding:12px 14px;border:var(--stroke-hairline) solid var(--border-hairline);border-radius:16px 16px 16px 4px;background:var(--surface-raised);color:var(--ink-primary);font:400 15px/1.45 var(--font-text)}
+.arq-pop__who.label{display:block;margin-bottom:6px;font:500 12px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-secondary)}
+.arq-pop__more.label{align-self:flex-start;display:inline-flex;align-items:center;gap:10px;min-height:var(--target-min);padding:0 18px;box-sizing:border-box;border:2px solid var(--ap-agent-arquitecto);border-radius:var(--radius-pill);background:var(--ap-agent-arquitecto);color:var(--ap-agent-arquitecto-ink);font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:transform var(--dur-press) var(--ease-out)}
+@media (hover: hover){.arq-pop__more.label:hover{background:var(--arq-hover);border-color:var(--arq-hover)}}
+.arq-pop__more.label:active{transform:scale(.97)}
+.arq-pop__more.label:focus-visible{outline:var(--focus-ring-width) solid var(--ap-agent-arquitecto);outline-offset:3px}
+@media (max-width: 719px){
+  .arq-pop{padding:20px;gap:var(--space-4)}
+  .arq-pop__title.subheading{font-size:22px}
+  .arq-pl__split{grid-template-columns:repeat(2,minmax(0,1fr));padding-top:var(--space-4)}
+  .arq-pl__split::before,.arq-pl__leg::before{display:none}
+  .arq-pl__node.body{min-width:0;width:100%}
+  .arq-pl__step{width:100%}
+  .arq-pop__fig{width:104px;height:128px}
+}
+
+/* Con una ficha o un plano abiertos, la navegación se aparta para no tapar la ventana ni su botón de cerrar. */
+body:has(.hab-pop.is-open) .ap-navwrap,body:has(.arq-pop.is-open) .ap-navwrap{visibility:hidden}
+
+@media (prefers-reduced-motion: reduce){
+  .ap-pk__head,.ap-arq__tip,.arq-pl__node.body,.arq-pop__more.label,.hab-pop__pill.body-sm,.hab-pop__btn.label{transition:none}
+  .arq-pop,.arq-pop.is-open,.arq-veil,.arq-veil.is-open{transition:none}
+  .hab-pop__say.body-sm,.hab-pop__me.body-sm{animation:none}
+}
