@@ -1,4 +1,5 @@
 import { Tag } from '../../atoms/Tag';
+import { ArchitectPeek } from '../../atoms/ArchitectPeek';
 
 // Proyecto de la galería: una portada a sangre y de esquinas rectas en el color de la app (estilo Josephmark), con el logo en blanco
 // a gran tamaño y, si hay capturas reales, un collage de tres pantallas alrededor que se abre al pasar el mouse.
@@ -7,7 +8,8 @@ import { Tag } from '../../atoms/Tag';
 // compone símbolo y nombre en la fuente de la marca (`logo.brand`). Logo y capturas son decorativos: el nombre
 // del proyecto va en el h3. `badge` es un sello opcional en la esquina de la portada (p. ej., AWS Skill Builder);
 // es decorativo porque el premio ya va escrito en el Tag del pie. Con `href`, el nombre es el enlace a la página del
-// proyecto y su área se extiende a todo el proyecto (portada incluida).
+// proyecto y su área se extiende a todo el proyecto (portada incluida). Con `architect` ({ label, tip, expanded, controls,
+// onClick }), arquitecto asoma por el borde superior de la portada y abre el plano del proyecto.
 function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, wordmark }) {
   if (image) {
     return <img className={`ap-gal__logo ap-gal__logo--${brand}`} src={image} width={width} height={height} alt="" decoding="async" loading="lazy" />;
@@ -20,9 +22,10 @@ function Logo({ brand, image, width, height, symbol, symbolWidth, symbolHeight, 
   );
 }
 
-export function ProjectTile({ name, href, description, role, award, badge, logo, shots = [], className }) {
+export function ProjectTile({ name, href, description, role, award, badge, logo, shots = [], architect, className }) {
   return (
     <article className={['ap-gal__item', `ap-gal__item--${logo.brand}`, className].filter(Boolean).join(' ')}>
+      {architect && <ArchitectPeek {...architect} />}
       <div className="ap-gal__tile">
         {badge && (
           <span className="ap-gal__badge" aria-hidden="true">

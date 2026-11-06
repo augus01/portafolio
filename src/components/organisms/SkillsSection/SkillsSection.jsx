@@ -5,8 +5,8 @@ import { useSkillPicker } from '../../../hooks/useSkillPicker';
 
 // Superpoderes: "Con qué construyo" (artefacto "Hero · Augusto Pinto"). Encabezado con la tipografía de Sobre mí y
 // una cinta de logos 3D en dos filas a velocidades distintas; sin movimiento se ve como grilla.
-// Clic en un logo: se abre su ficha y la cinta se detiene hasta cerrarla.
-export function SkillsSection({ id, title, eyebrow, lead, rows, card }) {
+// Clic en un logo: se abre su ficha (con stack y sus preguntas listas de `ask`) y la cinta se detiene hasta cerrarla.
+export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {} }) {
   const [first, second] = title;
   const sectionRef = useRef(null);
   const cardId = useId();
@@ -36,7 +36,7 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card }) {
           />
         ))}
       </div>
-      <SkillCard id={cardId} item={shown} open={!!picker.open} n={picker.n} texts={card} onClose={picker.close} />
+      <SkillCard id={cardId} item={shown} ask={(shown && ask[shown.logo]) || []} open={!!picker.open} n={picker.n} texts={card} onClose={picker.close} />
     </section>
   );
 }

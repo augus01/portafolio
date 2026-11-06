@@ -11,7 +11,8 @@ export const nav = {
   ],
   actions: [
     { label: 'GitHub', href: 'https://github.com/augus01', external: true },
-    { label: 'Contacto', href: '#contacto' },
+    // Recepción asoma por detrás de esta píldora: al tocarla se agacha, la página baja a Contacto y saluda desde su escritorio.
+    { label: 'Contacto', href: '#contacto', peek: true },
   ],
 };
 
@@ -66,8 +67,83 @@ export const skills = {
   // La segunda parte del título va en gris.
   title: ['Con qué', 'construyo'],
   lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue. Pasa el cursor sobre una fila para detenerla y haz clic en una para ver qué logré con ella.',
-  // Textos de la ficha que se abre al elegir una tecnología.
-  card: { usedIn: 'Dónde lo usé', close: 'Cerrar', open: (name) => `Ver qué logré con ${name}`, dialog: (name) => `Detalle de ${name}`, alt: (name) => `Logo de ${name} en 3D` },
+  // Textos de la ficha. Stack presenta la herramienta: preguntas listas, su respuesta y el paso a la oficina con la pregunta ya escrita.
+  card: {
+    usedIn: 'Dónde lo usé', close: 'Cerrar', open: (name) => `Ver qué logré con ${name}`, dialog: (name) => `Detalle de ${name}`, alt: (name) => `Logo de ${name} en 3D`,
+    agent: 'stack', askLabel: 'Pregúntale a stack', toOffice: 'Seguir con stack en la oficina', office: '/oficina/',
+    draft: (name) => `¿Qué más hizo Augusto con ${name}?`,
+  },
+  // Preguntas listas de stack en la ficha de cada tecnología (por `logo`), con datos reales de los proyectos.
+  ask: {
+    react: [
+      { q: '¿Qué es Inkvibe?', a: 'El marketplace del tatuaje para Latinoamérica: descubres artistas verificados por estilo y ciudad, revisas portafolios, cotizas y reservas en un solo lugar.' },
+      { q: '¿Con qué más arma interfaces?', a: 'Con Next.js como base de la web, y con Material UI y Vite cuando necesita armar interfaces en React rápido.' },
+    ],
+    python: [
+      { q: '¿Para qué la usa?', a: 'Para IA y automatización: scripts, manejo de datos y prototipos de agentes. Es su camino a convertirse en AI Engineer.' },
+      { q: '¿Dónde hay IA en sus proyectos?', a: 'En Rumbo a Casa: el asistente conversa con Bedrock y un motor de reglas cita el decreto detrás de cada respuesta.' },
+    ],
+    aws: [
+      { q: '¿Qué es Rumbo a Casa?', a: 'Un asistente que guía a familias chilenas por cuatro subsidios habitacionales del Estado (DS49, DS1, DS19 y DS52) y arma la lista de papeles.' },
+      { q: '¿Qué ganó con él?', a: 'La categoría Social Good en la hackathon AWS Zero to Shipped.' },
+    ],
+    nextjs: [
+      { q: '¿Qué ve el dueño en Zam?', a: 'Las ventas, el catálogo, los gastos y el stock de su minimarket, en un solo lugar.' },
+      { q: '¿Cómo está armado Zam?', a: 'Backend en NestJS con Fastify, ordenado por módulos; web en Next.js y app en Expo. Todo en TypeScript, sobre Postgres en Supabase con Prisma.' },
+    ],
+    nodejs: [
+      { q: '¿Qué módulos tiene Zam?', a: 'Inventario, ventas y proveedores, cada uno en capas de dominio, aplicación e infraestructura.' },
+      { q: '¿Sobre qué base de datos?', a: 'Postgres en Supabase, con Prisma para el esquema, las migraciones y las consultas tipadas.' },
+    ],
+    cloudflare: [
+      { q: '¿Qué es Lexinova?', a: 'Una plataforma LegalTech multi-tenant construida Cloudflare-first. Augusto se encarga de integraciones y arquitectura.' },
+      { q: '¿Qué más mantiene ahí?', a: 'El worker de PJUD, en Railway: el módulo que trabaja con la información del Poder Judicial.' },
+    ],
+    typescript: [
+      { q: '¿Sobre qué base de datos?', a: 'Postgres en Supabase, con Prisma para el esquema, las migraciones y las consultas tipadas.' },
+      { q: '¿Y el inicio de sesión?', a: 'Firebase Auth maneja el inicio de sesión de dueños y cajeros.' },
+    ],
+    postgresql: [
+      { q: '¿Qué guarda Zam ahí?', a: 'Tiendas, catálogo, stock, ventas y proveedores.' },
+      { q: '¿Cómo separa cada tienda?', a: 'Con multi-tenancy resuelto en la capa de aplicación. La base vive en Supabase y Prisma lleva el esquema.' },
+    ],
+    railway: [
+      { q: '¿Qué hace el worker de PJUD?', a: 'Trabaja con la información del Poder Judicial para la plataforma de Lexinova.' },
+      { q: '¿Dónde más despliega?', a: 'En AWS y Cloudflare, según el proyecto.' },
+    ],
+    javascript: [
+      { q: '¿Cómo empezó a programar?', a: 'En la adolescencia, con bootcamps básicos de frontend: ahí encontró lo que le gusta, ver una idea convertirse en una pantalla que alguien puede usar.' },
+      { q: '¿Y hoy qué usa más?', a: 'TypeScript de punta a punta, como en Zam: backend, web y app móvil.' },
+    ],
+    prisma: [
+      { q: '¿Sobre qué base trabaja?', a: 'Sobre Postgres en Supabase, la base de Zam. Prisma lleva el esquema, corre las migraciones y arma consultas tipadas.' },
+      { q: '¿Con qué backend se conecta?', a: 'Con el backend de Zam en NestJS con Fastify, ordenado por módulos. Todo en TypeScript.' },
+    ],
+    docker: [
+      { q: '¿Dónde despliega?', a: 'En AWS, Cloudflare y Railway, según el proyecto.' },
+      { q: '¿Qué más usa a diario?', a: 'GitHub, para repositorios, pull requests y trabajo en equipo.' },
+    ],
+    vite: [
+      { q: '¿Con qué lo combina?', a: 'Con React y Material UI, para armar interfaces rápido.' },
+      { q: '¿Y para la web de un producto?', a: 'Next.js, como en la web de Inkvibe y el panel de Zam.' },
+    ],
+    supabase: [
+      { q: '¿Qué guarda?', a: 'La base Postgres de Zam: tiendas, catálogo, stock, ventas y proveedores.' },
+      { q: '¿Con qué la consulta?', a: 'Con Prisma: esquema, migraciones y consultas tipadas.' },
+    ],
+    github: [
+      { q: '¿Qué es Rumbo a Casa?', a: 'Un asistente que guía a familias chilenas por cuatro subsidios habitacionales y cita el decreto detrás de cada respuesta. Ganó Social Good en la hackathon AWS Zero to Shipped.' },
+      { q: '¿Sobre qué corre?', a: 'CloudFront, Lambda, Bedrock, DynamoDB y Polly.' },
+    ],
+    'material-ui': [
+      { q: '¿Con qué lo combina?', a: 'Con React y Vite, cuando necesita armar interfaces rápido.' },
+      { q: '¿Qué más usa en frontend?', a: 'React y Next.js. Next.js es la base de la web de Inkvibe.' },
+    ],
+    firebase: [
+      { q: '¿Quién inicia sesión?', a: 'Los dueños y los cajeros de los minimarkets que usan Zam.' },
+      { q: '¿Qué más usa Zam?', a: 'Backend en NestJS con Fastify, web en Next.js y app en Expo, todo en TypeScript.' },
+    ],
+  },
   rows: [
     [
       { name: 'React', logo: 'react', tint: '#61DAFB', cat: 'Frontend',
@@ -132,6 +208,12 @@ export const projects = {
   // Encabezado de la galería: la segunda línea va en gris.
   title: ['Lo que he', 'construido'],
   count: '3 proyectos',
+  // Arquitecto asoma por el borde de cada portada; al tocarlo abre el plano del proyecto.
+  architect: {
+    agent: 'arquitecto', tip: 'Ver el plano', open: (name) => `Ver el plano de ${name}`, eyebrow: (name) => `Plano · ${name}`,
+    title: 'Toca una pieza y arquitecto te la explica', close: 'Cerrar el plano', dialog: (name) => `Plano de ${name}`,
+    figure: 'Arquitecto en 3D con su plano enrollado', toOffice: 'Seguir con arquitecto en la oficina', office: '/oficina/',
+  },
   // Cada proyecto es una portada en el color de su app con el logo en blanco, y debajo
   // nombre, descripción y rol. `logo.image` es un archivo con el nombre incluido; `logo.symbol` + `logo.wordmark`
   // compone el símbolo con el nombre escrito en la fuente de esa marca (`logo.brand` elige la fuente).
@@ -149,6 +231,21 @@ export const projects = {
       // Símbolo y tipografía (Bricolage Grotesque 700) tomados del repositorio augus01/rumbo-a-casa; en la portada
       // azul van como en el encabezado de la app: barras blancas y casa óxido. Las capturas son de la app real.
       logo: { brand: 'rumbo', symbol: '/proyectos/rumbo-simbolo-claro.svg', symbolWidth: 48, symbolHeight: 33, wordmark: 'Rumbo a Casa' },
+      // Plano que abre arquitecto desde la portada: `chain` va en línea y `legs` se reparten debajo; `def` es la pieza inicial.
+      plan: {
+        def: 'reglas', ask: '¿Cómo está armado Rumbo a Casa?',
+        chain: [
+          { id: 'familia', label: 'Familia', sub: 'Web · español o inglés', text: 'La familia conversa con el asistente en español o inglés y recibe la lista de papeles que necesita.' },
+          { id: 'cloudfront', label: 'CloudFront', sub: 'Entrega el sitio', text: 'Entrega el sitio rápido a cualquier familia en Chile.' },
+          { id: 'lambda', label: 'Lambda', sub: 'Recibe cada mensaje', text: 'Recibe cada mensaje y llama a las piezas que hacen falta para responder.' },
+        ],
+        legs: [
+          { id: 'bedrock', label: 'Bedrock', sub: 'Conversa', text: 'Es el modelo que entiende lo que la familia cuenta y arma la conversación.' },
+          { id: 'reglas', label: 'Motor de reglas', sub: 'Cita el decreto', text: 'Decide a qué subsidio puede postular la familia (DS49, DS1, DS19 o DS52) y cita el decreto detrás de cada respuesta.' },
+          { id: 'dynamo', label: 'DynamoDB', sub: 'Datos', text: 'Guarda los datos que el asistente necesita entre un mensaje y otro.' },
+          { id: 'polly', label: 'Polly', sub: 'Voz', text: 'Convierte las respuestas en voz para quien prefiere escuchar.' },
+        ],
+      },
       shots: [
         { src: '/proyectos/portada-rumbo-resultado-movil.webp', width: 480, height: 780 },
         { src: '/proyectos/portada-rumbo-conversacion.webp', width: 480, height: 640 },
@@ -162,6 +259,20 @@ export const projects = {
       role: 'Desarrollador frontend',
       // Logotipo horizontal de inkvibe.app con el nombre en blanco, como en su encabezado sobre fondo oscuro.
       logo: { brand: 'inkvibe', image: '/proyectos/inkvibe-logo-claro.png', width: 1200, height: 281 },
+      // Plano que abre arquitecto desde la portada: `chain` va en línea y `legs` se reparten debajo; `def` es la pieza inicial.
+      plan: {
+        def: 'web', ask: '¿Cómo está armado Inkvibe?',
+        chain: [
+          { id: 'clientes', label: 'Clientes', sub: 'Buscan artista', text: 'Descubren artistas verificados por estilo y ciudad, en cualquier parte de Latinoamérica.' },
+          { id: 'web', label: 'Web', sub: 'React y Next.js', text: 'Es lo que construye Augusto, como único desarrollador frontend: toda la web en React y Next.js.' },
+        ],
+        legs: [
+          { id: 'inkcards', label: 'InkCards', sub: 'Cada artista', text: 'Cada artista tiene su InkCard dentro del marketplace.' },
+          { id: 'portafolios', label: 'Portafolios', sub: 'Su trabajo', text: 'Los clientes revisan el portafolio de cada artista antes de elegir.' },
+          { id: 'reserva', label: 'Cotizar y reservar', sub: 'Un solo lugar', text: 'El flujo para cotizar y reservar con el artista, sin salir del sitio.' },
+          { id: 'backend', label: 'Backend', sub: 'Separado', text: 'La web habla con un backend separado, aparte del frontend que construye Augusto.' },
+        ],
+      },
       shots: [
         { src: '/proyectos/portada-inkvibe-movil.webp', width: 480, height: 862 },
         { src: '/proyectos/portada-inkvibe-descubre.webp', width: 480, height: 690 },
@@ -177,6 +288,18 @@ export const projects = {
       // redibujado en SVG desde la referencia de Augusto, en blanco para la portada; el nombre va en minúsculas en
       // Plus Jakarta Sans 500, la fuente de la marca. Sin capturas todavía: solo el logo.
       logo: { brand: 'zam', symbol: '/proyectos/zam-simbolo-claro.svg', symbolWidth: 466, symbolHeight: 466, wordmark: 'zam' },
+      // Plano que abre arquitecto desde la portada: `chain` va en línea y `legs` se reparten debajo; `def` es la pieza inicial.
+      plan: {
+        def: 'zam', ask: '¿Cómo está armado Zam?',
+        chain: [
+          { id: 'zam', label: 'Zam', sub: 'Minimarket de barrio', text: 'Caja, inventario y finanzas del minimarket de barrio, en dos superficies pensadas para quien las usa.' },
+        ],
+        legs: [
+          { id: 'app', label: 'App móvil', sub: 'Cajero y dueño', text: 'Para operar con una mano: caja, escáner, mermas, precios, alertas y ventas del día.' },
+          { id: 'panel', label: 'Panel web', sub: 'Solo el dueño', text: 'En Next.js, para analizar y administrar: panel financiero, catálogo, gastos, usuarios y alertas.' },
+          { id: 'asistente', label: 'Asistente', sub: 'Habla con Zam', text: 'Desde la app se habla con Zam: responde en frases cortas, con la cifra primero.' },
+        ],
+      },
     },
   ],
 };
@@ -196,6 +319,8 @@ export const contact = {
   desk: {
     lines: ['¡Hola! Soy recepción', 'Deja tu mensaje para Augusto', '¿Pasas a la oficina? Te llevo', 'Toca el timbre si quieres'],
     follow: '¡Sígueme!',
+    // Lo que dice al llegar desde la píldora Contacto de la nav.
+    greet: 'Hola, soy recepción. ¿En qué te ayudo?',
     // Lo que dice con el primer y el segundo clic; al tercero te lleva a la oficina.
     tickles: ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'],
   },
