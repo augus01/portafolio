@@ -279,7 +279,7 @@ export function getCase(slug) {
   const i = cases.findIndex((c) => c.slug === slug);
   if (i < 0) return null;
   const others = cases.slice(i + 1).concat(cases.slice(0, i))
-    .map((o) => ({ name: o.name, href: caseHref(o.slug), color: o.theme.next, logo: o.cover.logo }));
+    .map((o) => ({ name: o.name, href: caseHref(o.slug), color: o.theme.brand, logo: o.cover.logo }));
   const pad = (n) => String(n).padStart(2, '0');
   return {
     ...cases[i],

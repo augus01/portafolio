@@ -1,5 +1,7 @@
-// Otros proyectos: cada uno con su nombre gigante y una banda en su color con solo su logo, empezando por el
-// siguiente; debajo, la vuelta a la galería.
+import { CaseLockup } from '../../molecules/CaseLockup';
+
+// Otros proyectos: lado a lado, cada uno con su nombre grande y una banda en su color de marca con su logo completo,
+// empezando por el siguiente; debajo, la vuelta a la galería.
 export function CaseNext({ labels, others }) {
   return (
     <section className="ap-case-next" aria-label={labels.label}>
@@ -9,9 +11,7 @@ export function CaseNext({ labels, others }) {
           <li key={o.href}>
             <a className="ap-case-next__link" href={o.href} style={{ '--case-next': o.color }}>
               <span className="ap-case-next__title">{o.name}</span>
-              <span className={`ap-case-next__thumb ap-case-next__thumb--${o.logo.image ? 'word' : 'symbol'}`}>
-                <img src={o.logo.symbol || o.logo.image} alt="" loading="lazy" decoding="async" />
-              </span>
+              <span className="ap-case-next__thumb"><CaseLockup {...o.logo} lazy /></span>
             </a>
           </li>
         ))}

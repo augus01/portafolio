@@ -88,7 +88,9 @@ test('cada caso muestra abajo los otros dos proyectos, en orden y solo con su lo
     assert.equal(others[0].name, cases[(cases.indexOf(c) + 1) % cases.length].name, `${c.slug}: primero el siguiente`);
     for (const o of others) {
       assert.ok(o.logo && (o.logo.symbol || o.logo.image), `${o.name} sin logo`);
-      assert.ok(o.color, `${o.name} sin color`);
+      const caso = cases.find((e) => e.name === o.name);
+      assert.equal(o.color, caso.theme.brand, `${o.name}: el fondo es el color de marca del landing`);
+      assert.ok(o.logo.image || o.logo.wordmark, `${o.name}: logo completo, no solo el isotipo`);
       assert.equal(o.thumb, undefined, `${o.name} no lleva pantallas`);
     }
   }
