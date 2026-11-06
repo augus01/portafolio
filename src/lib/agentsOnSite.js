@@ -38,8 +38,8 @@ function lights(scene, sunAt) {
   return sun;
 }
 
-/** Figura del agente `id`. Stack lleva su antena con ampolleta; arquitecto, su plano enrollado al costado. */
-function buildAgent(id) {
+/** Figura del agente `id`. Stack lleva su antena con ampolleta (`antenna` cambia su color); arquitecto, su plano enrollado. */
+function buildAgent(id, { antenna = INK } = {}) {
   const skin = mat(COLORS[id], { emissive: COLORS[id], emissiveIntensity: 0.4 });
   const white = mat(0xffffff), ink = mat(INK);
   const g = new THREE.Group();
@@ -57,7 +57,7 @@ function buildAgent(id) {
   });
   put(new THREE.TorusGeometry(0.06, 0.014, 8, 16, Math.PI), ink, 0, -0.05, 0.285, head).rotation.z = Math.PI;
   if (id === 'stack') {
-    put(new THREE.CylinderGeometry(0.015, 0.015, 0.22, 8), ink, 0, 0.41, 0, head);
+    put(new THREE.CylinderGeometry(0.015, 0.015, 0.22, 8), antenna === INK ? ink : mat(antenna), 0, 0.41, 0, head);
     put(new THREE.SphereGeometry(0.055, 12, 10), mat(BULB), 0, 0.54, 0, head);
   }
   if (id === 'arquitecto') {
@@ -284,5 +284,86 @@ export function mountAgentCard(canvas, id) {
     // Solo se anima con su ventana abierta.
     setActive(v) { active = v; if (v) lp.kick(); },
     dispose() { lp.stop(); ptr.off(); ro.disconnect(); freeRenderer(r); },
+  };
+}
+
+/**
+ * Los tres agentes juntos en el pie (recepción, arquitecto y stack), en un solo lienzo. Te siguen con la mirada,
+ * pestañean y, al pasar el cursor por `host` (el enlace a la oficina) o con foco, saltan uno tras otro.
+ */
+export function mountAgentTrio(canvas, host) {
+  const r = makeRenderer(canvas);
+  if (!r) return null;
+  r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene();
+  lights(scene, [5, 9, 6]);
+  const H = 0.62;
+  const cam = new THREE.OrthographicCamera(-1, 1, H, -H, 0.1, 20);
+  cam.position.set(0, -0.12, 5);
+  cam.lookAt(0, -0.12, 0);
+  const ids = ['recepcion', 'arquitecto', 'stack'];
+  const crew = ids.map((id, i) => {
+    // En el pie oscuro la antena de stack va en su naranja (la tinta no se vería), como en la figura plana.
+    const A = buildAgent(id, { antenna: COLORS.stack });
+    A.g.scale.setScalar(0.72);
+    A.g.position.x = (i - 1) * 0.62;
+    scene.add(A.g);
+    return { A, look: newLook(), phase: i * 1.3, hop: 0 };
+  });
+  crew.forEach((c, i) => { c.look.blinkAt = 2 + i * 0.9; });
+  const clock = new THREE.Clock();
+  const still = isStill();
+  let visible = false, prev = 0;
+  const ptr = pointer(() => lp.kick());
+  const size = () => {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    r.setSize(w, h, false);
+    cam.left = -H * (w / h); cam.right = H * (w / h); cam.updateProjectionMatrix();
+    lp.kick();
+  };
+  const ro = new ResizeObserver(size);
+  ro.observe(canvas);
+  const io = new IntersectionObserver((es) => { visible = es[0].isIntersecting; lp.kick(); }, { threshold: 0 });
+  io.observe(canvas);
+  const lp = loop(() => {
+    if (!visible) return false;
+    const t = clock.getElapsedTime();
+    const dt = Math.min(t - prev, 0.05); prev = t;
+    const up = host.matches(':hover') || host.matches(':focus-visible');
+    const p = ptr.fresh();
+    const b = canvas.getBoundingClientRect();
+    let moving = false;
+    crew.forEach((c, i) => {
+      // Saltan en ola al pasar el cursor por el enlace, como las figuras planas de antes.
+      const goal = up ? 1 : 0;
+      const delay = up ? i * 0.06 : 0;
+      c.hop += (goal - c.hop) * (still ? 1 : Math.min(1, dt * 12 * (t - (c.upAt || 0) > delay ? 1 : 0)));
+      if (up && !c.wasUp) c.upAt = t;
+      c.wasUp = up;
+      if (Math.abs(goal - c.hop) > 0.002) moving = true;
+      let gx = 0, gy = 0;
+      if (p) {
+        const cx = b.left + b.width * (0.5 + (i - 1) * 0.31);
+        gx = clamp((p.x - cx) / 300);
+        gy = clamp((p.y - (b.top + b.height * 0.35)) / 300);
+      } else if (!still) gx = idleX(t, c.phase);
+      pose(c.A, c.look, gx, gy, t, still);
+      c.A.g.position.y = c.hop * 0.16 + (still ? 0 : Math.sin(t * 1.6 + c.phase) * 0.012);
+    });
+    r.render(scene, cam);
+    return !still || moving;
+  });
+  size();
+  const onHover = () => lp.kick();
+  host.addEventListener('pointerenter', onHover);
+  host.addEventListener('pointerleave', onHover);
+  host.addEventListener('focus', onHover);
+  host.addEventListener('blur', onHover);
+  return {
+    dispose() {
+      lp.stop(); ptr.off(); ro.disconnect(); io.disconnect(); freeRenderer(r);
+      ['pointerenter', 'pointerleave', 'focus', 'blur'].forEach((ev) => host.removeEventListener(ev, onHover));
+    },
   };
 }

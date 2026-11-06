@@ -118,3 +118,27 @@ export function useAgentCard(canvasRef, agent, open, talkKey) {
 
   useEffect(() => () => { if (ctlRef.current) { ctlRef.current.dispose(); ctlRef.current = null; } }, []);
 }
+
+/**
+ * Los tres agentes del pie en 3D, dentro del enlace `hostRef` (lienzo `[data-trio-gl]`). Se montan cuando el pie se
+ * acerca; al lograrlo, el enlace lleva `is-3d` y las figuras planas (respaldo sin WebGL) se ocultan.
+ */
+export function useAgentTrio(hostRef) {
+  useEffect(() => {
+    const host = hostRef.current;
+    const canvas = host && host.querySelector('[data-trio-gl]');
+    if (!canvas || !('IntersectionObserver' in window)) return undefined;
+    let cancelled = false, ctl = null;
+    const io = new IntersectionObserver((es) => {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      load().then(({ mountAgentTrio }) => {
+        if (cancelled) return;
+        ctl = mountAgentTrio(canvas, host);
+        if (ctl) host.classList.add('is-3d');
+      }).catch(() => { /* sin WebGL: quedan las figuras planas */ });
+    }, { rootMargin: '400px 0px' });
+    io.observe(host);
+    return () => { cancelled = true; io.disconnect(); if (ctl) ctl.dispose(); host.classList.remove('is-3d'); };
+  }, [hostRef]);
+}

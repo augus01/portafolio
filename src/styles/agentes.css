@@ -125,3 +125,10 @@ body:has(.hab-pop.is-open) .ap-navwrap,body:has(.arq-pop.is-open) .ap-navwrap{vi
   .arq-pop,.arq-pop.is-open,.arq-veil,.arq-veil.is-open{transition:none}
   .hab-pop__say.body-sm,.hab-pop__me.body-sm{animation:none}
 }
+
+/* ---------- Los tres agentes del pie, en 3D ---------- */
+/* El lienzo ocupa el lugar de las tres figuras planas; estas quedan de respaldo sin WebGL. */
+.ap-foot__agents{position:relative}
+.ap-foot__gl{display:none}
+.ap-foot__agents.is-3d .ap-agent{visibility:hidden}
+.ap-foot__agents.is-3d .ap-foot__gl{display:block;position:absolute;left:0;right:0;bottom:0;height:calc(100% + var(--space-4));width:100%;pointer-events:none}
