@@ -32,6 +32,9 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   // Último agente que habló: al entrar, recepción (saluda ella).
   const lastRef = useRef(MAIN);
   const vivoRef = useRef(true);
+  // Agente con quien conversas de cerca (null: vista general con las tres tarjetas). Mientras hay uno, la cámara se
+  // queda acercada al que habla y solo se ve su tarjeta.
+  const focusRef = useRef(null);
   const msg = (who, text) => ({ id: ++idRef.current, who, text });
 
   const [state, setState] = useState(() => {
@@ -46,23 +49,29 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
       typing: false,
       live: '',
       histOpen: false,
+      focus: null,
       greet: text,
     };
   });
 
   // Globos: cada agente que responde, uno tras otro (primero quien deriva, después a quien deriva), con su globo y su
-  // anillo, sin mover la cámara. Solo con `focus: true` (al elegir un agente) la cámara se le acerca. Aviso completo
-  // para lectores de pantalla.
-  const bubbles = useCallback((replies, opts) => {
+  // anillo. Con un agente elegido (vista cercana) la cámara se acerca a cada uno que habla; en la vista general no se
+  // mueve. Aviso completo para lectores de pantalla.
+  const bubbles = useCallback((replies) => {
     clearTimeout(seqRef.current);
     const s = sceneRef.current;
-    const focus = !!(opts && opts.focus);
+    const focus = !!focusRef.current;
     const play = (i) => {
       const r = replies[i];
       if (!r) return;
       s.say({ [r.agent]: r.text }, { focus });
       s.speak(r.agent);
       lastRef.current = r.agent;
+      // De cerca, la tarjeta y la cámara siguen al agente que toma la conversación (también al derivar).
+      if (focusRef.current && focusRef.current !== r.agent) {
+        focusRef.current = r.agent;
+        setState((st) => ({ ...st, focus: r.agent, to: st.to ? r.agent : st.to }));
+      }
       if (i < replies.length - 1) seqRef.current = setTimeout(() => play(i + 1), holdFor(r));
     };
     if (!replies.length) { s.say({}, { focus: false }); s.speak(null); return; }
@@ -95,7 +104,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   const recep = (text, patch, passText) => {
     const pass = toRecep(passText);
     push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', text)]), { ...(patch || {}), ...(pass.length ? { to: null } : {}) });
-    if (pass.length) sceneRef.current.select(null);
+    if (pass.length) sceneRef.current.select(focusRef.current ? 'recepcion' : null);
     bubbles(pass.concat([{ agent: 'recepcion', text }]));
   };
 
@@ -109,7 +118,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     // Si estabas con arquitecto o stack, primero te avisa que el recado lo toma recepción y la cámara viaja a ella.
     const pass = toRecep(chat.handoffLead);
     push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', ask)]), { lead: pending || { step: 'name' }, to: null });
-    sceneRef.current.select(null);
+    sceneRef.current.select(focusRef.current ? 'recepcion' : null);
     // Si otro agente acaba de responder, su globo va antes y recepción suma el suyo.
     bubbles((prev || []).filter((r) => r.agent !== 'recepcion').concat(pass, [{ agent: 'recepcion', text: ask }]));
   };
@@ -157,7 +166,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     setState((st) => ({ ...st, typing: true }));
     clearTimeout(seqRef.current);
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
-    sceneRef.current.say(from ? { [from]: '…' } : {}, { focus: false });
+    sceneRef.current.say(from ? { [from]: '…' } : {}, { focus: !!focusRef.current });
     const local = () => answer(text, { topics: chat.topics, agents, small: chat.small, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
     // Con VITE_CHAT_API_URL pide la respuesta a la IA; si no hay URL o falla (null), responde con las reglas locales.
     // Los saludos y agradecimientos los responde siempre el agente local, con su voz y sin derivar.
@@ -190,26 +199,33 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   else if (!vis) { chips = chat.visitors.map((v) => ({ label: v.label, pick: () => pickVisitor(v) })); chipsLabel = chat.visitorsLabel; }
   else chips = vis.sugs.map((q) => ({ label: q, pick: () => send(q) }));
 
-  // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó. Antes de tu primer mensaje es el único
-  // momento en que la cámara se acerca: dice su presentación de cerca y, al hablarle, vuelve a la vista general. Una vez
-  // empezada la conversación, nunca más hay zoom. Al soltarlo, vuelve a la vista general.
+  // Entra a la vista cercana con `id`: la cámara se le acerca y queda solo su tarjeta.
+  const focusOn = (id) => {
+    focusRef.current = id;
+    setState((st) => (st.focus === id ? st : { ...st, focus: id }));
+  };
+
+  // Elegir un agente ("Hablar con …" o clic en la maqueta; con `fromScene` el clic vino de la maqueta, que ya lo marcó):
+  // la cámara se le acerca, se presenta y su tarjeta es la única a la vista. Al soltarlo vuelve la vista general.
   function pick(id, fromScene) {
     // Elegir a arquitecto o stack deja en pausa un recado en curso: lo que escribas va para ellos.
     setState((st) => ({ ...st, to: id || null, ...(id && id !== MAIN && leadOpen(st.lead) ? { lead: { ...st.lead, paused: true } } : {}) }));
     if (!fromScene) sceneRef.current.select(id || null);
     if (!id) { unfocus(); return; }
+    focusOn(id);
     if (state.typing) return;
     const intro = agents[id].intro;
     push([msg(id, intro)]);
-    // Zoom solo antes de empezar a hablar: si ya escribiste algo, el agente se presenta sin mover la cámara.
-    const talked = state.msgs.some((m) => m.who === 'visitor');
-    if (talked) sceneRef.current.unfocus();
-    bubbles([{ agent: id, text: intro }], { focus: !talked });
+    bubbles([{ agent: id, text: intro }]);
   }
 
-  // Esc o soltar al agente: corta la secuencia de respuestas y vuelve a la vista general, sin globo.
+  // Esc, "Cambiar de agente" o soltar al agente: corta la secuencia de respuestas y vuelve a la vista general, con las
+  // tres tarjetas y sin globo.
   function unfocus() {
     clearTimeout(seqRef.current);
+    focusRef.current = null;
+    setState((st) => ({ ...st, focus: null, to: null }));
+    sceneRef.current.select(null);
     sceneRef.current.speak(null);
     sceneRef.current.unfocus();
   }
@@ -219,19 +235,24 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   const lastAgent = [...state.msgs].reverse().find((m) => m.who !== 'visitor')?.who;
   const toName = state.to ? agents[state.to].name : null;
   // Agente con quien conversas: su tarjeta es la que se abre con el hilo y la caja para escribir.
-  const active = state.to || lastAgent || MAIN;
+  const active = state.focus || state.to || lastAgent || MAIN;
   const withName = agents[active]?.name || chat.placeholderAll;
+  // Escribirle o usar un chip desde la vista general también te acerca al agente de la tarjeta abierta.
+  const enter = () => { if (!focusRef.current) { sceneRef.current.select(active); focusOn(active); } };
+  chips = chips.map((c) => ({ ...c, pick: () => { if (state.typing) return; enter(); c.pick(); } }));
   const placeholder = inLead ? chat.lead.placeholders[state.lead.step] : chat.placeholder(withName);
 
   return {
     msgs: state.msgs,
     to: state.to,
     active,
-    // Pregunta lista de la tarjeta de un agente: le habla a él directo, sin acercar la cámara.
+    focus: state.focus,
+    // Pregunta lista de la tarjeta de un agente: le habla a él directo y la cámara se le acerca.
     ask: (id, q) => {
       // Como al elegirlo: hablarle a arquitecto o stack deja en pausa un recado en curso.
       if (id !== MAIN) setState((st) => (leadOpen(st.lead) ? { ...st, lead: { ...st.lead, paused: true } } : st));
       sceneRef.current.select(id);
+      focusOn(id);
       send(q, { to: id });
     },
     typing: state.typing,
@@ -245,7 +266,11 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     live: state.live,
     histOpen: state.histOpen,
     setDraft: (draft) => setState((st) => ({ ...st, draft })),
-    submit: () => send(state.draft),
+    submit: () => {
+      if (!String(state.draft || '').trim() || state.typing) return;
+      enter();
+      send(state.draft);
+    },
     toggleHist: () => setState((st) => ({ ...st, histOpen: !st.histOpen })),
     setTo: (id, fromScene) => pick(id, fromScene),
     unfocus,

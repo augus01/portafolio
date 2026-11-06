@@ -179,6 +179,11 @@
 .ap-ofd__cards{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:var(--space-3);align-items:end}
 .ap-ofd__cards[data-open="1"]{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)}
 .ap-ofd__cards[data-open="2"]{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr)}
+/* Vista cercana: solo la tarjeta del agente con quien conversas, a la izquierda; la cámara deja al agente a la derecha
+   (--off-focus-shift, fracción del ancho) y más abajo que en la vista general (--off-focus-lift). Lo lee officeEngine.js. */
+.ap-off__stage{--off-focus-lift:.04;--off-focus-shift:.2}
+.ap-ofd.is-near{left:var(--space-6);transform:none;width:min(540px,calc(46% - var(--space-6)))}
+.ap-ofd.is-near .ap-ofd__cards{grid-template-columns:minmax(0,1fr)}
 /* La maqueta sube y se aleja para quedar entera sobre las tarjetas (lo lee officeEngine.js). */
 .ap-off__stage{--off-room-lift:.2;--off-room-zoom:1.3}
 .ap-ofc{display:flex;flex-direction:column;gap:var(--space-3);min-width:0;box-sizing:border-box;padding:var(--space-4);border:1.5px solid var(--off-q-line);border-radius:20px;background:var(--off-panel-bg);color:var(--off-panel-ink);box-shadow:var(--off-panel-shadow)}
@@ -220,6 +225,9 @@
 @media (max-width: 899px){
   .ap-off__stage{--off-room-lift:.22;--off-room-zoom:1.15}
   .ap-ofd{bottom:var(--space-2);width:calc(100% - var(--space-4))}
+  .ap-off__stage{--off-focus-lift:.3;--off-focus-shift:0}
+  .ap-ofd.is-near{left:50%;transform:translateX(-50%);width:calc(100% - var(--space-4))}
+  .ap-ofd.is-near .ap-ofd__cards{grid-template-columns:minmax(0,1fr)}
   .ap-ofd__cards[data-open]{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ap-ofd__ask{display:none}
   .ap-ofd__cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}

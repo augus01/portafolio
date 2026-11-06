@@ -134,8 +134,9 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   });
 
   // Cámara isométrica con giro limitado.
-  const view = { theta: Math.PI / 4, el: Math.atan(1 / Math.SQRT2), size: 7.2, target: new THREE.Vector3(0, 0.6, 0) };
-  const goal = { theta: view.theta, el: view.el, size: view.size, target: view.target.clone() };
+  // `lift` y `shift` corren el encuadre (fracción del alto y del ancho) para que el agente no quede bajo la conversación.
+  const view = { theta: Math.PI / 4, el: Math.atan(1 / Math.SQRT2), size: 7.2, target: new THREE.Vector3(0, 0.6, 0), lift: 0, shift: 0 };
+  const goal = { theta: view.theta, el: view.el, size: view.size, target: view.target.clone(), lift: 0, shift: 0 };
   const TH_MIN = 0.0, TH_MAX = Math.PI / 2 - 0.12;
   let mode = 'iso';
   // Agente al que se acerca la cámara mientras habla (null: vista general). FOCUS es la fracción del encuadre general
@@ -143,12 +144,16 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   let focus = null;
   const FOCUS = 0.36, FOCUS_Y = 0.3;
   // La conversación ocupa el pie del escenario: --off-room-lift (fracción del alto) sube la maqueta y --off-room-zoom
-  // la aleja para que entre completa arriba (oficina.css). Se leen al cambiar el tamaño.
-  let lift = 0, zoom = 1;
+  // la aleja para que entre completa arriba (oficina.css). De cerca, --off-focus-lift y --off-focus-shift (fracción del
+  // ancho, hacia la derecha) dejan al agente fuera de la tarjeta de la conversación. Se leen al cambiar el tamaño.
+  let lift = 0, zoom = 1, focusLift = 0, focusShift = 0;
   const readFrame = () => {
     const cs = getComputedStyle(stage);
-    lift = parseFloat(cs.getPropertyValue('--off-room-lift')) || 0;
-    zoom = parseFloat(cs.getPropertyValue('--off-room-zoom')) || 1;
+    const num = (k, d) => { const n = parseFloat(cs.getPropertyValue(k)); return Number.isFinite(n) ? n : d; };
+    lift = num('--off-room-lift', 0);
+    zoom = num('--off-room-zoom', 1) || 1;
+    focusLift = num('--off-focus-lift', lift);
+    focusShift = num('--off-focus-shift', 0);
   };
   readFrame();
   const baseSize = () => 7.2 * zoom * Math.max(1, 1.15 / (stage.clientWidth / stage.clientHeight));
@@ -156,8 +161,12 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     if (focus) {
       goal.target.set(focus.pos[0], focus.pos[1] + FOCUS_Y, focus.pos[2]);
       goal.size = baseSize() * FOCUS;
+      goal.lift = focusLift;
+      goal.shift = focusShift;
       return;
     }
+    goal.lift = lift;
+    goal.shift = 0;
     goal.target.set(0, 0.6, 0);
     goal.size = baseSize() * (mode === 'top' ? 0.85 : 1);
   };
@@ -175,10 +184,12 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
   };
   resize();
   view.size = goal.size;
+  view.lift = goal.lift;
   const updateCamera = () => {
     const aspect = stage.clientWidth / stage.clientHeight || 1;
-    cam.left = -view.size * aspect; cam.right = view.size * aspect;
-    const s = 2 * lift * view.size;
+    const sx = 2 * view.shift * view.size * aspect;
+    cam.left = -view.size * aspect - sx; cam.right = view.size * aspect - sx;
+    const s = 2 * view.lift * view.size;
     cam.top = view.size - s; cam.bottom = -view.size - s;
     cam.updateProjectionMatrix();
     const d = 40;
@@ -255,6 +266,8 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     view.theta += (goal.theta - view.theta) * k;
     view.el += (goal.el - view.el) * k;
     view.size += (goal.size - view.size) * k;
+    view.lift += (goal.lift - view.lift) * k;
+    view.shift += (goal.shift - view.shift) * k;
     view.target.lerp(goal.target, k);
     updateCamera();
     AG.forEach((a, i) => {

@@ -3,8 +3,8 @@ import { Icon } from '../../atoms/Icon';
 import { OfficeLeadCard } from '../../molecules/OfficeLeadCard';
 import { OfficeAgentCard } from '../../molecules/OfficeAgentCard';
 
-// Conversación al pie de la maqueta (artefacto "Chat B · Elige con quién hablar"): "¿Con quién quieres hablar?" y las
-// tarjetas de los tres agentes. La de quien conversas (al entrar, recepción) se abre con el hilo, la ficha del recado,
+// Conversación al pie de la maqueta (artefacto "Chat B · Elige con quién hablar"): en la vista general, "¿Con quién
+// quieres hablar?" y las tarjetas de los tres agentes; al elegir uno, la cámara se le acerca y queda solo su tarjeta. La de quien conversas (al entrar, recepción) se abre con el hilo, la ficha del recado,
 // los chips y la caja para escribir; las otras ofrecen dos preguntas listas y "Hablar con …".
 export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
   const inputId = `${historyId}-in`;
@@ -17,18 +17,25 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
   }, [chat.msgs.length, chat.typing, chat.active]);
   const list = Object.values(agents);
   const thread = chat.msgs.slice(-6);
+  // Vista cercana: solo la tarjeta del agente con quien conversas. "Cambiar de agente" vuelve a la vista general con las
+  // tres tarjetas y deja el foco en "Hablar con …" del siguiente.
+  const near = !!chat.focus;
+  const shown = near ? list.filter((a) => a.id === chat.active) : list;
   const changeAgent = () => {
     const other = list.find((a) => a.id !== chat.active);
-    goRefs.current[other.id]?.focus();
+    chat.unfocus();
+    requestAnimationFrame(() => goRefs.current[other.id]?.focus());
   };
   return (
-    <section className="ap-ofd" ref={rootRef} aria-label={texts.regionLabel}>
-      <div className="ap-ofd__ask">
-        <h2 className="ap-ofd__title subheading">{texts.pick.title}</h2>
-        <p className="ap-ofd__lead body-sm">{texts.pick.lead}</p>
-      </div>
-      <div className="ap-ofd__cards" data-open={list.findIndex((a) => a.id === chat.active)}>
-        {list.map((a) => (
+    <section className={['ap-ofd', near && 'is-near'].filter(Boolean).join(' ')} ref={rootRef} aria-label={texts.regionLabel}>
+      {!near && (
+        <div className="ap-ofd__ask">
+          <h2 className="ap-ofd__title subheading">{texts.pick.title}</h2>
+          <p className="ap-ofd__lead body-sm">{texts.pick.lead}</p>
+        </div>
+      )}
+      <div className="ap-ofd__cards" data-open={near ? undefined : list.findIndex((a) => a.id === chat.active)}>
+        {shown.map((a) => (
           <OfficeAgentCard
             key={a.id}
             ref={(el) => { goRefs.current[a.id] = el; }}
