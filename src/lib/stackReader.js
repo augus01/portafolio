@@ -33,11 +33,15 @@ export function mountStackReader(stage, opts) {
   var M = function (c, o) { return new THREE.MeshStandardMaterial(Object.assign({ color: c, roughness: 0.88, metalness: 0 }, o || {})); };
   var add = function (geo, m, x, y, z, parent) { var p = new THREE.Mesh(geo, m); p.position.set(x, y, z); p.castShadow = true; p.receiveShadow = true; (parent || scene).add(p); return p; };
 
+  /* `attentive` (ficha de cada tecnología): sin pufón ni libro, de pie flotando, atento al usuario y siguiendo el cursor. */
+  var attentive = !!opts.attentive;
   /* Pufón (banqueta baja) donde se sienta */
-  var seatM = M(0x2f3a66), legM = M(0x17171c);
-  add(new THREE.CylinderGeometry(0.34, 0.34, 0.12, 32), seatM, 0, 0.3, 0);
-  add(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 12), legM, 0, 0.15, 0);
-  add(new THREE.CylinderGeometry(0.28, 0.28, 0.04, 24), legM, 0, 0.02, 0);
+  if (!attentive) {
+    var seatM = M(0x2f3a66), legM = M(0x17171c);
+    add(new THREE.CylinderGeometry(0.34, 0.34, 0.12, 32), seatM, 0, 0.3, 0);
+    add(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 12), legM, 0, 0.15, 0);
+    add(new THREE.CylinderGeometry(0.28, 0.28, 0.04, 24), legM, 0, 0.02, 0);
+  }
   var shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), new THREE.ShadowMaterial({ opacity: 0.12 }));
   shadowFloor.rotation.x = -Math.PI / 2; shadowFloor.position.y = 0.001; shadowFloor.receiveShadow = true; scene.add(shadowFloor);
 
@@ -61,7 +65,7 @@ export function mountStackReader(stage, opts) {
   mouthO.scale.set(1, 1.25, 0.5); mouthO.visible = false;
   add(new THREE.CylinderGeometry(0.015, 0.015, 0.22, 8), ink, 0, 0.41, 0, head);
   var bulb = add(new THREE.SphereGeometry(0.055, 12, 10), M(0xf5a8c0), 0, 0.54, 0, head);
-  var SIT_Y = 0.36 + 0.78; /* asiento + altura del cuerpo */
+  var SIT_Y = attentive ? 0.9 : 0.36 + 0.78; /* asiento + altura del cuerpo; atento, flota justo sobre el piso */
   agent.position.set(0, SIT_Y, 0);
   /* De frente a la cámara; `facing` lo gira (en la ficha mira hacia el logo, a su izquierda). */
   agent.rotation.y = opts.facing == null ? Math.PI / 4 - 0.15 : opts.facing;
@@ -83,6 +87,7 @@ export function mountStackReader(stage, opts) {
   book.position.set(0, -0.55, 0.3);
   book.rotation.x = -0.9;
   agent.add(book);
+  book.visible = !attentive;
   var BOOK_REST = { y: -0.55, z: 0.3, rx: -0.9 };
 
   /* Cámara fija, isométrica */
@@ -126,6 +131,11 @@ export function mountStackReader(stage, opts) {
   var cheer = function (txt) { jumpWith('cheer', txt); };
   stage.addEventListener('pointerenter', scare);
   stage.addEventListener('pointerdown', scare);
+  /* Atento: sigue el cursor con la cabeza y los ojos */
+  var ptr = null;
+  var onMove = function (e) { ptr = { x: e.clientX, y: e.clientY }; };
+  if (attentive) window.addEventListener('pointermove', onMove, { passive: true });
+  var clamp1 = function (n) { return Math.max(-1, Math.min(1, n)); };
 
   var v = new THREE.Vector3();
   var ease = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
@@ -134,7 +144,22 @@ export function mountStackReader(stage, opts) {
     if (!visible || document.hidden) return;
     var t = now(), tt = t - S.t0;
     var headX = 0.75, headY = 0, eyeS = 0.45, y = SIT_Y, squash = 1, armUp = 0, bookFlyT = 0, o = false, tilt = 0;
-    if (S.mode === 'read') {
+    if (S.mode === 'read' && attentive) {
+      /* Listo y atento: de pie, flota suave, ojos abiertos mirando al usuario (o al cursor) y pestañea */
+      var gx = 0, gy = 0;
+      if (ptr && !reduced) {
+        var rc = stage.getBoundingClientRect();
+        gx = clamp1((ptr.x - (rc.left + rc.width * 0.5)) / (rc.width * 2.2));
+        gy = clamp1((ptr.y - (rc.top + rc.height * 0.4)) / (rc.height * 1.6));
+      }
+      headX = 0.05 + gy * 0.35;
+      headY = gx * 0.6;
+      eyeS = 1;
+      if (!reduced) y += Math.sin(t * 1.14) * 0.04;
+      eyes.forEach(function (e) { e.pupil.position.x = gx * 0.025; e.pupil.position.y = -gy * 0.02; });
+      if (!reduced && S.blinkT < 0 && t > S.blinkAt) S.blinkT = t;
+      if (S.blinkT >= 0) { var bk = (t - S.blinkT) / 0.2; if (bk >= 1) { S.blinkT = -1; S.blinkAt = t + 3 + Math.random() * 3; } else eyeS *= Math.max(0.1, Math.abs(1 - 2 * bk)); }
+    } else if (S.mode === 'read') {
       /* Absorto: cabeza gacha, ojos entrecerrados que van de línea en línea, respira muy lento */
       headX = 0.62 + (reduced ? 0 : Math.sin(t * 0.9 + S.nodSeed) * 0.04);
       headY = reduced ? 0 : Math.sin(t * 0.6) * 0.06;
@@ -155,8 +180,9 @@ export function mountStackReader(stage, opts) {
       eyeS = 0.45 + pre * 1.0;
       var happy = S.kind === 'cheer';
       o = !happy;
-      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.scale.setScalar(0.7); });
+      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.position.y = 0; e.pupil.scale.setScalar(0.7); });
       if (happy) eyeS = 1;
+      if (attentive) headX = 0;
       if (!reduced && jump > 0 && jump < 1) {
         y += Math.sin(jump * Math.PI) * 0.45;
         squash = 1 + Math.sin(jump * Math.PI) * 0.12;
@@ -165,7 +191,7 @@ export function mountStackReader(stage, opts) {
         bookFlyT = jump;
       } else if (!reduced && jump >= 1) { var lnd = ease((tt - 0.72) / 0.18); squash = 1 - Math.sin(lnd * Math.PI) * 0.1; }
       if (!reduced && tt > 0.72) bookFlyT = 1;
-      if (tt > (happy ? 1.3 : 2.4)) { S.mode = 'calm'; S.t0 = t; stage.classList.remove('is-awake'); eyes.forEach(function (e) { e.pupil.scale.setScalar(1); }); }
+      if (tt > (happy ? 1.3 : 2.4)) { S.mode = attentive ? 'read' : 'calm'; S.t0 = t; stage.classList.remove('is-awake'); eyes.forEach(function (e) { e.pupil.scale.setScalar(1); }); }
     } else {
       /* Se calma: respira, mira alrededor un segundo y retoma el libro */
       var c = tt / 1.4;
@@ -186,8 +212,15 @@ export function mountStackReader(stage, opts) {
     agent.rotation.z = tilt;
     eyes.forEach(function (e) { e.g.scale.set(Math.max(1, eyeS), Math.max(0.08, eyeS), 1); });
     bulb.position.y = 0.54 + (S.mode === 'wake' && !reduced ? Math.sin(tt * 40) * 0.015 : 0);
-    armL.rotation.x = armR.rotation.x = 0.9 - armUp * 2.4;
-    armL.position.y = armR.position.y = -0.5 + armUp * 0.25;
+    if (attentive) {
+      /* Brazos a los lados, un poco abiertos; al saltar los levanta */
+      armL.rotation.x = armR.rotation.x = 0.1 - armUp * 2.6;
+      armL.rotation.z = -0.15 * (1 - armUp); armR.rotation.z = 0.15 * (1 - armUp);
+      armL.position.set(-0.25, -0.42 + armUp * 0.3, 0); armR.position.set(0.25, -0.42 + armUp * 0.3, 0);
+    } else {
+      armL.rotation.x = armR.rotation.x = 0.9 - armUp * 2.4;
+      armL.position.y = armR.position.y = -0.5 + armUp * 0.25;
+    }
     /* Libro: sale despedido hacia arriba y cae de vuelta a sus manos */
     if (S.mode === 'wake') {
       var f = Math.min(1, bookFlyT);
@@ -220,6 +253,7 @@ export function mountStackReader(stage, opts) {
       document.removeEventListener('visibilitychange', kick);
       stage.removeEventListener('pointerenter', scare);
       stage.removeEventListener('pointerdown', scare);
+      window.removeEventListener('pointermove', onMove);
       stage.classList.remove('is-awake');
       if (bubble) bubble.classList.remove('is-on');
       scene.traverse(function (n) { if (n.geometry) n.geometry.dispose(); if (n.material) (Array.isArray(n.material) ? n.material : [n.material]).forEach(function (m) { m.dispose(); }); });

@@ -11,7 +11,7 @@ const halo = (hex) => {
 };
 
 // Ficha de una tecnología, al centro de la pantalla sobre un velo: categoría, logo a color flotando en 3D con stack
-// (el mismo de la cinta: sentado en su pufón leyendo, girado hacia el logo; salta de emoción al responder), qué logré con ella y en qué proyectos la usé. Stack responde las preguntas
+// (el mismo de la cinta, sin pufón ni libro: de pie, atento y siguiendo el cursor; salta de emoción al responder), qué logré con ella y en qué proyectos la usé. Stack responde las preguntas
 // listas de `ask` en un hilo y "Seguir con stack en la oficina" abre la oficina con él elegido y la pregunta escrita.
 // Va en <body> para quedar sobre la página. Al abrir, el foco va a "Cerrar".
 export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {

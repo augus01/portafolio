@@ -45,7 +45,8 @@ export function useStackReader(stageRef, scare, cheer) {
 }
 
 /**
- * stack de la cinta en la ficha de una tecnología (`SkillCard`): sentado leyendo, girado hacia el logo. Se monta al
+ * stack de la cinta en la ficha de una tecnología (`SkillCard`): sin pufón ni libro, de pie y atento al usuario
+ * (sigue el cursor con la mirada). Se monta al
  * abrir la ficha y se libera al cerrarla; cada vez que sube `talkKey` (respondió una pregunta) salta de emoción.
  */
 export function useStackCard(stageRef, open, talkKey) {
@@ -58,7 +59,7 @@ export function useStackCard(stageRef, open, talkKey) {
     let cancelled = false;
     import('../lib/stackReader').then(({ mountStackReader }) => {
       if (cancelled) return;
-      readerRef.current = mountStackReader(stage, { facing: 0.4, size: 1.05, lookY: 0.8 });
+      readerRef.current = mountStackReader(stage, { attentive: true, facing: Math.PI / 4 - 0.2, size: 1.0, lookY: 0.8 });
     }).catch(() => { /* sin stack 3D */ });
     return () => {
       cancelled = true;
