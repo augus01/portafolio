@@ -48,8 +48,11 @@ export function mountStackReader(stage, opts) {
   var body = add(new THREE.ConeGeometry(0.27, 0.55, 24), skin, 0, -0.5, 0, agent); body.rotation.x = Math.PI;
   var eyes = [-0.1, 0.1].map(function (x) {
     var eg = new THREE.Group(); eg.position.set(x, 0.05, 0.25); head.add(eg);
-    add(new THREE.SphereGeometry(0.075, 16, 12), white, 0, 0, 0, eg);
-    return { g: eg, pupil: add(new THREE.SphereGeometry(0.038, 12, 10), ink, 0, 0, 0.06, eg) };
+    var ball = add(new THREE.SphereGeometry(0.075, 16, 12), white, 0, 0, 0, eg);
+    /* Ojo feliz (emocionado): arco cerrado hacia arriba, como ^ */
+    var arc = add(new THREE.TorusGeometry(0.05, 0.014, 8, 16, Math.PI), ink, 0, -0.015, 0.06, eg);
+    arc.visible = false;
+    return { g: eg, ball: ball, arc: arc, pupil: add(new THREE.SphereGeometry(0.038, 12, 10), ink, 0, 0, 0.06, eg) };
   });
   var mouth = add(new THREE.TorusGeometry(0.06, 0.014, 8, 16, Math.PI), ink, 0, -0.05, 0.285, head);
   mouth.rotation.z = Math.PI;
@@ -149,7 +152,8 @@ export function mountStackReader(stage, opts) {
       eyeS = 0.45 + pre * 1.0;
       var happy = S.kind === 'cheer';
       o = !happy;
-      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.scale.setScalar(happy ? 1.15 : 0.7); });
+      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.scale.setScalar(0.7); });
+      if (happy) eyeS = 1;
       if (!reduced && jump > 0 && jump < 1) {
         y += Math.sin(jump * Math.PI) * 0.45;
         squash = 1 + Math.sin(jump * Math.PI) * 0.12;
@@ -169,8 +173,10 @@ export function mountStackReader(stage, opts) {
       if (c >= 1) { S.mode = 'read'; S.blinkAt = t + 2; S.pageAt = t + 3; }
     }
     mouth.visible = !o; mouthO.visible = o;
-    /* Emocionado: la sonrisa se agranda mientras dura el salto. */
-    var grin = S.mode === 'wake' && S.kind === 'cheer' ? 1.7 : 1;
+    /* Emocionado: ojos cerrados en arco (^ ^) y la sonrisa de siempre, apenas más grande. */
+    var joy = S.mode === 'wake' && S.kind === 'cheer';
+    eyes.forEach(function (e) { e.ball.visible = e.pupil.visible = !joy; e.arc.visible = joy; });
+    var grin = joy ? 1.25 : 1;
     mouth.scale.set(grin, grin, 1);
     head.rotation.x = headX; head.rotation.y = headY; agent.position.y = y;
     agent.scale.set(1 / Math.sqrt(squash), squash, 1 / Math.sqrt(squash));
