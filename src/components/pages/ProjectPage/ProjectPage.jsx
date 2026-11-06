@@ -2,7 +2,6 @@ import { useEffect, useId, useRef } from 'react';
 import { CasePageTemplate } from '../../templates/CasePageTemplate';
 import { NavBar } from '../../molecules/NavBar';
 import { MobileNavBar } from '../../molecules/MobileNavBar';
-import { CaseBackButton } from '../../molecules/CaseBackButton';
 import { MobileMenu } from '../../organisms/MobileMenu';
 import { CaseHead } from '../../organisms/CaseHead';
 import { CaseCover } from '../../organisms/CaseCover';
@@ -42,7 +41,6 @@ export function ProjectPage({ slug }) {
             <MobileMenu id={menuId} open={menu.open} {...mobileMenu} onClose={menu.closeMenu} onNavigate={menu.navigate} closeRef={menu.closeRef} />
           </div>
         )}
-        back={<CaseBackButton {...casePage.back} />}
         head={<CaseHead index={data.index} eyebrow={data.eyebrow} name={data.name} meta={data.meta} />}
         cover={<CaseCover label={casePage.coverLabel} cta={data.cta} building={data.building} {...data.cover} />}
         intro={<CaseIntro labels={{ project: casePage.projectLabel, links: casePage.linksLabel, stack: casePage.stackLabel }} {...data.intro} facts={data.facts} />}
