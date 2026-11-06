@@ -66,7 +66,8 @@ Reglas:
 - **Toda** la UI usa los tokens de `tokens.css` y las clases `.ap-*` de `components/bundle.css`. Prohibido usar valores literales de color, tamaño, radio, fuente o duración: si falta un token, se detiene y se propone.
 - Tipografía solo con las clases del sistema (`.wordmark`, `.hero`, `.display`, `.heading`, `.subheading`, `.lead`, `.body`, `.body-sm`, `.meta`, `.label`, `.code`).
 - Monocromo, sin acentos ni degradados, salvo las excepciones del hero documentadas en `INTEGRACION.md`.
-- Contenido en español de Chile, sin Lorem ipsum, sin emojis, botones con verbos concretos.
+- Contenido bilingüe: **inglés como idioma principal** (el sitio abre en inglés para los jueces) y español de Chile como alternativa, con la píldora de idioma de la nav. El español vive en `src/content/*.js` y el inglés en `src/content/en/*.js`, con los mismos exports y la misma forma (lo comprueban `src/content/i18n.test.js` y `src/lib/officeChat.test.js`). Todo texto nuevo va en los dos. Sin Lorem ipsum, sin emojis, botones con verbos concretos.
+- El idioma se maneja con `src/lib/lang.js` y `src/hooks/useLang.js` (clave `ap-lang` en localStorage, `<html lang>`); las páginas eligen el contenido con `pickLang`.
 - No se modifican los archivos de `design-system/` para un caso puntual; los cambios del sistema se documentan ahí mismo.
 - Sin MUI: los componentes se reimplementan en React con el mismo marcado, clases y props del sistema.
 
@@ -92,7 +93,7 @@ Los agentes de `/oficina/` responden con Claude Haiku 4.5 en Bedrock, detrás de
 
 Reglas:
 - Todo lo del chat se llama `chat-agentes` (stack, Lambda, tabla, API, budget, perfil `chat-agentes-haiku`) y lleva las etiquetas `project=portafolio` y `componente=chat-agentes`.
-- El contenido de los agentes sale solo de `src/content/office.js`; `infra/lambda/contenido.json` se regenera con `node scripts/chat-agentes-contenido.mjs`.
+- El contenido de los agentes sale solo de `src/content/office.js` (español) y `src/content/en/office.js` (inglés); `infra/lambda/contenido.json` (`{ es, en }`) se regenera con `node scripts/chat-agentes-contenido.mjs`. El sitio envía `lang` a la API; sin `lang` la Lambda responde en español.
 - El chat de reglas (`answer()`) es siempre el respaldo; sin `VITE_CHAT_API_URL` el sitio funciona igual.
 - Desplegar, cambiar budgets o etiquetas, o tocar Amplify genera cambios o gasto en AWS: se confirma con el usuario antes.
 
