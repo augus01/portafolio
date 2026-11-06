@@ -21,16 +21,22 @@ export function isConfirm(text) {
 }
 
 /**
- * Respuestas a una pregunta: el agente del primer tema que calza y, si hay otro tema de otro agente, este completa.
- * Si el visitante le habló a un agente (`to`, o el último que habló, `from`) y la pregunta también es de su tema, él
- * responde primero; si no sabe del tema, pasa la palabra con `handoff(agente)`. Cada vez que la palabra pasa a otro
- * agente hay un aviso (marcado `handoff: true`): `handoff` al derivar, `handoffMore` cuando otro completa.
- * Sin tema, responde recepción. Devuelve como máximo 4 respuestas `{ agent, text, handoff? }`.
+ * Respuestas a una pregunta. Los saludos y agradecimientos (`small`) los responde el agente al que le hablas (`to`, o
+ * el último que habló, `from`; sin ninguno, recepción), con su voz y sin derivar. Si no, responde el tema del agente
+ * pedido; si no hay, arquitecto antes que stack; si no, el primero que calza. Un tema con `unless` que calza no aplica.
+ * Si calza otro tema de otro agente, este completa (encadenamiento con `handoffMore`), salvo que sea el agente pedido
+ * que acaba de derivar: así el visitante no salta dos veces. Cada vez que la palabra pasa a otro agente hay un aviso
+ * (marcado `handoff: true`): `handoff` al derivar, `handoffMore` cuando otro completa. Sin tema, responde recepción.
+ * Devuelve como máximo 4 respuestas `{ agent, text, handoff? }`.
  */
-export function answer(question, { topics, agents, to, from, noMatch, noMatchHanded, handoff, handoffMore, handoffUnknown }) {
+export function answer(question, { topics, agents, small, to, from, noMatch, noMatchHanded, handoff, handoffMore, handoffUnknown }) {
   const n = normalize(question);
-  const hits = topics.filter((t) => t.rx.test(n));
   const asked = to || from;
+  if (small) {
+    const key = small.greetRx.test(n) ? 'greet' : small.thanksRx.test(n) ? 'thanks' : null;
+    if (key) return [{ agent: asked || 'recepcion', text: small[key][asked || 'recepcion'] }];
+  }
+  const hits = topics.filter((t) => t.rx.test(n) && !(t.unless && t.unless.test(n)));
   const out = [];
   if (!hits.length) {
     // Nadie sabe del tema: si estabas con arquitecto o stack, te pasa a recepción, que ofrece dejarle la pregunta a Augusto.
@@ -40,9 +46,10 @@ export function answer(question, { topics, agents, to, from, noMatch, noMatchHan
     out.push({ agent: 'recepcion', text: noMatch });
   }
   else {
-    const main = hits.find((h) => h.agent === asked) || hits[0];
+    const arq = hits.some((h) => h.agent === 'stack') && hits.find((h) => h.agent === 'arquitecto');
+    const main = hits.find((h) => h.agent === asked) || arq || hits[0];
     out.push({ agent: main.agent, text: main.text });
-    const other = hits.find((h) => h.agent !== main.agent);
+    const other = hits.find((h) => h.agent !== main.agent && h.agent !== asked);
     if (other) {
       const next = agents[other.agent];
       out.push({ agent: main.agent, handoff: true, text: handoffMore ? handoffMore(next) : `${next.name} te cuenta el resto.` });

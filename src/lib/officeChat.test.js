@@ -68,8 +68,8 @@ test('answer: el último agente que habló deriva la pregunta con aviso claro', 
   const out = answer('¿Cómo está armado Zam?', { ...opts(), from: 'recepcion', handoff: chat.handoff });
   assert.equal(out[0].agent, 'recepcion');
   assert.equal(out[0].handoff, true);
-  assert.match(out[0].text, /arquitecto.*Te llevo a su escritorio/);
-  assert.equal(out[1].agent, 'arquitecto');
+  assert.match(out[0].text, /stack.*Te llevo a su escritorio/);
+  assert.deepEqual(out.map((r) => r.agent), ['recepcion', 'stack']);
 });
 
 test('answer: si quien habló sabe del tema, no hay derivación', () => {
@@ -79,7 +79,7 @@ test('answer: si quien habló sabe del tema, no hay derivación', () => {
 });
 
 test('answer: si le preguntan a stack algo que también es suyo, responde él y anuncia a arquitecto', () => {
-  const out = answer('¿Qué tecnologías usó en Rumbo a Casa?', { ...opts('stack'), handoff: chat.handoff, handoffMore: chat.handoffMore });
+  const out = answer('¿Qué es Rumbo a Casa y con qué tecnologías está hecho?', { ...opts('stack'), handoff: chat.handoff, handoffMore: chat.handoffMore });
   assert.deepEqual(out.map((r) => r.agent), ['stack', 'stack', 'arquitecto']);
   assert.equal(out[1].handoff, true);
   assert.match(out[1].text, /Arquitecto .* te cuenta el resto/);
@@ -103,4 +103,47 @@ test('answer: una pregunta de recepción hecha a arquitecto pasa por su aviso', 
   const out = answer('¿Quién es Augusto?', { ...opts('arquitecto'), handoff: chat.handoff });
   assert.deepEqual(out.map((r) => r.agent), ['arquitecto', 'recepcion']);
   assert.match(out[0].text, /recepción.*Te llevo a su escritorio/);
+});
+
+test('recepción deriva "¿qué ha hecho Augusto?" a arquitecto', () => {
+  const out = answer('¿Qué ha hecho Augusto?', { ...opts('recepcion'), handoff: chat.handoff });
+  assert.deepEqual(out.map((r) => r.agent), ['recepcion', 'arquitecto']);
+});
+
+test('"¿Qué es Inkvibe?" solo arquitecto', () => {
+  assert.deepEqual(answer('¿Qué es Inkvibe?', opts()).map((r) => r.agent), ['arquitecto']);
+});
+
+test('"¿Cómo está hecho Inkvibe?" solo stack, también en mayúsculas', () => {
+  for (const q of ['¿Cómo está hecho Inkvibe?', '¿CÓMO ESTÁ HECHO INKVIBE?']) {
+    assert.deepEqual(answer(q, opts()).map((r) => r.agent), ['stack'], q);
+  }
+});
+
+test('"¿Qué sabe de React?" lo responde stack nombrando Inkvibe', () => {
+  const out = answer('¿Qué sabe de React?', opts());
+  assert.equal(out[0].agent, 'stack');
+  assert.match(out[0].text, /Inkvibe/);
+});
+
+test('dos territorios sin agente: arquitecto, aviso, stack', () => {
+  const out = answer('¿Qué es Inkvibe y cómo está hecho?', { ...opts(), handoffMore: chat.handoffMore });
+  assert.deepEqual(out.map((r) => r.agent), ['arquitecto', 'arquitecto', 'stack']);
+  assert.equal(out[1].handoff, true);
+});
+
+test('cada agente responde su propio saludo y agradecimiento, sin derivar', () => {
+  for (const id of ['recepcion', 'arquitecto', 'stack']) {
+    for (const [q, key] of [['HOLA', 'greet'], ['gracias!', 'thanks']]) {
+      const out = answer(q, { ...opts(id), small: chat.small, handoff: chat.handoff });
+      assert.deepEqual(out, [{ agent: id, text: chat.small[key][id] }], `${id} ${q}`);
+    }
+  }
+  assert.equal(answer('hola', { ...opts(), small: chat.small })[0].agent, 'recepcion');
+  assert.equal(answer('hola', { ...opts(), from: 'stack', small: chat.small })[0].agent, 'stack');
+});
+
+test('a stack le preguntan qué es Zam: deriva y no vuelve a stack', () => {
+  const out = answer('¿Qué es Zam?', { ...opts('stack'), handoff: chat.handoff, handoffMore: chat.handoffMore });
+  assert.deepEqual(out.map((r) => r.agent), ['stack', 'arquitecto']);
 });

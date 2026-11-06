@@ -138,7 +138,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     clearTimeout(seqRef.current);
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
     sceneRef.current.say(from ? { [from]: '…' } : {});
-    const local = () => answer(text, { topics: chat.topics, agents, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
+    const local = () => answer(text, { topics: chat.topics, agents, small: chat.small, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
     // Con VITE_CHAT_API_URL pide la respuesta a la IA; si no hay URL o falla (null), responde con las reglas locales.
     // En todo caso espera al menos TYPING_MS para que los puntos se vean.
     const espera = new Promise((resolve) => { timerRef.current = setTimeout(resolve, TYPING_MS); });
