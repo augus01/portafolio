@@ -209,3 +209,13 @@ test('armarSistema en inglés no le da al modelo frases en español para copiar'
   assert.match(s, /"I don't know"/);
   assert.match(armarSistema(todo.es), /"no lo sé"/);
 });
+test('interpretarRespuesta acepta el nombre del agente en vez del id (el modelo escribe "architect")', () => {
+  const r = interpretarRespuesta('{"intencion":"pregunta","agente":"architect","sabe":true,"texto":"Zam is a store app.","sigue":{"agente":"stack","texto":"Built with NestJS."}}', { pedido: null, contenido: todo.en });
+  assert.deepEqual(r.map((x) => x.agent), ['arquitecto', 'arquitecto', 'stack']);
+  const recep = interpretarRespuesta('{"agente":"reception","sabe":false,"texto":"I don\'t know."}', { pedido: 'stack', contenido: todo.en });
+  assert.deepEqual(recep.map((x) => x.agent), ['stack', 'recepcion']);
+  assert.equal(interpretarRespuesta('{"agente":"recepción","texto":"Hola."}', { pedido: null, contenido: todo.es })[0].agent, 'recepcion');
+});
+test('armarSistema en inglés aclara que "agente" va con el id', () => {
+  assert.match(armarSistema(todo.en, null, 'en'), /"agente" is always the id \(recepcion, arquitecto, stack\)/);
+});

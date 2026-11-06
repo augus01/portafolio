@@ -62,7 +62,7 @@ export function armarSistema(contenido, pedido = null, lang = 'es') {
     '',
     'Reglas:',
     lang === 'en'
-      ? '- Respond in English, with at most 3 sentences per agent, no emojis. The facts above are already in English: use them as they are. Call the agents reception, architect and stack; never write Spanish words.'
+      ? '- Respond in English, with at most 3 sentences per agent, no emojis. The facts above are already in English: use them as they are. In "texto" call the agents reception, architect and stack and never write Spanish words; in the JSON, "agente" is always the id (recepcion, arquitecto, stack).'
       : '- Responde en español de Chile, con un máximo de 3 frases por agente, sin emojis.',
     '- Habla solo del trabajo de Augusto y de la oficina. Si te piden otra cosa, vuelve al tema con amabilidad.',
     '- Usa solo los hechos de arriba. Si el dato no está, no lo inventes.',
@@ -98,6 +98,13 @@ export function armarMensajes({ historial, mensaje }) {
   return turnos;
 }
 
+// El modelo a veces pone el nombre del agente ("architect", "recepción") en vez de su id: se traduce al id.
+const idDe = (valor, contenido) => {
+  if (AGENTES.includes(valor)) return valor;
+  const v = String(valor || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return Object.entries(contenido.agentes).find(([, a]) => String(a.name).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '') === v)?.[0] ?? valor;
+};
+
 export function interpretarRespuesta(texto, { pedido, contenido }) {
   if (typeof texto !== 'string') return null;
   const ini = texto.indexOf('{');
@@ -109,7 +116,10 @@ export function interpretarRespuesta(texto, { pedido, contenido }) {
   } catch {
     return null;
   }
-  if (!obj || typeof obj !== 'object' || !AGENTES.includes(obj.agente)) return null;
+  if (!obj || typeof obj !== 'object') return null;
+  obj.agente = idDe(obj.agente, contenido);
+  if (obj.sigue && typeof obj.sigue === 'object') obj.sigue.agente = idDe(obj.sigue.agente, contenido);
+  if (!AGENTES.includes(obj.agente)) return null;
   if (typeof obj.texto !== 'string' || !obj.texto.trim()) return null;
   const text = obj.texto.trim().slice(0, MAX_RESPUESTA);
   // Saludo, gracias o ayuda: responde solo el agente al que le hablan (sin elegido, recepción), aunque el modelo ponga a otro.
