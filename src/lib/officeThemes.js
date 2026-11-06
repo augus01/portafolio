@@ -109,11 +109,12 @@ T.original = {
     };
     /* Huevo 2: closet de la esquina; la puerta derecha se abre y hay un agente parado */
     const cx = -4.62, cmat = mat.tealD, cin = M(0xf4f1ea);
-    box(0.04, 1.9, 1.7, cin, -4.96, 0, -3.4);
+    // El fondo y la base (crema) van por dentro de los costados y las puertas: si comparten cara con la caja turquesa, parpadean (z-fighting).
+    box(0.04, 1.86, 1.62, cin, -4.96, 0, -3.4);
     box(0.72, 1.9, 0.04, cmat, cx, 0, -4.23);
     box(0.72, 1.9, 0.04, cmat, cx, 0, -2.57);
     box(0.72, 0.04, 1.7, cmat, cx, 1.86, -3.4);
-    box(0.72, 0.04, 1.7, cin, cx, 0, -3.4);
+    box(0.64, 0.04, 1.62, cin, -4.615, 0, -3.4);
     box(0.03, 1.82, 0.8, cmat, -4.275, 0.04, -2.99);
     box(0.04, 0.45, 0.04, silver, -4.25, 0.85, -3.29);
     const doorR = new T.Group();
