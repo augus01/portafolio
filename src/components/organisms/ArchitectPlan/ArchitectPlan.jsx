@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../../atoms/Icon';
+import { AgentLink } from '../../atoms/AgentLink';
 import { useAgentCard } from '../../../hooks/useAgentsOnSite';
 import { officeHref } from '../../../lib/officeLink';
 
@@ -60,10 +61,9 @@ export function ArchitectPlan({ id, project, open, texts, onClose }) {
           <div className="arq-pop__fig"><canvas ref={glRef} className="arq-pop__gl" role="img" aria-label={texts.figure} /></div>
           <p className="arq-pop__bubble body" role="status"><span className="arq-pop__who label">{texts.agent} · {cur.label}</span>{cur.text}</p>
         </div>
-        <a className="arq-pop__more label" href={officeHref(texts.office, texts.agent, plan.ask)}>
+        <AgentLink agent="arquitecto" className="arq-pop__more" href={officeHref(texts.office, texts.agent, plan.ask)}>
           {texts.toOffice}
-          <Icon name="arrow-right" size="sm" />
-        </a>
+        </AgentLink>
       </aside>
     </>,
     document.body

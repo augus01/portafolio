@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../../atoms/Icon';
+import { AgentLink } from '../../atoms/AgentLink';
 import { useStackCard } from '../../../hooks/useStackReader';
 import { officeHref } from '../../../lib/officeLink';
 
@@ -76,10 +77,9 @@ export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {
             </div>
           </div>
         )}
-        <a className="hab-pop__btn label" href={officeHref(texts.office, texts.agent, texts.draft(item.name))}>
+        <AgentLink agent="stack" className="hab-pop__btn" href={officeHref(texts.office, texts.agent, texts.draft(item.name))}>
           {texts.toOffice}
-          <Icon name="arrow-right" size="sm" />
-        </a>
+        </AgentLink>
       </aside>
     </>,
     document.body

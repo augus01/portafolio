@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Icon } from '../../atoms/Icon';
+import { AgentLink } from '../../atoms/AgentLink';
 import { PageWipe } from '../../atoms/PageWipe';
 import { SectionHeadline } from '../SectionHeadline';
 import { useContactDesk } from '../../../hooks/useContactDesk';
@@ -45,10 +45,9 @@ export function ContactSection({ id, headline, enter, meta, hint, desk }) {
       <div className="ap-ct__grid">
         <div className="ap-ct__text ap-reveal">
           <SectionHeadline {...headline} />
-          <a className="ap-ct__enter label" href={enter.href} onClick={onEnter}>
+          <AgentLink agent="recepcion" className="ap-ct__enter" href={enter.href} onClick={onEnter}>
             {enter.label}
-            <Icon name="arrow-right" size="md" />
-          </a>
+          </AgentLink>
           <p className="ap-ct__meta body-sm">{meta}</p>
         </div>
         <div className="ap-ct__stage ap-reveal" ref={stageRef}>

@@ -8,9 +8,7 @@
 .ap-ct__text{display:flex;flex-direction:column;align-items:flex-start}
 
 /* Pista visible de la función creativa: botón amarillo de recepción que lleva a /oficina/. */
-.ap-ct__enter.label{margin-top:28px;display:inline-flex;align-items:center;gap:10px;min-height:var(--ct-enter-height);padding:0 var(--ct-enter-pad);box-sizing:border-box;border:var(--ct-stroke) solid var(--ink-primary);border-radius:var(--radius-pill);background:var(--ap-agent-recepcion);color:var(--ap-agent-ink);font:500 13px/1 var(--font-mono);letter-spacing:var(--ct-ui-tracking);text-transform:uppercase;text-decoration:none;transition:transform var(--dur-press) var(--ease-out)}
-@media (hover: hover){.ap-ct__enter.label:hover{transform:translateY(-2px)}}
-.ap-ct__enter.label:focus-visible{outline:3px solid var(--focus-ring);outline-offset:3px}
+.ap-ct__enter{margin-top:28px}
 .ap-ct__meta.body-sm{margin:20px 0 0;font-size:.875rem;line-height:1.5;color:var(--ink-secondary)}
 
 /* Escritorio 3D: el lienzo llena el recuadro; el globo lo ubica el motor sobre la cabeza del personaje. */
@@ -26,4 +24,4 @@
   .ap-ct__grid{grid-template-columns:1fr;gap:var(--space-8)}
   .ap-ct__stage{min-height:380px}
 }
-@media (prefers-reduced-motion: reduce){.ap-ct__enter.label,.ap-ct__bubble.label{transition:none}}
+@media (prefers-reduced-motion: reduce){.ap-ct__bubble.label{transition:none}}
