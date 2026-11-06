@@ -14,6 +14,7 @@ const toLanding = (item) => ({ ...item, href: item.href.startsWith('#') ? `/${it
 export const casePage = {
   nav: {
     brand: landingNav.brand,
+    labels: landingNav.labels,
     items: landingNav.items.map(toLanding),
     actions: landingNav.actions.map(toLanding),
   },

@@ -17,6 +17,11 @@ export const nav = {
   ],
 };
 
+// Píldora de idioma: muestra el idioma al que cambia.
+export const langToggle = { label: 'EN', ariaLabel: 'View in English', target: 'en' };
+
+export const meta = { documentTitle: 'Augusto Pinto · Portafolio' };
+
 // Menú móvil a pantalla completa (bajo 600px): enlaces grandes, llamada principal, enlace secundario y pie.
 export const mobileMenu = {
   links: [
