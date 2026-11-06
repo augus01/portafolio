@@ -1,6 +1,6 @@
 // Páginas dedicadas de cada proyecto (/proyectos/<slug>/), según las páginas de caso del artefacto "Hero · Augusto Pinto"
-// (4 nov 2026: Rumbo a Casa e Inkvibe, escritorio y móvil). Zam no tiene página en el artefacto ni capturas todavía:
-// usa la misma estructura con su logo y cómo está armado, solo con hechos ya publicados en el sitio.
+// (4 nov 2026: Rumbo a Casa e Inkvibe, escritorio y móvil). Zam no tiene página en el artefacto: usa la misma estructura
+// con pantallas hechas en Claude Design sobre los datos de docs/zam-pantallas/ (fuente en docs/zam-pantallas/fuente/).
 // vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build (por eso solo importa contenido plano).
 import { nav as landingNav, mobileMenu as landingMenu, footer as landingFooter } from './home.js';
 
@@ -205,25 +205,61 @@ export const cases = [
     cover: {
       badge: 'En desarrollo',
       logo: { brand: 'zam', symbol: '/proyectos/zam-simbolo-claro.svg', symbolWidth: 466, symbolHeight: 466, wordmark: 'zam' },
-      phones: [],
+      phones: [
+        { src: `${dir}/zam-tel-caja.webp`, alt: 'Caja del cajero en el teléfono: venta en curso de $7.342 con pan a granel y una línea sin código' },
+        { src: `${dir}/zam-tel-alerta.webp`, alt: 'Alerta en el teléfono: al ritmo actual te quedan unos 4 días de Leche entera 1L' },
+        { src: `${dir}/zam-tel-asistente.webp`, alt: 'Conversación con Zam en el teléfono: un gasto de $48.600 leído desde la foto de una boleta' },
+      ],
     },
     intro: {
       links: [],
       stack: ['TypeScript', 'NestJS', 'Fastify', 'Next.js', 'Expo', 'PostgreSQL', 'Prisma', 'Supabase', 'Firebase Auth'],
-      lead: 'Caja, inventario y finanzas del minimarket de barrio: una app para el cajero y un panel web para el dueño.',
-      body: 'Es mi proyecto propio y sigue en desarrollo. El dueño revisa en el panel web las ventas, el catálogo, los gastos y el stock; el cajero vende desde la app. Todo está escrito en TypeScript de punta a punta, y cada tienda ve solo sus datos: el multi-tenancy se resuelve en la capa de aplicación. Todavía no tiene capturas públicas; aquí está cómo está armado.',
+      lead: 'Caja, inventario y finanzas para el minimarket de barrio: el control de un supermercado, hecho para un almacén.',
+      body: 'Es mi proyecto propio y sigue en desarrollo. El cajero vende desde la app, aunque el producto no esté en el catálogo. El dueño ve en la web cuánto vendió, qué le queda en bodega y cuánto le costó cada lote, y recibe avisos que le dicen qué pasa y qué hacer. Cada tienda ve solo sus datos. Las pantallas de esta página usan una tienda de ejemplo con cifras que calzan entre sí.',
     },
     facts: [
       { n: '2', l: 'Superficies: app del cajero y panel web del dueño' },
       { n: '3', l: 'Módulos del backend: inventario, ventas y proveedores' },
-      { n: '3', l: 'Capas: dominio, aplicación e infraestructura' },
+      { n: '7', l: 'Tipos de alerta que explican y proponen' },
       { n: '1', l: 'Lenguaje de punta a punta: TypeScript' },
     ],
     stages: [
       {
+        tone: 'tint', label: 'El dueño en la web',
+        blocks: [
+          { type: 'laptop', shot: { src: `${dir}/zam-web-inicio.webp`, alt: 'Inicio del dueño en escritorio: Cómo va hoy, con $612.480 en ventas, 148 boletas y cuatro cosas para revisar' },
+            caption: { n: '01 — Cómo va hoy', text: 'Ventas, caja y boletas del día en una fila, y al lado lo que hay que resolver, cada aviso con su acción.' } },
+          { type: 'laptop', shot: { src: `${dir}/zam-web-ingreso.webp`, alt: 'Nuevo ingreso de mercadería en escritorio: cuatro productos de Distribuidora Sur con el flete repartido y el costo final por unidad' },
+            caption: { n: '02 — Ingreso de mercadería', text: 'El flete se reparte entre los productos y cada lote guarda su costo real y su vencimiento, como en un supermercado.' } },
+        ],
+      },
+      {
+        tone: 'light', label: 'En la tienda',
+        blocks: [
+          { type: 'split', n: '03 — La app', title: 'Vender sin trabas, avisar a tiempo.',
+            text: 'El cajero cobra con fila esperando: si un producto no tiene código, lo agrega y sigue. Al dueño le llegan avisos con la cifra y el plazo, y Zam le arma el gasto desde la foto de una boleta para que solo confirme.' },
+          { type: 'phones',
+            shots: [
+              { src: `${dir}/zam-tel-caja.webp`, alt: 'Caja del cajero: venta en curso con el botón Cobrar $7.342' },
+              { src: `${dir}/zam-tel-alerta.webp`, alt: 'Alerta de quiebre de Leche entera 1L con el botón Pedir a Lácteos del Maipo' },
+              { src: `${dir}/zam-tel-asistente.webp`, alt: 'Borrador de gasto de gas licuado por $48.600 con los botones Guardar gasto y Corregir' },
+            ],
+            caption: { n: '04 — Móvil', text: 'Caja, alerta de quiebre y asistente: tres momentos del día de un almacén.' } },
+        ],
+      },
+      {
+        tone: 'tint', label: 'Próxima etapa',
+        blocks: [
+          { type: 'split', n: '05 — Próxima etapa', title: 'Ver la tienda como la ve un supermercado.',
+            text: 'El plan es armar la tienda en 3D, estante por estante: qué hay en cada uno, dónde compran más los clientes y cuándo se va a vaciar un producto, para pedirlo antes de que falte.' },
+          { type: 'laptop', shot: { src: `${dir}/zam-web-mapa-3d.webp`, alt: 'Próxima etapa, imagen referencial: planta 3D del minimarket con zonas de calor de compra y el estante de lácteos seleccionado' },
+            caption: { n: '06 — Próxima etapa · imagen referencial', text: 'Zonas de calor sobre la planta y el aviso de quiebre en el estante donde ocurre. Todavía no está construido.' } },
+        ],
+      },
+      {
         tone: 'brand', label: 'Cómo está armado',
         blocks: [
-          { type: 'split', n: '01 — Arquitectura', title: 'Un backend por módulos, dos pantallas encima.',
+          { type: 'split', n: '07 — Arquitectura', title: 'Un backend por módulos, dos pantallas encima.',
             text: 'El backend corre en NestJS con Fastify y separa cada módulo en dominio, aplicación e infraestructura. La web y la app hablan el mismo lenguaje que el servidor.' },
           { type: 'columns',
             items: [
@@ -235,7 +271,7 @@ export const cases = [
         ],
       },
     ],
-    nextThumb: null,
+    nextThumb: { src: `${dir}/zam-tel-alerta.webp`, ...PHONE },
   },
 ];
 
