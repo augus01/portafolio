@@ -3,7 +3,7 @@ import { TechMarqueeRow } from '../../molecules/TechMarqueeRow';
 import { SkillCard } from '../../molecules/SkillCard';
 import { useSkillPicker } from '../../../hooks/useSkillPicker';
 import { useViewportWidth } from '../../../hooks/useViewportWidth';
-import { marqueePeriod } from '../../../lib/techMarquee';
+import { createCheer, marqueePeriod } from '../../../lib/techMarquee';
 
 // Superpoderes: "Con qué construyo" (artefacto "Hero · Augusto Pinto"). Encabezado con la tipografía de Sobre mí y
 // una cinta de logos 3D en dos filas a velocidades distintas; sin movimiento se ve como grilla.
@@ -17,6 +17,9 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, 
   const picker = useSkillPicker(sectionRef);
   const shown = rows.flat().find((s) => s.logo === picker.shown) || null;
   const vw = useViewportWidth();
+  // Un solo aviso para la sección: al pasar por cualquier logo saltan todos los stack que estén a la vista.
+  const cheer = useMemo(() => createCheer(), []);
+  const stackReader = useMemo(() => (reader ? { ...reader, cheer } : null), [reader, cheer]);
   const periods = useMemo(() => rows.map((items, i) => marqueePeriod(items, i, vw, reader?.before)), [rows, vw, reader]);
   return (
     <section id={id} ref={sectionRef} className="hab-mq" aria-labelledby={`${id}-titulo`}>
@@ -32,7 +35,7 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, 
           <TechMarqueeRow
             key={i}
             slots={slots}
-            reader={reader}
+            reader={stackReader}
             label={`Tecnologías, fila ${i + 1}`}
             variant={i % 2 ? 'b' : 'a'}
             activeId={picker.open}

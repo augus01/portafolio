@@ -6,6 +6,7 @@ import { StackReader } from '../../atoms/StackReader';
 // la pista lo lleva dos veces y avanza la mitad de su ancho para volver a empezar sin salto. Los logos repetidos y la
 // segunda copia quedan ocultos para lectores de pantalla y fuera del orden de Tab.
 // Cada logo es un botón: al pasar gira a su versión a color; al hacer clic abre su ficha (`onPick`).
+// Al pasar el cursor (o el foco) por un logo, stack se emociona: `reader.cheer.emit(reader.excited(nombre))`.
 // La pista se detiene con el cursor encima, con una ficha abierta (`paused`) y fuera de pantalla.
 export function TechMarqueeRow({ slots, label, variant = 'a', activeId, paused, onPick, openLabel, controls, reader }) {
   const rowRef = useRef(null);
@@ -15,13 +16,14 @@ export function TechMarqueeRow({ slots, label, variant = 'a', activeId, paused, 
     if (slot.reader) {
       return (
         <li key={key} className="hab-mq__item hab-mq__item--rd" aria-hidden="true">
-          <StackReader scare={reader?.scare} />
+          <StackReader scare={reader?.scare} cheer={reader?.cheer} />
         </li>
       );
     }
     const { item } = slot;
     const copy = second || slot.copy;
     const active = activeId === item.logo;
+    const onCheer = reader?.cheer && reader.excited ? () => reader.cheer.emit(reader.excited(item.name)) : undefined;
     return (
       <li key={key} className="hab-mq__item" aria-hidden={copy || undefined}>
         <button
@@ -32,6 +34,8 @@ export function TechMarqueeRow({ slots, label, variant = 'a', activeId, paused, 
           aria-controls={controls}
           aria-label={openLabel(item.name)}
           onClick={(e) => onPick(item.logo, e.currentTarget)}
+          onPointerEnter={onCheer}
+          onFocus={copy ? undefined : onCheer}
         >
           <span className="hab-mq__pic">
             <img src={`/habilidades/${item.logo}.webp`} alt="" width="128" height="128" loading="lazy" decoding="async" className="hab-mq__logo" />

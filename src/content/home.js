@@ -73,8 +73,9 @@ export const skills = {
     agent: 'stack', askLabel: 'Pregúntale a stack', toOffice: 'Seguir con stack en la oficina', office: '/oficina/',
     draft: (name) => `¿Qué más hizo Augusto con ${name}?`,
   },
-  // stack sentado leyendo en la cinta: en la fila de arriba va justo antes de `before`; al pasar el cursor salta asustado.
-  reader: { scare: '¡AAH! ¡Me asustaste!', before: 'nextjs' },
+  // stack sentado leyendo en la cinta: en la fila de arriba va justo antes de `before`; al pasar el cursor salta asustado
+  // y al pasar por un logo salta de emoción con `excited`.
+  reader: { scare: '¡AAH! ¡Me asustaste!', excited: (name) => `¡Me encanta ${name}!`, before: 'nextjs' },
   // Preguntas listas de stack en la ficha de cada tecnología (por `logo`), con datos reales de los proyectos.
   ask: {
     react: [

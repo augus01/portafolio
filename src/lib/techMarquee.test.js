@@ -28,3 +28,15 @@ test('abajo, stack va a media vuelta del de arriba', () => {
   const slots = marqueePeriod(items, 1, 1440, 'nextjs');
   assert.equal(slots.findIndex((s) => s.reader), 10);
 });
+
+test('el aviso de emoción llega a todos los stack suscritos y se puede soltar', async () => {
+  const { createCheer } = await import('./techMarquee.js');
+  const cheer = createCheer();
+  const got = [];
+  const off = cheer.on((t) => got.push(`a:${t}`));
+  cheer.on((t) => got.push(`b:${t}`));
+  cheer.emit('React');
+  off();
+  cheer.emit('AWS');
+  assert.deepEqual(got, ['a:React', 'b:React', 'b:AWS']);
+});

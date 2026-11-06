@@ -1,6 +1,6 @@
 // Superpoderes: stack (el agente naranja de la oficina) sentado en un pufón sobre la cinta de tecnologías, leyendo sin
 // enterarse de nada. Si el cursor pasa por encima (o lo tocas), se despierta y salta asustado; el libro sale volando y
-// vuelve a leer. Del artefacto "Hero · Augusto Pinto" (stack-reader.js, 6 nov 2026). Three.js r128, cargado aparte.
+// vuelve a leer. Al pasar el cursor por un logo de la cinta se emociona y salta igual (`cheer`). Del artefacto "Hero · Augusto Pinto" (stack-reader.js, 6 nov 2026). Three.js r128, cargado aparte.
 // Mismo personaje y colores que la oficina (excepción aprobada, design-system/INTEGRACION.md).
 import * as THREE from 'three';
 import { getPerfTier } from './perfTier';
@@ -107,13 +107,17 @@ export function mountStackReader(stage, opts) {
   };
   var raf = 0, visible = true;
   var kick = function () { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
-  var scare = function () {
+  /* Mismo salto en dos ánimos: 'scare' (cursor encima: ojos de plato, boca en O) y 'cheer' (cursor sobre un logo de la
+     cinta: se emociona, sonrisa grande y salto más corto). */
+  var jumpWith = function (kind, txt) {
     if (S.mode !== 'read') return;
-    S.mode = 'wake'; S.t0 = now();
-    say(opts.scare || '¡AAH! ¡Me asustaste!', 2300);
+    S.mode = 'wake'; S.kind = kind; S.t0 = now();
+    say(txt, kind === 'cheer' ? 1600 : 2300);
     stage.classList.add('is-awake');
     kick();
   };
+  var scare = function () { jumpWith('scare', opts.scare || '¡AAH! ¡Me asustaste!'); };
+  var cheer = function (txt) { if (txt) jumpWith('cheer', txt); };
   stage.addEventListener('pointerenter', scare);
   stage.addEventListener('pointerdown', scare);
 
@@ -143,8 +147,9 @@ export function mountStackReader(stage, opts) {
       var jump = (tt - 0.1) / 0.62;
       headX = 0.75 * (1 - pre) - 0.15 * pre;
       eyeS = 0.45 + pre * 1.0;
-      o = true;
-      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.scale.setScalar(0.7); });
+      var happy = S.kind === 'cheer';
+      o = !happy;
+      eyes.forEach(function (e) { e.pupil.position.x = 0; e.pupil.scale.setScalar(happy ? 1.15 : 0.7); });
       if (!reduced && jump > 0 && jump < 1) {
         y += Math.sin(jump * Math.PI) * 0.45;
         squash = 1 + Math.sin(jump * Math.PI) * 0.12;
@@ -153,17 +158,20 @@ export function mountStackReader(stage, opts) {
         bookFlyT = jump;
       } else if (!reduced && jump >= 1) { var lnd = ease((tt - 0.72) / 0.18); squash = 1 - Math.sin(lnd * Math.PI) * 0.1; }
       if (!reduced && tt > 0.72) bookFlyT = 1;
-      if (tt > 2.4) { S.mode = 'calm'; S.t0 = t; stage.classList.remove('is-awake'); eyes.forEach(function (e) { e.pupil.scale.setScalar(1); }); }
+      if (tt > (happy ? 1.3 : 2.4)) { S.mode = 'calm'; S.t0 = t; stage.classList.remove('is-awake'); eyes.forEach(function (e) { e.pupil.scale.setScalar(1); }); }
     } else {
       /* Se calma: respira, mira alrededor un segundo y retoma el libro */
       var c = tt / 1.4;
       headX = -0.15 + ease(c) * 0.9;
       eyeS = 1.0 - ease(c) * 0.55;
       headY = reduced ? 0 : Math.sin(c * Math.PI * 2) * 0.35 * (1 - ease(c));
-      o = c < 0.35;
+      o = c < 0.35 && S.kind !== 'cheer';
       if (c >= 1) { S.mode = 'read'; S.blinkAt = t + 2; S.pageAt = t + 3; }
     }
     mouth.visible = !o; mouthO.visible = o;
+    /* Emocionado: la sonrisa se agranda mientras dura el salto. */
+    var grin = S.mode === 'wake' && S.kind === 'cheer' ? 1.7 : 1;
+    mouth.scale.set(grin, grin, 1);
     head.rotation.x = headX; head.rotation.y = headY; agent.position.y = y;
     agent.scale.set(1 / Math.sqrt(squash), squash, 1 / Math.sqrt(squash));
     agent.rotation.z = tilt;
@@ -195,6 +203,7 @@ export function mountStackReader(stage, opts) {
 
   return {
     scare: scare,
+    cheer: cheer,
     dispose: function () {
       if (raf) cancelAnimationFrame(raf);
       clearTimeout(sayT);

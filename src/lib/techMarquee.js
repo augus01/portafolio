@@ -32,3 +32,12 @@ export function marqueePeriod(items, row, vw, before) {
   slots.splice(at, 0, { reader: true });
   return slots;
 }
+
+/** Aviso de la cinta a los stack montados: `emit(texto)` los hace saltar de emoción; `on(fn)` devuelve cómo soltarse. */
+export function createCheer() {
+  const subs = new Set();
+  return {
+    on(fn) { subs.add(fn); return () => subs.delete(fn); },
+    emit(text) { subs.forEach((fn) => fn(text)); },
+  };
+}
