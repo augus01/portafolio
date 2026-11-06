@@ -20,6 +20,13 @@ export function isConfirm(text) {
   return /^(si|enviar|envialo|ok|dale|listo)/.test(normalize(text));
 }
 
+/** true si es un saludo o un agradecimiento (`small`): lo responde el agente local, sin ir a la IA. */
+export function isSmallTalk(text, small) {
+  if (!small) return false;
+  const n = normalize(text);
+  return small.greetRx.test(n) || small.thanksRx.test(n);
+}
+
 /**
  * Respuestas a una pregunta. Los saludos y agradecimientos (`small`) los responde el agente al que le hablas (`to`, o
  * el último que habló, `from`; sin ninguno, recepción), con su voz y sin derivar. Si no, responde el tema del agente

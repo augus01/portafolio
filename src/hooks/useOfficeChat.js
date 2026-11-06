@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { answer, bubbleMap, greeting, isConfirm, isQuestion, leadMailto, leadNext, wantsContact } from '../lib/officeChat';
+import { answer, bubbleMap, greeting, isConfirm, isQuestion, isSmallTalk, leadMailto, leadNext, wantsContact } from '../lib/officeChat';
 import { historialParaApi, pedirRespuesta } from '../lib/chatAgentesApi';
 
 const STORE = 'ap-office-visit';
@@ -147,10 +147,11 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     sceneRef.current.say(from ? { [from]: '…' } : {});
     const local = () => answer(text, { topics: chat.topics, agents, small: chat.small, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
     // Con VITE_CHAT_API_URL pide la respuesta a la IA; si no hay URL o falla (null), responde con las reglas locales.
+    // Los saludos y agradecimientos los responde siempre el agente local, con su voz y sin derivar.
     // En todo caso espera al menos TYPING_MS para que los puntos se vean.
     const espera = new Promise((resolve) => { timerRef.current = setTimeout(resolve, TYPING_MS); });
     Promise.all([
-      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs) }),
+      pedirRespuesta({ url: isSmallTalk(text, chat.small) ? null : import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs) }),
       espera,
     ]).then(([remotas]) => {
       if (!vivoRef.current) return;

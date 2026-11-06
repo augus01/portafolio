@@ -217,3 +217,12 @@ test('answer: más formas de preguntar cómo está hecho van a stack', () => {
 test('answer: los premios los cuenta arquitecto', () => {
   for (const t of ['¿Ganó algún premio?', '¿Qué premios tiene?']) assert.equal(answer(t, opts())[0].agent, 'arquitecto', t);
 });
+
+test('isSmallTalk: saludos y gracias no van a la IA; preguntas sí', async () => {
+  const { isSmallTalk } = await import('./officeChat.js');
+  const { chat } = await import('../content/office.js');
+  assert.equal(isSmallTalk('hola', chat.small), true);
+  assert.equal(isSmallTalk('¡Muchas gracias!', chat.small), true);
+  assert.equal(isSmallTalk('¿Qué es Inkvibe?', chat.small), false);
+  assert.equal(isSmallTalk('hola', null), false);
+});
