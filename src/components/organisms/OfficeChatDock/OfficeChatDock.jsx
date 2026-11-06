@@ -21,7 +21,10 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
   // Vista cercana: solo la tarjeta del agente con quien conversas. "Cambiar de agente" vuelve a la vista general con las
   // tres tarjetas y deja el foco en "Hablar con …" del siguiente.
   const near = !!chat.focus;
-  const shown = near ? list.filter((a) => a.id === chat.active) : list;
+  // Vista general: las tres tarjetas iguales, sin ninguna abierta, con recepción al medio.
+  const order = ['arquitecto', 'recepcion', 'stack'];
+  const sorted = [...list].sort((x, y) => order.indexOf(x.id) - order.indexOf(y.id));
+  const shown = near ? list.filter((a) => a.id === chat.active) : sorted;
   const changeAgent = () => {
     const other = list.find((a) => a.id !== chat.active);
     chat.unfocus();
@@ -35,13 +38,13 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
           <p className="ap-ofd__lead body-sm">{texts.pick.lead}</p>
         </div>
       )}
-      <div className="ap-ofd__cards" data-open={near ? undefined : list.findIndex((a) => a.id === chat.active)}>
+      <div className="ap-ofd__cards">
         {shown.map((a) => (
           <OfficeAgentCard
             key={a.id}
             ref={(el) => { goRefs.current[a.id] = el; }}
             agent={a}
-            open={a.id === chat.active}
+            open={near && a.id === chat.active}
             texts={texts.pick}
             onAsk={(q) => chat.ask(a.id, q)}
             onTalk={() => chat.setTo(a.id)}

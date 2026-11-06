@@ -176,9 +176,9 @@
 .ap-ofd__ask{align-self:flex-start;display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--space-1) var(--space-4);padding:var(--space-2) var(--space-4);border-radius:var(--radius-pill);background:var(--off-panel-bg);box-shadow:var(--off-panel-shadow);pointer-events:none}
 .ap-ofd__title.subheading{margin:0;font-family:"Oswald","Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:26px;line-height:1.1;letter-spacing:0;color:var(--off-panel-ink)}
 .ap-ofd__lead.body-sm{margin:0;font-size:14px;color:var(--off-panel-muted)}
-.ap-ofd__cards{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr) minmax(0,1fr);gap:var(--space-3);align-items:end}
-.ap-ofd__cards[data-open="1"]{grid-template-columns:minmax(0,1fr) minmax(0,1.5fr) minmax(0,1fr)}
-.ap-ofd__cards[data-open="2"]{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.5fr)}
+.ap-ofd__cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-3);align-items:end}
+.ap-ofc.is-pickable{cursor:pointer;transition:border-color var(--dur-press) var(--ease-out)}
+@media (hover: hover){.ap-ofc.is-pickable:hover{border-color:var(--off-line)}}
 /* Vista cercana: solo la tarjeta del agente con quien conversas, al medio; la cámara centra al agente a lo ancho y lo
    sube sobre la tarjeta (--off-focus-lift, fracción del alto; --off-focus-shift lo correría a lo ancho). Lo lee officeEngine.js. */
 .ap-off__stage{--off-focus-lift:.22;--off-focus-shift:0}
@@ -227,10 +227,9 @@
   .ap-ofd{bottom:var(--space-2);width:calc(100% - var(--space-4))}
   .ap-off__stage{--off-focus-lift:.22;--off-focus-shift:0}
   .ap-ofd.is-near{left:50%;transform:translateX(-50%);width:calc(100% - var(--space-4))}
-  .ap-ofd.is-near .ap-ofd__cards{grid-template-columns:minmax(0,1fr)}
-  .ap-ofd__cards[data-open]{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ap-ofd__ask{display:none}
-  .ap-ofd__cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2)}
+  .ap-ofd__cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-2)}
+  .ap-ofd.is-near .ap-ofd__cards{grid-template-columns:minmax(0,1fr)}
   .ap-ofc{padding:var(--space-3);gap:var(--space-2);border-radius:16px}
   .ap-ofc.is-open{grid-column:1 / -1;order:-1}
   .ap-ofc:not(.is-open) .ap-ofc__qs,.ap-ofc:not(.is-open) .ap-ofc__blurb{display:none}

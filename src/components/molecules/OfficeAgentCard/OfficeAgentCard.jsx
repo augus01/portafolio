@@ -6,7 +6,12 @@ import { AgentFigure } from '../../atoms/AgentFigure';
 // caja para escribir.
 export const OfficeAgentCard = forwardRef(function OfficeAgentCard({ agent, open, texts, onAsk, onTalk, children }, ref) {
   return (
-    <article className={['ap-ofc', `ap-ofc--${agent.id}`, open && 'is-open'].filter(Boolean).join(' ')} aria-label={agent.name}>
+    // Cerrada, toda la tarjeta elige al agente (el botón "Hablar con …" sigue siendo el control para teclado).
+    <article
+      className={['ap-ofc', `ap-ofc--${agent.id}`, open ? 'is-open' : 'is-pickable'].join(' ')}
+      aria-label={agent.name}
+      onClick={open ? undefined : (e) => { if (!e.target.closest('button')) onTalk(); }}
+    >
       <div className="ap-ofc__head">
         <AgentFigure agent={agent.id} className="ap-ofc__av" />
         <div className="ap-ofc__name">
