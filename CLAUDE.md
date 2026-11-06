@@ -87,8 +87,8 @@ Reglas: cada componente en su carpeta `Nombre/Nombre.jsx` + `index.js`; un compo
 
 ## Chat de la oficina con IA (chat-agentes)
 Los agentes de `/oficina/` responden con Claude Haiku 4.5 en Bedrock, detrás de API Gateway y Lambda, con un tope de gasto de USD 10 al mes. **Antes de tocar el chat, su infraestructura o los presupuestos de AWS, leer:**
-1. `docs/chat-agentes.md` — cómo funciona: recorrido de un mensaje, contrato de la API, derivación entre agentes, archivos, infraestructura, costos, budgets y estado actual.
-2. `docs/superpowers/plans/2026-11-05-chat-agentes.md` — plan de implementación con las tareas pendientes y sus verificaciones.
+1. `docs/sensible/chat-agentes.md` (local, en `.gitignore`) — cómo funciona: recorrido de un mensaje, contrato de la API, derivación entre agentes, archivos, infraestructura, costos, budgets y estado actual.
+2. `docs/sensible/plan-chat-agentes.md` (local) — plan de implementación con las tareas pendientes y sus verificaciones.
 
 Reglas:
 - Todo lo del chat se llama `chat-agentes` (stack, Lambda, tabla, API, budget, perfil `chat-agentes-haiku`) y lleva las etiquetas `project=portafolio` y `componente=chat-agentes`.

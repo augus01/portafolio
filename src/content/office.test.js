@@ -55,8 +55,8 @@ test('ningún texto habla de prácticas ni filtra datos personales', () => {
 });
 
 test('nombres de organizaciones del perfil local no aparecen', (t) => {
-  const perfil = new URL('../../docs/perfil-augusto.md', import.meta.url);
-  if (!existsSync(perfil)) return t.skip('sin docs/perfil-augusto.md (clon limpio)');
+  const perfil = new URL('../../docs/sensible/perfil-augusto.md', import.meta.url);
+  if (!existsSync(perfil)) return t.skip('sin docs/sensible/perfil-augusto.md (clon limpio)');
   const linea = readFileSync(perfil, 'utf-8').split('\n').find((l) => l.startsWith('Organizaciones que no se nombran:'));
   assert.ok(linea, 'falta la línea de organizaciones en el perfil');
   const nombres = linea.split(':')[1].replace(/\.$/, '').split(',').map((n) => sinTildes(n.trim())).filter(Boolean);

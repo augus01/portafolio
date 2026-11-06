@@ -31,7 +31,7 @@ export const stage = {
 // Los tres agentes, con su nombre en minúsculas (su color, el del personaje, vive en src/styles/oficina.css).
 // `intro` es lo que dice cada uno al hacerle clic; `topic`, lo que sabe (para cuando otro agente te deriva a él);
 // `rules`, su territorio: el chat de reglas lo respeta con los temas de abajo y la IA las recibe en su prompt.
-// Fuente del contenido: docs/perfil-augusto.md (CV y LinkedIn, solo lo profesional).
+// Fuente del contenido: docs/sensible/perfil-augusto.md (CV y LinkedIn, solo lo profesional).
 export const agents = {
   recepcion: { id: 'recepcion', name: 'recepción', topic: 'quién es Augusto y cómo dejarle un recado',
     intro: 'Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.',

@@ -3,3 +3,6 @@ dist
 *.local
 .DS_Store
 infra/.empaquetado.yaml
+
+# Documentación sensible (capturas, publicación de Builder Center, chat-agentes y perfil)
+docs/sensible/
