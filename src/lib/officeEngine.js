@@ -301,6 +301,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
       if (!s.on) return;
       a.tagEl.style.display = 'none';
       s.el.classList.toggle('is-docked', narrow);
+      if (narrow) s.el.classList.remove('is-side', 'is-side-l');
       if (narrow) {
         s.el.style.maxWidth = (w - 16) + 'px';
         s.el.style.transform = `translate(8px, ${stackY}px)`;
@@ -323,6 +324,27 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
           else minTop = sw.offsetTop + sw.offsetHeight + 8;
         }
       }
+      // Si no cabe sobre la cabeza (respuesta larga), va al costado del agente, más ancho y sin taparlo, sobre la
+      // conversación del pie; la colita apunta de lado al agente.
+      if (y - bh - 16 < minTop) {
+        const dock = stage.querySelector('.ap-ofd');
+        const sr = stage.getBoundingClientRect();
+        const floor = dock ? dock.getBoundingClientRect().top - sr.top - 8 : h - 8;
+        const gap = 44;
+        const right = w - x - gap - 8, left = x - gap - 8;
+        const room = Math.max(right, left);
+        s.el.style.maxWidth = Math.round(Math.max(220, Math.min(440, room))) + 'px';
+        const sw2 = s.el.offsetWidth, sh2 = s.el.offsetHeight;
+        const onRight = right >= sw2 || right >= left;
+        const sx = onRight ? x + gap : x - gap - sw2;
+        const sy = Math.max(8, Math.min(floor - sh2, y - sh2 / 2));
+        s.el.classList.add('is-side');
+        s.el.classList.toggle('is-side-l', !onRight);
+        s.el.style.transform = `translate(${Math.round(sx)}px, ${Math.round(sy)}px)`;
+        s.el.style.setProperty('--tail-y', Math.round(Math.max(16, Math.min(sh2 - 16, y - sy))) + 'px');
+        return;
+      }
+      s.el.classList.remove('is-side', 'is-side-l');
       const top = Math.max(minTop, y - bh - 16);
       s.el.style.transform = `translate(${Math.round(cx - bw / 2)}px, ${Math.round(top)}px)`;
       s.el.style.setProperty('--tail', Math.round(Math.max(18, Math.min(bw - 18, bw / 2 + (x - cx)))) + 'px');

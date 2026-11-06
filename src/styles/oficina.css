@@ -66,6 +66,9 @@
 .ap-off__say.is-on{display:block}
 .ap-off__say::after{content:"";position:absolute;left:var(--tail,50%);bottom:-9px;width:14px;height:14px;margin-left:-8px;background:inherit;border-right:var(--off-stroke) solid var(--ap-agent-ink);border-bottom:var(--off-stroke) solid var(--ap-agent-ink);transform:rotate(45deg)}
 .ap-off__say.is-docked::after{display:none}
+/* Globo al costado del agente (respuesta larga que no cabe sobre su cabeza): la colita apunta de lado. */
+.ap-off__say.is-side::after{left:-9px;top:var(--tail-y,50%);bottom:auto;margin:-8px 0 0;border:0;border-left:var(--off-stroke) solid var(--ap-agent-ink);border-bottom:var(--off-stroke) solid var(--ap-agent-ink)}
+.ap-off__say.is-side-l::after{left:auto;right:-9px;border:0;border-top:var(--off-stroke) solid var(--ap-agent-ink);border-right:var(--off-stroke) solid var(--ap-agent-ink)}
 .ap-off__sayname{display:block;margin-bottom:var(--space-1);font:600 var(--off-ui-size)/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase}
 .ap-off__say--recepcion{background:var(--ap-agent-recepcion);color:var(--ap-agent-ink)}
 .ap-off__say--arquitecto{background:var(--ap-agent-arquitecto);color:var(--ap-agent-arquitecto-ink)}
