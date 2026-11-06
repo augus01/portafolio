@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { answer, bubbleMap, greeting, isConfirm, isEmail, leadMailto, wantsContact } from '../lib/officeChat';
+import { answer, bubbleMap, greeting, isConfirm, isQuestion, leadMailto, leadNext, wantsContact } from '../lib/officeChat';
 import { historialParaApi, pedirRespuesta } from '../lib/chatAgentesApi';
 
 const STORE = 'ap-office-visit';
@@ -73,9 +73,12 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   const push = (list, patch) => setState((st) => ({ ...st, msgs: st.msgs.concat(list), ...(patch || {}) }));
   // Aviso de paso a recepción: si estabas con arquitecto o stack (elegido o el último que habló), él lo dice primero y
   // la cámara viaja después. Sin agente previo, o si ya estabas con recepción, no hay aviso.
+  // Recado en curso (ni enviado ni en pausa): todo lo que escribes es un dato del recado.
+  const leadOpen = (lead) => !!(lead && !lead.paused && lead.step !== 'sent');
   const toRecep = (passText) => {
     const from = state.to || lastRef.current;
-    return from && from !== 'recepcion' ? [{ agent: from, handoff: true, text: passText || chat.handoffBack }] : [];
+    const text = passText || (leadOpen(state.lead) ? chat.lead.handoffOpen : chat.handoffBack);
+    return from && from !== 'recepcion' ? [{ agent: from, handoff: true, text }] : [];
   };
   // Cualquier respuesta de recepción pasa por aquí, así ningún cambio a ella es abrupto.
   const recep = (text, patch, passText) => {
@@ -85,11 +88,16 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     bubbles(pass.concat([{ agent: 'recepcion', text }]));
   };
 
+  // Lo que pide recepción en cada paso del recado (para retomarlo donde quedó).
+  const stepText = (L) => ({ name: chat.lead.askName, need: chat.lead.need(L.name), email: chat.lead.email, confirm: chat.lead.review }[L.step]);
+
   const startLead = (after, prev) => {
-    const ask = after ? chat.lead.askAfter : chat.lead.ask;
+    // Un recado que quedó en pausa se retoma en el paso pendiente, con lo que ya diste.
+    const pending = state.lead && state.lead.step !== 'sent' ? { ...state.lead, paused: false } : null;
+    const ask = pending ? `${chat.lead.resume} ${stepText(pending)}` : after ? chat.lead.askAfter : chat.lead.ask;
     // Si estabas con arquitecto o stack, primero te avisa que el recado lo toma recepción y la cámara viaja a ella.
     const pass = toRecep(chat.handoffLead);
-    push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', ask)]), { lead: { step: 'name' }, to: null });
+    push(pass.map((r) => msg(r.agent, r.text)).concat([msg('recepcion', ask)]), { lead: pending || { step: 'name' }, to: null });
     sceneRef.current.select(null);
     // Si otro agente acaba de responder, su globo va antes y recepción suma el suyo.
     bubbles((prev || []).filter((r) => r.agent !== 'recepcion').concat(pass, [{ agent: 'recepcion', text: ask }]));
@@ -103,24 +111,23 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     } else recep(chat.lead.sent(L.email), { lead: L });
   };
 
+  // Un dato del recado. Devuelve false si no lo era (una pregunta): el recado queda en pausa y la pregunta se responde.
   const leadInput = (text, lead) => {
-    const L = { ...lead };
-    if (L.step === 'name') {
-      L.name = text.slice(0, 80); L.step = 'need';
-      recep(chat.lead.need(L.name), { lead: L });
-    } else if (L.step === 'need') {
-      L.need = text.slice(0, 400); L.step = 'email';
-      recep(chat.lead.email, { lead: L });
-    } else if (L.step === 'email') {
-      if (!isEmail(text)) { recep(chat.lead.badEmail); return; }
-      L.email = text.trim(); L.step = 'confirm';
+    if (lead.step === 'confirm') {
+      if (isConfirm(text)) leadSend(lead);
+      else recep(chat.lead.useCard);
+      return true;
+    }
+    const { lead: L, say } = leadNext(lead, text, { isQuestion: (t) => isQuestion(t, chat.topics) });
+    if (say === 'exit') { setState((st) => ({ ...st, lead: { ...st.lead, paused: true } })); return false; }
+    if (say === 'review') {
       const asked = askedRef.current.slice(-3);
       L.card = { name: L.name, need: L.need, email: L.email, topics: asked.length ? asked.join(' · ') : chat.lead.card.none };
-      recep(chat.lead.review, { lead: L });
-    } else if (L.step === 'confirm') {
-      if (isConfirm(text)) leadSend(L);
-      else recep(chat.lead.useCard);
     }
+    const text2 = { need: chat.lead.need(L.name), email: chat.lead.email, review: chat.lead.review, badName: chat.lead.badName,
+      badNeed: chat.lead.badNeed, badEmail: chat.lead.badEmail, badEmailCancel: chat.lead.badEmailCancel }[say];
+    recep(text2, { lead: L });
+    return true;
   };
 
   const send = (raw) => {
@@ -128,7 +135,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     if (!text || state.typing) return;
     push([msg('visitor', text)], { draft: '' });
     const lead = state.lead;
-    if (lead && lead.step !== 'sent') { leadInput(text, lead); return; }
+    if (leadOpen(lead) && leadInput(text, lead)) return;
     askedRef.current = askedRef.current.concat(text);
     if (wantsContact(text, chat.leadRx)) { startLead(); return; }
     writeStore({ last: text.slice(0, 80) });
@@ -161,7 +168,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
   };
 
   // Chips bajo la caja: quién visita, luego sus preguntas sugeridas; durante el recado, cancelar.
-  const inLead = !!(state.lead && state.lead.step !== 'sent');
+  const inLead = leadOpen(state.lead);
   const vis = chat.visitors.find((v) => v.id === state.visitor);
   let chips = [];
   let chipsLabel = chat.suggestionsLabel;
@@ -200,7 +207,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
     // Elegir un agente: con `fromScene` el clic vino de la maqueta, que ya lo marcó. Al elegirlo, la cámara se le
     // acerca y dice su presentación; al soltarlo, vuelve a la vista general.
     setTo: (id, fromScene) => {
-      setState((st) => ({ ...st, to: id || null }));
+      // Elegir a arquitecto o stack deja en pausa un recado en curso: lo que escribas va para ellos.
+      setState((st) => ({ ...st, to: id || null, ...(id && id !== 'recepcion' && leadOpen(st.lead) ? { lead: { ...st.lead, paused: true } } : {}) }));
       if (!fromScene) sceneRef.current.select(id || null);
       if (!id) { unfocus(); return; }
       if (state.typing) return;

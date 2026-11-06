@@ -192,6 +192,14 @@ export const chat = {
     need: (name) => `Gracias, ${name}. En una o dos frases, ¿qué necesitas?`,
     email: '¿A qué correo te escribe Augusto?',
     badEmail: 'Ese correo no me cuadra. ¿Lo revisas?',
+    // Datos que no sirven: un saludo como nombre, una necesidad de una palabra, el segundo correo inválido.
+    badName: 'Para el recado necesito tu nombre. ¿Cómo te llamas?',
+    badNeed: 'Cuéntame en una o dos frases qué necesitas, así Augusto llega preparado.',
+    badEmailCancel: 'Ese correo no me cuadra. Revísalo o, si prefieres, usa Cancelar.',
+    // Si preguntas otra cosa o eliges otro agente, el recado queda en pausa; al pedir contacto de nuevo, se retoma.
+    resume: 'Sigamos con tu recado.',
+    askName: '¿Cómo te llamas?',
+    handoffOpen: 'Tu recado sigue abierto en recepción. Te llevo a su escritorio.',
     review: 'Revisa tu recado abajo antes de enviarlo.',
     useCard: 'Usa “Enviar recado” o “Corregir” en la ficha de abajo.',
     sent: (email) => `¡Recado entregado! Augusto te escribirá a ${email}. Mientras, pregunta lo que quieras.`,

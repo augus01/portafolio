@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { normalize, wantsContact, isEmail, isConfirm, answer, greeting, bubbleMap, leadMailto } from './officeChat.js';
+import { normalize, wantsContact, isEmail, isConfirm, answer, greeting, bubbleMap, leadMailto, leadNext, isQuestion } from './officeChat.js';
 import { chat, agents } from '../content/office.js';
 
 const opts = (to = null) => ({ topics: chat.topics, agents, to, noMatch: chat.noMatch });
@@ -146,4 +146,49 @@ test('cada agente responde su propio saludo y agradecimiento, sin derivar', () =
 test('a stack le preguntan qué es Zam: deriva y no vuelve a stack', () => {
   const out = answer('¿Qué es Zam?', { ...opts('stack'), handoff: chat.handoff, handoffMore: chat.handoffMore });
   assert.deepEqual(out.map((r) => r.agent), ['stack', 'arquitecto']);
+});
+
+const q = { isQuestion: (t) => isQuestion(t, chat.topics) };
+
+test('leadNext rechaza saludos y cortesías como nombre', () => {
+  for (const t of ['HOLA', 'ok', 'gracias', 'sí', 'a']) assert.equal(leadNext({ step: 'name' }, t, q).say, 'badName', t);
+  assert.equal(leadNext({ step: 'name' }, 'HOLA', q).lead.step, 'name');
+});
+
+test('leadNext: una pregunta durante el recado sale del recado', () => {
+  assert.equal(leadNext({ step: 'name' }, '¿Qué es Zam?', q).say, 'exit');
+  assert.equal(leadNext({ step: 'need', name: 'Ana' }, 'como esta hecho inkvibe', q).say, 'exit');
+});
+
+test('leadNext acepta un nombre y lo capitaliza', () => {
+  const r = leadNext({ step: 'name' }, 'ANA MARÍA', q);
+  assert.equal(r.say, 'need');
+  assert.equal(r.lead.name, 'Ana María');
+  assert.equal(r.lead.step, 'need');
+});
+
+test('leadNext pide una necesidad de verdad', () => {
+  assert.equal(leadNext({ step: 'need', name: 'Ana' }, 'hola', q).say, 'badNeed');
+  assert.equal(leadNext({ step: 'need', name: 'Ana' }, 'una web', q).say, 'badNeed');
+  const r = leadNext({ step: 'need', name: 'Ana' }, 'Necesito una web para mi tienda', q);
+  assert.equal(r.say, 'email');
+  assert.equal(r.lead.need, 'Necesito una web para mi tienda');
+});
+
+test('leadNext: el segundo correo inválido ofrece cancelar', () => {
+  const a = leadNext({ step: 'email', name: 'Ana', need: 'una web nueva' }, 'al mio', q);
+  assert.equal(a.say, 'badEmail');
+  assert.equal(leadNext(a.lead, 'tampoco', q).say, 'badEmailCancel');
+  const ok = leadNext(a.lead, 'ana@empresa.cl', q);
+  assert.equal(ok.say, 'review');
+  assert.equal(ok.lead.step, 'confirm');
+  assert.equal(ok.lead.email, 'ana@empresa.cl');
+});
+
+test('isQuestion detecta preguntas y temas', () => {
+  assert.ok(isQuestion('¿Cómo está hecho Inkvibe?', chat.topics));
+  assert.ok(isQuestion('como esta hecho zam', chat.topics));
+  assert.ok(isQuestion('que es esto', chat.topics));
+  assert.ok(!isQuestion('Ana', chat.topics));
+  assert.ok(!isQuestion('Necesito una web para mi tienda', chat.topics));
 });

@@ -63,6 +63,48 @@ export function answer(question, { topics, agents, small, to, from, noMatch, noM
   return out.slice(0, 4);
 }
 
+// Palabras que no son un dato del recado: saludos y cortesías.
+const CORTESIA = /^(hola|holi|buenas|hey|hi|hello|gracias|ok|okay|si|no|dale|listo|vale|bueno|que tal)$/;
+const PREGUNTA = /\?|^(que|como|quien|cual|cuales|donde|cuando|por que|cuanto)\b/;
+
+/** true si el texto es una pregunta (signo, palabra interrogativa) o calza con algún tema de la oficina. */
+export function isQuestion(text, topics) {
+  const n = normalize(text).trim();
+  if (PREGUNTA.test(n)) return true;
+  return (topics || []).some((t) => t.rx.test(n) && !(t.unless && t.unless.test(n)));
+}
+
+const capitalizar = (t) => t.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, sep, l) => sep + l.toUpperCase());
+
+/**
+ * Siguiente paso del recado con lo que escribió el visitante. Devuelve el recado actualizado y qué decir:
+ * 'need' | 'email' | 'review' (avanza), 'badName' | 'badNeed' | 'badEmail' | 'badEmailCancel' (repite el paso) o
+ * 'exit' (no es un dato: es una pregunta y el recado queda en pausa).
+ */
+export function leadNext(lead, text, { isQuestion: esPregunta }) {
+  const t = String(text || '').trim();
+  const n = normalize(t).replace(/[¡!.,]/g, '').trim();
+  const L = { ...lead };
+  if (L.step === 'email') {
+    if (isEmail(t)) return { lead: { ...L, email: t, step: 'confirm' }, say: 'review' };
+    if (esPregunta(t)) return { lead: L, say: 'exit' };
+    L.tries = (L.tries || 0) + 1;
+    return { lead: L, say: L.tries >= 2 ? 'badEmailCancel' : 'badEmail' };
+  }
+  if (esPregunta(t)) return { lead: L, say: 'exit' };
+  if (L.step === 'name') {
+    const primera = n.split(/\s+/)[0];
+    const valido = /^[\p{L}' -]{2,60}$/u.test(t) && !CORTESIA.test(n) && !CORTESIA.test(primera);
+    if (!valido) return { lead: L, say: 'badName' };
+    return { lead: { ...L, name: capitalizar(t), step: 'need' }, say: 'need' };
+  }
+  if (L.step === 'need') {
+    if (CORTESIA.test(n) || n.split(/\s+/).filter(Boolean).length < 3) return { lead: L, say: 'badNeed' };
+    return { lead: { ...L, need: t.slice(0, 400), step: 'email' }, say: 'email' };
+  }
+  return { lead: L, say: 'exit' };
+}
+
 /** Saludo de recepción: si el visitante ya vino y preguntó algo (que no era un contacto), lo retoma. */
 export function greeting(seen, { welcome, leadRx }) {
   if (seen && seen.last && !wantsContact(seen.last, leadRx)) return `¡Volviste! La última vez preguntaste “${seen.last}”. ¿Seguimos por ahí?`;
