@@ -128,6 +128,13 @@ export const chat = {
       arquitecto: '¡Hola! Soy arquitecto. Pregúntame qué es cada proyecto de Augusto y qué logra.',
       stack: '¡Hola! Soy stack. Pregúntame cómo está construido un proyecto de Augusto.',
     },
+    // "¿Qué te puedo preguntar?": respaldo cuando no hay IA; con IA, el modelo lo reconoce como intención "ayuda".
+    helpRx: /que (te|le|les) (puedo|podria) preguntar|que (se )?puedo preguntar|en que (me )?(puedes )?ayuda|de que sabes|^[¿]?(y )?(tu )?que sabes( tu)?[?]?$|como funciona (esto|la oficina|esta oficina)|^[¿]?ayuda[?!.]?$/,
+    help: {
+      recepcion: 'Puedo contarte quién es Augusto, qué estudia, cómo trabaja y cuál es su meta, y tomar tu recado si quieres hablar con él: prueba con "¿Quién es Augusto?". En esta oficina cada agente sabe de algo distinto: yo, recepción, de Augusto; arquitecto, de sus proyectos, y stack, de cómo están construidos.',
+      arquitecto: 'Puedo contarte qué es cada proyecto de Augusto y qué logra: Rumbo a Casa, Inkvibe, Zam y Lexinova. Prueba con "¿Qué es Rumbo a Casa?" o "¿Qué ha construido?". En esta oficina cada agente sabe de algo distinto: recepción, de Augusto; yo, arquitecto, de sus proyectos, y stack, de cómo están construidos.',
+      stack: 'Puedo contarte cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Prueba con "¿Cómo está hecho Zam?" o "¿Qué usa en AWS?". En esta oficina cada agente sabe de algo distinto: recepción, de Augusto; arquitecto, de sus proyectos, y yo, stack, de cómo están construidos.',
+    },
     thanks: {
       recepcion: '¡De nada! Si quieres que Augusto te escriba, dime y tomo tus datos.',
       arquitecto: '¡De nada! Si quieres conocer otro proyecto, pregúntame.',

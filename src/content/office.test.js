@@ -68,3 +68,17 @@ test('leadRx: disponibilidad sí, práctica no', () => {
   assert.ok(chat.leadRx.test('esta disponible'));
   assert.ok(!chat.leadRx.test('hizo una practica'));
 });
+
+test('cada agente tiene su ayuda: qué aclara y cómo funciona la oficina', () => {
+  for (const id of ['recepcion', 'arquitecto', 'stack']) {
+    assert.ok(chat.small.help[id], id);
+    assert.match(chat.small.help[id], /recepción/, id);
+    assert.match(chat.small.help[id], /arquitecto/, id);
+    assert.match(chat.small.help[id], /stack/, id);
+  }
+  assert.ok(!chat.small.helpRx.test('que es inkvibe'));
+});
+test('una pregunta con "qué sabes de" no es ayuda', () => {
+  assert.ok(!chat.small.helpRx.test('que sabes de zam?'));
+  assert.ok(chat.small.helpRx.test('que sabes?'));
+});

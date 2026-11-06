@@ -218,11 +218,11 @@ test('answer: los premios los cuenta arquitecto', () => {
   for (const t of ['¿Ganó algún premio?', '¿Qué premios tiene?']) assert.equal(answer(t, opts())[0].agent, 'arquitecto', t);
 });
 
-test('isSmallTalk: saludos y gracias no van a la IA; preguntas sí', async () => {
-  const { isSmallTalk } = await import('./officeChat.js');
-  const { chat } = await import('../content/office.js');
-  assert.equal(isSmallTalk('hola', chat.small), true);
-  assert.equal(isSmallTalk('¡Muchas gracias!', chat.small), true);
-  assert.equal(isSmallTalk('¿Qué es Inkvibe?', chat.small), false);
-  assert.equal(isSmallTalk('hola', null), false);
+test('respaldo: "¿qué te puedo preguntar?" lo responde el agente al que le hablas, sin derivar', () => {
+  for (const id of ['recepcion', 'arquitecto', 'stack']) {
+    for (const q of ['¿Qué te puedo preguntar?', 'en qué me ayudas', '¿De qué sabes?', '¿Cómo funciona esto?', 'ayuda']) {
+      assert.deepEqual(answer(q, { ...opts(id), small: chat.small, handoff: chat.handoff }), [{ agent: id, text: chat.small.help[id] }], `${id} ${q}`);
+    }
+  }
+  assert.equal(answer('¿Qué te puedo preguntar?', { ...opts(), small: chat.small })[0].agent, 'recepcion');
 });

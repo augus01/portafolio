@@ -20,13 +20,6 @@ export function isConfirm(text) {
   return /^(si|enviar|envialo|ok|dale|listo)/.test(normalize(text));
 }
 
-/** true si es un saludo o un agradecimiento (`small`): lo responde el agente local, sin ir a la IA. */
-export function isSmallTalk(text, small) {
-  if (!small) return false;
-  const n = normalize(text);
-  return small.greetRx.test(n) || small.thanksRx.test(n);
-}
-
 /**
  * Respuestas a una pregunta. Los saludos y agradecimientos (`small`) los responde el agente al que le hablas (`to`, o
  * el último que habló, `from`; sin ninguno, recepción), con su voz y sin derivar. Si no, responde el tema del agente
@@ -40,7 +33,7 @@ export function answer(question, { topics, agents, small, to, from, noMatch, noM
   const n = normalize(question);
   const asked = to || from;
   if (small) {
-    const key = small.greetRx.test(n) ? 'greet' : small.thanksRx.test(n) ? 'thanks' : null;
+    const key = small.greetRx.test(n) ? 'greet' : small.thanksRx.test(n) ? 'thanks' : small.helpRx && small.helpRx.test(n) ? 'help' : null;
     if (key) return [{ agent: asked || 'recepcion', text: small[key][asked || 'recepcion'] }];
   }
   const hits = topics.filter((t) => t.rx.test(n) && !(t.unless && t.unless.test(n)));
