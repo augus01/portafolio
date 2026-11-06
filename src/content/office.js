@@ -60,9 +60,9 @@ export const agents = {
 };
 
 // Palabras de implementación: con ellas una pregunta por un proyecto es de stack (y no de arquitecto).
-const IMPL = String.raw`como (esta|lo|la|fue|se)|hech[oa] con|construid|armad|stack|tecnolog|arquitectura|implement|framework|codigo|backend|frontend|base de datos`;
+const IMPL = String.raw`como (esta|lo|la|fue|se|construyo|hizo|hicieron|programo)|con que|programad|built|how|hech[oa] con|construid|armad|stack|tecnolog|arquitectura|implement|framework|codigo|backend|frontend|base de datos`;
 // Palabras de "qué es": con ellas la pregunta también es de arquitecto aunque traiga implementación.
-const QUE = String.raw`que es|de que se trata|para que|objetivo|que logr|que hace|que gano|premio`;
+const QUE = String.raw`que es\b|de que se trata|para que|objetivo|que logr|que hace|que gano|premio`;
 const deStack = (nombres) => new RegExp(`(?=.*(${nombres}))(?=.*(${IMPL}))`);
 const soloImpl = new RegExp(`^(?!.*(${QUE})).*(${IMPL})`);
 
@@ -159,7 +159,7 @@ export const chat = {
     { rx: /tecnolog|stack|lenguaje|herramient|sabe usar|que usa|con que (construye|trabaja|programa)|framework/, agent: 'stack',
       text: 'Depende del proyecto: Inkvibe va en Next.js, React y TypeScript; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare y Railway. ¿Cuál te detallo?' },
     // arquitecto: qué es cada proyecto y qué logra (si la pregunta es solo de implementación, `unless` la deja a stack).
-    { rx: /rumbo|subsidio|hackathon|zero to shipped|vivienda/, agent: 'arquitecto', unless: soloImpl,
+    { rx: /rumbo|subsidio|hackathon|zero to shipped|vivienda|premi|gano/, agent: 'arquitecto', unless: soloImpl,
       text: 'Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales (DS49, DS1, DS19 y DS52) y cita el decreto detrás de cada respuesta. Augusto es co-creador y el proyecto ganó la categoría Social Good en la hackathon AWS Zero to Shipped.' },
     { rx: /inkvibe|tatu|inkcard/, agent: 'arquitecto', unless: soloImpl,
       text: 'Inkvibe es el primer marketplace digital del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar. Augusto fue el único desarrollador frontend y entregó cuatro superficies en 9 semanas: la InkCard para la bio de Instagram, proyectada como el mayor canal de tráfico; el panel de los estudios; el backoffice interno y la web pública por ciudad y estilo.' },
@@ -181,7 +181,7 @@ export const chat = {
       text: 'Trabajó como desarrollador frontend en Inkvibe. Además, en las organizaciones donde se desempeña Augusto trabaja de cara al cliente: analiza indicadores NPS para evaluar la experiencia y resuelve reclamos con un enfoque empático y ágil, así que entiende al usuario final porque lo atiende todos los días.' },
     { rx: /meta|objetivo profesional|futuro|ai engineer|que busca|aspira|a que se quiere dedicar/, agent: 'recepcion',
       text: 'Augusto va camino a ser AI Engineer: quiere construir productos con IA aplicada a situaciones de la vida real, que resuelvan un trámite, una duda o una decisión concreta. Lo que lo mueve es hacer el producto que más ayude a las personas.' },
-    { rx: /quien es|quien eres|sobre (el|augusto)|de donde|edad|cuantos anos|estudia|universidad|carrera|augusto/, agent: 'recepcion',
+    { rx: /quien es|quien eres|sobre (el|augusto)|de donde|edad|cuantos anos|estudia|universidad|carrera|^[¿]?(y )?augusto[?]?$/, agent: 'recepcion',
       unless: /ha hecho|ha construido|proyecto/,
       text: 'Augusto Pinto tiene 21 años y estudia Ingeniería Civil Informática en la Universidad San Sebastián, en cuarto año, en Santiago de Chile. Va camino a ser AI Engineer y construye productos completos, desde la pantalla hasta la arquitectura.' },
   ],

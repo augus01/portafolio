@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { agents, chat } from './office.js';
+import { contact } from './home.js';
 
 const sinTildes = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 // Todos los textos de la oficina, con las funciones resueltas con un agente de prueba.
@@ -47,6 +48,7 @@ test('saludos y agradecimientos con texto propio de cada agente', () => {
 
 test('ningún texto habla de prácticas ni filtra datos personales', () => {
   assert.doesNotMatch(todo, /pr[aá]ctica|pasant/i);
+  assert.doesNotMatch(JSON.stringify(contact), /pr[aá]ctica|pasant/i);
   assert.doesNotMatch(todo, /\+?56\s?9|\b\d{8,9}\b|san miguel/i);
   const correos = (todo.match(/[a-z0-9._-]+@[a-z0-9-]+\.[a-z.]+/gi) || []).filter((c) => c !== 'tu@correo.com');
   assert.deepEqual(correos, []);

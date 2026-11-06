@@ -188,7 +188,7 @@ export const contact = {
   headline: {
     eyebrow: 'Contacto',
     title: ['Pasa por', 'recepción'],
-    lead: '¿Tienes un proyecto, una práctica o una idea con IA? Aquí no hay formulario: pasa por recepción y saluda.',
+    lead: '¿Tienes un proyecto, una oportunidad o una idea con IA? Aquí no hay formulario: pasa por recepción y saluda.',
   },
   enter: { label: 'Pasa a la oficina', href: '/oficina/' },
   meta: 'Chile · GMT−3',

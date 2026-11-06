@@ -118,7 +118,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail }) {
       else recep(chat.lead.useCard);
       return true;
     }
-    const { lead: L, say } = leadNext(lead, text, { isQuestion: (t) => isQuestion(t, chat.topics) });
+    const { lead: L, say } = leadNext(lead, text, { isQuestion });
     if (say === 'exit') { setState((st) => ({ ...st, lead: { ...st.lead, paused: true } })); return false; }
     if (say === 'review') {
       const asked = askedRef.current.slice(-3);

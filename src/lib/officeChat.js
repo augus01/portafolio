@@ -65,13 +65,12 @@ export function answer(question, { topics, agents, small, to, from, noMatch, noM
 
 // Palabras que no son un dato del recado: saludos y cortesías.
 const CORTESIA = /^(hola|holi|buenas|hey|hi|hello|gracias|ok|okay|si|no|dale|listo|vale|bueno|que tal)$/;
-const PREGUNTA = /\?|^(que|como|quien|cual|cuales|donde|cuando|por que|cuanto)\b/;
-
-/** true si el texto es una pregunta (signo, palabra interrogativa) o calza con algún tema de la oficina. */
-export function isQuestion(text, topics) {
-  const n = normalize(text).trim();
-  if (PREGUNTA.test(n)) return true;
-  return (topics || []).some((t) => t.rx.test(n) && !(t.unless && t.unless.test(n)));
+/**
+ * true si el texto es una pregunta explícita (con signo de interrogación). Solo eso saca del recado: una necesidad o
+ * un nombre pueden calzar con un tema ("Tengo un proyecto…", "Ernesto") y siguen siendo datos.
+ */
+export function isQuestion(text) {
+  return /[¿?]/.test(String(text || ''));
 }
 
 const capitalizar = (t) => t.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, sep, l) => sep + l.toUpperCase());

@@ -148,7 +148,7 @@ test('a stack le preguntan qué es Zam: deriva y no vuelve a stack', () => {
   assert.deepEqual(out.map((r) => r.agent), ['stack', 'arquitecto']);
 });
 
-const q = { isQuestion: (t) => isQuestion(t, chat.topics) };
+const q = { isQuestion };
 
 test('leadNext rechaza saludos y cortesías como nombre', () => {
   for (const t of ['HOLA', 'ok', 'gracias', 'sí', 'a']) assert.equal(leadNext({ step: 'name' }, t, q).say, 'badName', t);
@@ -157,7 +157,7 @@ test('leadNext rechaza saludos y cortesías como nombre', () => {
 
 test('leadNext: una pregunta durante el recado sale del recado', () => {
   assert.equal(leadNext({ step: 'name' }, '¿Qué es Zam?', q).say, 'exit');
-  assert.equal(leadNext({ step: 'need', name: 'Ana' }, 'como esta hecho inkvibe', q).say, 'exit');
+  assert.equal(leadNext({ step: 'need', name: 'Ana' }, '¿Cómo está hecho Inkvibe?', q).say, 'exit');
 });
 
 test('leadNext acepta un nombre y lo capitaliza', () => {
@@ -185,10 +185,35 @@ test('leadNext: el segundo correo inválido ofrece cancelar', () => {
   assert.equal(ok.lead.email, 'ana@empresa.cl');
 });
 
-test('isQuestion detecta preguntas y temas', () => {
-  assert.ok(isQuestion('¿Cómo está hecho Inkvibe?', chat.topics));
-  assert.ok(isQuestion('como esta hecho zam', chat.topics));
-  assert.ok(isQuestion('que es esto', chat.topics));
-  assert.ok(!isQuestion('Ana', chat.topics));
-  assert.ok(!isQuestion('Necesito una web para mi tienda', chat.topics));
+test('isQuestion: solo una pregunta explícita', () => {
+  assert.ok(isQuestion('¿Cómo está hecho Inkvibe?'));
+  assert.ok(isQuestion('como esta hecho zam?'));
+  assert.ok(!isQuestion('Ana'));
+  assert.ok(!isQuestion('Que me ayude con una página web'));
+});
+
+test('leadNext: necesidades y nombres normales no sacan del recado', () => {
+  for (const t of ['Tengo un proyecto de app móvil', 'Necesito una web para mi minimarket', 'Que me ayude con una página web', 'Quiero una app con inteligencia artificial']) {
+    assert.equal(leadNext({ step: 'need', name: 'Ana' }, t, q).say, 'email', t);
+  }
+  for (const t of ['Ernesto', 'Ana Zamora', 'José Carrera', 'Augusto Pérez', 'Matías Nube']) {
+    assert.equal(leadNext({ step: 'name' }, t, q).say, 'need', t);
+  }
+});
+
+test('answer: "Augusto" en una pregunta de otro territorio no arrastra a recepción', () => {
+  assert.deepEqual(answer('¿Qué tecnologías usa Augusto?', opts()).map((r) => r.agent), ['stack']);
+  assert.deepEqual(answer('¿Augusto usa IA?', opts()).map((r) => r.agent), ['stack']);
+  assert.deepEqual(answer('¿Qué hace Augusto en Lexinova?', opts()).map((r) => r.agent), ['arquitecto']);
+});
+
+test('answer: más formas de preguntar cómo está hecho van a stack', () => {
+  for (const t of ['¿Con qué está hecho Zam?', '¿En qué está programado Zam?', '¿Cómo construyó Inkvibe?', '¿Cómo hizo Inkvibe?', 'how is inkvibe built']) {
+    assert.deepEqual(answer(t, opts()).map((r) => r.agent), ['stack'], t);
+  }
+  assert.deepEqual(answer('¿Qué hizo en la hackathon de AWS?', opts()).map((r) => r.agent)[0], 'arquitecto');
+});
+
+test('answer: los premios los cuenta arquitecto', () => {
+  for (const t of ['¿Ganó algún premio?', '¿Qué premios tiene?']) assert.equal(answer(t, opts())[0].agent, 'arquitecto', t);
 });

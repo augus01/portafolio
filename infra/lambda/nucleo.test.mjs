@@ -40,6 +40,7 @@ test('armarSistema incluye las reglas de cada agente y el agente pedido', () => 
   assert.match(s, /le está hablando a stack/);
   assert.match(s, /saludos y agradecimientos/i);
   assert.match(s, /"sigue"/);
+  assert.match(s, /ese responde primero/);
   assert.doesNotMatch(armarSistema(contenido), /le está hablando a/);
 });
 test('sigue encadena con aviso', () => {
