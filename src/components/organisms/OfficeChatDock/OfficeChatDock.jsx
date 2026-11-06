@@ -14,9 +14,10 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
   useEffect(() => {
     const th = rootRef.current?.querySelector('.ap-ofc__thread');
     if (th) th.scrollTop = th.scrollHeight;
-  }, [chat.msgs.length, chat.typing, chat.active]);
+  }, [chat.msgs.length, chat.typing, chat.active, chat.histOpen]);
   const list = Object.values(agents);
-  const thread = chat.msgs.slice(-6);
+  // Historial de cada agente: lo que le dijiste a él y lo que respondió él. Oculto hasta tocar "Historial".
+  const threadOf = (id) => chat.msgs.filter((m) => (m.who === 'visitor' ? m.to === id : m.who === id));
   // Vista cercana: solo la tarjeta del agente con quien conversas. "Cambiar de agente" vuelve a la vista general con las
   // tres tarjetas y deja el foco en "Hablar con …" del siguiente.
   const near = !!chat.focus;
@@ -45,15 +46,14 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
             onAsk={(q) => chat.ask(a.id, q)}
             onTalk={() => chat.setTo(a.id)}
           >
-            <div className="ap-ofc__thread" aria-label={texts.pick.thread(a.name)}>
-              {thread.map((m) => (
-                <p key={m.id} className={['ap-ofc__msg', 'body-sm', m.who === 'visitor' ? 'is-me' : `is-${m.who}`].join(' ')}>
-                  {m.who !== 'visitor' && m.who !== a.id && <span className="ap-ofc__from label">{agents[m.who].name}</span>}
-                  {m.text}
-                </p>
-              ))}
-              {chat.typing && <p className="ap-ofd__status label">{chat.typingText}</p>}
-            </div>
+            {chat.histOpen && (
+              <div className="ap-ofc__thread" id={historyId} aria-label={texts.pick.thread(a.name)}>
+                {threadOf(a.id).map((m) => (
+                  <p key={m.id} className={['ap-ofc__msg', 'body-sm', m.who === 'visitor' ? 'is-me' : `is-${m.who}`].join(' ')}>{m.text}</p>
+                ))}
+              </div>
+            )}
+            {chat.typing && <p className="ap-ofd__status label">{chat.typingText}</p>}
             {chat.card && (
               <OfficeLeadCard card={chat.card} labels={{ ...texts.lead.card, send: texts.lead.send, fix: texts.lead.fix }} note={leadNote} onSend={chat.leadSend} onFix={chat.leadFix} />
             )}
@@ -81,7 +81,7 @@ export function OfficeChatDock({ chat, texts, agents, leadNote, historyId }) {
               <button type="button" className="ap-ofd__hist label" aria-expanded={chat.histOpen} aria-controls={historyId} aria-label={texts.historyAria} onClick={chat.toggleHist}>
                 <Icon name="list" size="sm" />
                 <span className="ap-ofd__histtxt">{texts.historyLabel}</span>
-                <span>{chat.msgs.length}</span>
+                <span>{threadOf(a.id).length}</span>
               </button>
             </div>
           </OfficeAgentCard>

@@ -35,7 +35,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   // Agente con quien conversas de cerca (null: vista general con las tres tarjetas). Mientras hay uno, la cámara se
   // queda acercada al que habla y solo se ve su tarjeta.
   const focusRef = useRef(null);
-  const msg = (who, text) => ({ id: ++idRef.current, who, text });
+  // `to` (solo en los del visitante): a qué agente le hablaste, para separar el historial por agente.
+  const msg = (who, text, to) => ({ id: ++idRef.current, who, text, ...(to ? { to } : {}) });
 
   const [state, setState] = useState(() => {
     const seen = readStore();
@@ -155,8 +156,10 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     const text = String(raw || '').trim();
     if (!text || state.typing) return;
     const toNow = opts && opts.to !== undefined ? opts.to : state.to;
-    push([msg('visitor', text)], { draft: '', to: toNow });
     const lead = state.lead;
+    const explicit = opts && opts.to !== undefined;
+    const heard = (!explicit || opts.to === MAIN) && leadOpen(lead) ? MAIN : toNow || lastRef.current || MAIN;
+    push([msg('visitor', text, heard)], { draft: '', to: toNow });
     if ((!opts || opts.to === undefined || opts.to === MAIN) && leadOpen(lead) && leadInput(text, lead)) return;
     askedRef.current = askedRef.current.concat(text);
     if (wantsContact(text, chat.leadRx)) { startLead(); return; }
@@ -186,7 +189,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   const pickVisitor = (v) => {
     if (state.visitor) return;
     writeStore({ visitor: v.id });
-    push([msg('visitor', v.label)]);
+    push([msg('visitor', v.label, MAIN)]);
     recep(v.reply, { visitor: v.id });
   };
 

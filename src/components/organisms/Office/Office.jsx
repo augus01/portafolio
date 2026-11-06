@@ -1,13 +1,12 @@
 import { useEffect, useId, useMemo, useRef } from 'react';
 import { OfficeThemeSwitch } from '../../molecules/OfficeThemeSwitch';
-import { OfficeChatHistory } from '../../molecules/OfficeChatHistory';
 import { OfficeSwapCover } from '../../molecules/OfficeSwapCover';
 import { OfficeChatDock } from '../OfficeChatDock';
 import { useOfficeScene } from '../../../hooks/useOfficeScene';
 import { useOfficeChat } from '../../../hooks/useOfficeChat';
 
 // Maqueta 3D de la oficina con la conversación encima: el selector de serie arriba, dentro del escenario, globos sobre
-// el agente que habla (la cámara se le acerca y solo entonces se ve su globo; Esc vuelve a la vista general), caja para escribir abajo e historial plegable. El cambio de oficina
+// el agente que habla (la cámara se le acerca y solo entonces se ve su globo; Esc vuelve a la vista general), caja para escribir abajo; el historial de cada agente se despliega en su tarjeta. El cambio de oficina
 // (`swap`) la tapa con cuadrados. Arrastrar gira la maqueta; clic en un agente lo elige para hablarle directo.
 // `link` ({ to, draft }) llega desde el landing con un agente elegido y la pregunta ya escrita.
 export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, link, className }) {
@@ -48,17 +47,6 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
           onPick={swap.go}
         />
         <OfficeChatDock chat={chat} texts={texts} agents={agents} historyId={historyId} leadNote={leadEmail ? texts.lead.noteMail : texts.lead.noteDraft} />
-        <OfficeChatHistory
-          id={historyId}
-          open={chat.histOpen}
-          title={texts.historyLabel}
-          ariaLabel={texts.historyAria}
-          closeLabel={texts.closeHistory}
-          me={texts.me}
-          msgs={chat.msgs}
-          agents={agents}
-          onClose={chat.toggleHist}
-        />
         <p className="ap-sr" aria-live="polite">{chat.live}</p>
         <OfficeSwapCover swap={swap} label={swapLabel} target={swapTarget} />
       </div>
