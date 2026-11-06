@@ -1,17 +1,29 @@
 import { useRef } from 'react';
 import { useInView } from '../../../hooks/useInView';
+import { StackReader } from '../../atoms/StackReader';
 
-// Una fila de la cinta de tecnologías. Los logos van dos veces: la pista avanza la mitad de su ancho y vuelve a
-// empezar sin salto. La copia queda oculta para lectores de pantalla y fuera del orden de Tab.
+// Una fila de la cinta de tecnologías. `slots` es un período (logos y el puesto de stack leyendo, lib/techMarquee.js);
+// la pista lo lleva dos veces y avanza la mitad de su ancho para volver a empezar sin salto. Los logos repetidos y la
+// segunda copia quedan ocultos para lectores de pantalla y fuera del orden de Tab.
 // Cada logo es un botón: al pasar gira a su versión a color; al hacer clic abre su ficha (`onPick`).
 // La pista se detiene con el cursor encima, con una ficha abierta (`paused`) y fuera de pantalla.
-export function TechMarqueeRow({ items, label, variant = 'a', activeId, paused, onPick, openLabel, controls }) {
+export function TechMarqueeRow({ slots, label, variant = 'a', activeId, paused, onPick, openLabel, controls, reader }) {
   const rowRef = useRef(null);
   const inView = useInView(rowRef);
-  const renderItem = (item, copy) => {
+  const renderSlot = (slot, i, second) => {
+    const key = `${second ? 'b' : 'a'}-${i}`;
+    if (slot.reader) {
+      return (
+        <li key={key} className="hab-mq__item hab-mq__item--rd" aria-hidden="true">
+          <StackReader scare={reader?.scare} />
+        </li>
+      );
+    }
+    const { item } = slot;
+    const copy = second || slot.copy;
     const active = activeId === item.logo;
     return (
-      <li key={`${copy ? 'copia-' : ''}${item.logo}`} className="hab-mq__item" aria-hidden={copy || undefined}>
+      <li key={key} className="hab-mq__item" aria-hidden={copy || undefined}>
         <button
           type="button"
           className={['hab-mq__btn', active && 'is-active'].filter(Boolean).join(' ')}
@@ -33,8 +45,8 @@ export function TechMarqueeRow({ items, label, variant = 'a', activeId, paused, 
   return (
     <div ref={rowRef} className={inView && !paused ? 'hab-mq__row' : 'hab-mq__row is-paused'} role="group" aria-label={label}>
       <ul className={`hab-mq__track hab-mq__track--${variant}`}>
-        {items.map((item) => renderItem(item, false))}
-        {items.map((item) => renderItem(item, true))}
+        {slots.map((slot, i) => renderSlot(slot, i, false))}
+        {slots.map((slot, i) => renderSlot(slot, i, true))}
       </ul>
     </div>
   );

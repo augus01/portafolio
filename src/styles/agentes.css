@@ -11,6 +11,8 @@
   --pk-move:240ms;--pk-duck-move:160ms;
   /* Stack en la ficha: globo en el tono claro de su naranja y nombre en su naranja oscuro. */
   --stk-say:#fdeee5;--stk-who:#8a3a10;
+  /* Stack leyendo en la cinta: puesto de 320 × 300px que sobresale 50px arriba y abajo (debe calzar con MQ_READER, lib/techMarquee.js). */
+  --hab-rd-width:320px;--hab-rd-height:300px;--hab-rd-bleed:-50px;
   /* Arquitecto: botón y pieza elegida en su azul; al pasar el cursor, un azul más oscuro. */
   --arq-hover:#2443b0;--arq-peek-w:120px;--arq-peek-h:100px;--arq-pop-w:600px;
   --agent-pop-ease:cubic-bezier(.2,.8,.2,1);
@@ -134,3 +136,13 @@ body:has(.hab-pop.is-open) .ap-navwrap,body:has(.arq-pop.is-open) .ap-navwrap{vi
 .ap-foot__gl{display:none}
 .ap-foot__agents.is-3d .ap-agent{visibility:hidden}
 .ap-foot__agents.is-3d .ap-foot__gl{display:block;position:absolute;left:0;right:0;bottom:0;height:calc(100% + var(--space-4));width:100%;pointer-events:none}
+
+/* ---------- Stack leyendo en la cinta de Superpoderes ---------- */
+/* Sentado en su pufón entre los logos; al pasar el cursor salta asustado y su globo sale sobre la cabeza
+   (posición calculada en lib/stackReader.js). Sin movimiento la cinta es grilla y el puesto no se muestra. */
+.hab-mq__item--rd{width:var(--hab-rd-width)}
+.hab-rd{position:relative;display:block;width:var(--hab-rd-width);height:var(--hab-rd-height);margin:var(--hab-rd-bleed) auto;cursor:default;touch-action:manipulation}
+.hab-rd__gl{position:absolute;inset:0;display:block}
+.hab-rd__say{position:absolute;left:0;top:0;pointer-events:none;white-space:nowrap;padding:var(--space-2) 12px;border-radius:14px 14px 14px 4px;background:var(--stk-say);border:1.5px solid var(--ap-agent-stack);color:var(--ink-primary);font:500 12px/1 var(--font-mono);letter-spacing:.04em;opacity:0;transition:opacity 150ms}
+.hab-rd__say.is-on{opacity:1}
+@media (prefers-reduced-motion: reduce){.hab-rd__say{transition:none}}

@@ -42,11 +42,12 @@
 /* Superpoderes, "Con qué construyo" (artefacto "Hero · Augusto Pinto", 3 nov 2026): cinta en dos filas. Cada fila lleva sus logos dos
    veces; la pista avanza la mitad de su ancho y vuelve a empezar sin salto. Logos 3D de Vitrum
    (vista Angle, material Black). La cinta ocupa todo el ancho; el encabezado se alinea con el resto de las secciones.
+   Las dos filas van a la misma velocidad para que los dos stack que leen en la cinta se turnen (lib/techMarquee.js).
    Excepciones sin token en variables --hab-* (design-system/INTEGRACION.md). */
 .hab-mq{box-sizing:border-box;width:100%;padding:var(--space-16) 0;display:flex;flex-direction:column;justify-content:center;gap:var(--space-16);overflow:hidden;color:var(--ink-primary);font-family:var(--font-text);
   --hab-title-font:var(--font-oswald);--hab-title-size:var(--section-title-size);--hab-title-leading:var(--section-title-leading);--hab-muted:var(--ink-highlight-muted);
   --hab-text-font:var(--font-oswald);--hab-text-size:22px;--hab-intro-max:var(--section-lead-max);
-  --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:46s;--hab-speed-b:54s;--hab-offset-b:-17s;--hab-fade:10%;
+  --hab-item-width:208px;--hab-logo-size:128px;--hab-speed-a:80s;--hab-speed-b:80s;--hab-offset-b:0s;--hab-fade:10%;--hab-row-pad:24px;
   --hab-btn-radius:var(--radius-lg);--hab-btn-active:rgba(18,18,18,.05);--hab-lift:-4px;--hab-grow:1.04;--hab-flip:200ms}
 @media (min-width:900px){.hab-mq{min-height:100vh}}
 /* Mismo ancho y relleno que .ap-section, para que el título arranque en la misma línea que Sobre mí y Proyectos. */
@@ -56,9 +57,10 @@
 .hab-mq__title.display{margin:0;font-family:var(--hab-title-font);font-weight:400;font-size:var(--hab-title-size);line-height:var(--hab-title-leading);letter-spacing:var(--section-title-tracking);color:var(--ink-primary)}
 .hab-mq__title span{color:var(--hab-muted)}
 .hab-mq__lead.lead{margin:0;font-family:var(--hab-text-font);font-size:var(--hab-text-size);font-weight:400;color:var(--ink-primary)}
-.hab-mq__rows{display:flex;flex-direction:column;gap:var(--space-12)}
+/* Las filas se tocan (sin gap) y llevan relleno propio: stack sentado sobresale un poco de su puesto. */
+.hab-mq__rows{display:flex;flex-direction:column;gap:0}
 /* La máscara solo desvanece los bordes de la fila (no pinta color): excepción aprobada en el artefacto. */
-.hab-mq__row{overflow:hidden;
+.hab-mq__row{overflow:hidden;padding:var(--hab-row-pad) 0;
   -webkit-mask-image:linear-gradient(to right,transparent,#000 var(--hab-fade),#000 calc(100% - var(--hab-fade)),transparent);
   mask-image:linear-gradient(to right,transparent,#000 var(--hab-fade),#000 calc(100% - var(--hab-fade)),transparent)}
 .hab-mq__track{list-style:none;margin:0;padding:0;display:flex;width:max-content;animation:hab-mq var(--hab-speed-a) linear infinite;will-change:transform}

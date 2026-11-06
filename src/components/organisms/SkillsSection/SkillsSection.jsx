@@ -1,17 +1,23 @@
-import { useId, useRef } from 'react';
+import { useId, useMemo, useRef } from 'react';
 import { TechMarqueeRow } from '../../molecules/TechMarqueeRow';
 import { SkillCard } from '../../molecules/SkillCard';
 import { useSkillPicker } from '../../../hooks/useSkillPicker';
+import { useViewportWidth } from '../../../hooks/useViewportWidth';
+import { marqueePeriod } from '../../../lib/techMarquee';
 
 // Superpoderes: "Con qué construyo" (artefacto "Hero · Augusto Pinto"). Encabezado con la tipografía de Sobre mí y
 // una cinta de logos 3D en dos filas a velocidades distintas; sin movimiento se ve como grilla.
 // Clic en un logo: se abre su ficha (con stack y sus preguntas listas de `ask`) y la cinta se detiene hasta cerrarla.
-export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {} }) {
+// En cada fila va stack sentado leyendo (`reader`); en la de arriba justo antes de `reader.before` y en la de abajo a
+// media vuelta, así se turnan.
+export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, reader }) {
   const [first, second] = title;
   const sectionRef = useRef(null);
   const cardId = useId();
   const picker = useSkillPicker(sectionRef);
   const shown = rows.flat().find((s) => s.logo === picker.shown) || null;
+  const vw = useViewportWidth();
+  const periods = useMemo(() => rows.map((items, i) => marqueePeriod(items, i, vw, reader?.before)), [rows, vw, reader]);
   return (
     <section id={id} ref={sectionRef} className="hab-mq" aria-labelledby={`${id}-titulo`}>
       <div className="hab-mq__head ap-reveal">
@@ -22,10 +28,11 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {} }
         </div>
       </div>
       <div className="hab-mq__rows">
-        {rows.map((items, i) => (
+        {periods.map((slots, i) => (
           <TechMarqueeRow
             key={i}
-            items={items}
+            slots={slots}
+            reader={reader}
             label={`Tecnologías, fila ${i + 1}`}
             variant={i % 2 ? 'b' : 'a'}
             activeId={picker.open}
