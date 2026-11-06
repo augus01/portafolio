@@ -13,7 +13,7 @@
   --case-font-rumbo:"Bricolage Grotesque","Helvetica Neue",Arial,sans-serif;--case-font-zam:"Plus Jakarta Sans","Helvetica Neue",Arial,sans-serif;
   --case-hover-scale:1.07;
   /* Otros proyectos: título dramático (el tamaño que tenía el nombre del siguiente proyecto) y nombres contenidos. */
-  --case-next-head-size:clamp(64px, 13cqw, 200px);--case-next-name-size:clamp(28px, 3.4cqw, 48px);--case-next-thumb-max:440px}
+  --case-next-head-size:clamp(64px, 13cqw, 200px);--case-next-thumb-max:440px}
 /* El body es oscuro por el hero (hero-inmersivo.css); en una página de proyecto va del color del lienzo. */
 body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case *{box-sizing:border-box}
@@ -146,8 +146,7 @@ body:has(.ap-case){background:var(--surface-canvas)}
 /* Cada proyecto del ancho de su banda: el nombre no pasa del borde de la banda ni invade el centro. */
 .ap-case-next__link{display:flex;flex-direction:column;align-items:flex-start;width:100%;max-width:var(--case-next-thumb-max);height:100%;margin:0 auto;text-decoration:none}
 .ap-case-next__label.hero{margin:0;font-family:var(--font-text);font-weight:400;font-size:var(--case-next-head-size);line-height:.9;letter-spacing:-0.055em;color:var(--ink-primary)}
-.ap-case-next__title{flex:1;display:flex;align-items:flex-end;font-family:var(--font-text);font-weight:400;font-size:var(--case-next-name-size);line-height:1.1;letter-spacing:-0.03em;text-align:left;transition:opacity var(--dur-move) var(--ease-in-out)}
-.ap-case-next__thumb{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4 / 3;margin-top:var(--space-4);background:var(--case-next);color:var(--ink-on-dark);transition:transform var(--dur-move) var(--ease-in-out)}
+.ap-case-next__thumb{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:4 / 3;background:var(--case-next);color:var(--ink-on-dark);transition:transform var(--dur-move) var(--ease-in-out)}
 .ap-case-next__thumb .ap-case-cover__logo{width:58%;height:auto}
 .ap-case-next__thumb .ap-case-lockup{gap:clamp(10px, 1.4cqw, 20px)}
 .ap-case-next__thumb .ap-case-lockup--rumbo .ap-case-lockup__symbol{width:clamp(26px, 2.6cqw, 40px);height:auto}
@@ -155,7 +154,6 @@ body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case-next__thumb .ap-case-lockup--zam .ap-case-lockup__symbol{width:clamp(34px, 3.6cqw, 54px);height:auto}
 .ap-case-next__thumb .ap-case-lockup--zam .ap-case-lockup__word{font-size:clamp(38px, 4cqw, 60px)}
 .ap-case-next__link:hover .ap-case-next__thumb{transform:scale(1.02)}
-.ap-case-next__link:hover .ap-case-next__title{opacity:.6}
 .ap-case-all{display:inline-flex;align-items:center;gap:10px;min-height:var(--target-lg);margin-top:72px;padding:0 28px;border:var(--stroke-hairline) solid var(--border-strong);border-radius:var(--radius-pill);text-decoration:none;font-family:var(--font-oswald);font-size:18px;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
 .ap-case-all:hover{background:var(--action);color:var(--on-action)}
 
