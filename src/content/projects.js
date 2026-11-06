@@ -215,11 +215,11 @@ export const cases = [
       links: [],
       stack: ['TypeScript', 'NestJS', 'Fastify', 'Next.js', 'Expo', 'PostgreSQL', 'Prisma', 'Supabase', 'Firebase Auth'],
       lead: 'Caja, inventario y finanzas para el minimarket de barrio: el control de un supermercado, hecho para un almacén.',
-      body: 'Es mi proyecto propio y sigue en desarrollo. El cajero vende desde la app, aunque el producto no esté en el catálogo. El dueño ve en la web cuánto vendió, qué le queda en bodega y cuánto le costó cada lote, y recibe avisos que le dicen qué pasa y qué hacer. Cada tienda ve solo sus datos. Las pantallas de esta página usan una tienda de ejemplo con cifras que calzan entre sí.',
+      body: 'Es mi proyecto propio y está en su primer hito: el backend se está construyendo módulo por módulo. Las pantallas de esta página son diseños del producto, hechos sobre una tienda de ejemplo con cifras que calzan entre sí. Muestran lo que viene: el cajero vende desde la app aunque el producto no esté en el catálogo, y el dueño ve cuánto vendió, qué le queda en bodega y cuánto le costó cada lote, con avisos que le dicen qué pasa y qué hacer.',
     },
     facts: [
       { n: '2', l: 'Superficies: app del cajero y panel web del dueño' },
-      { n: '3', l: 'Módulos del backend: inventario, ventas y proveedores' },
+      { n: '7', l: 'Módulos del backend: identidad, inventario, ventas, proveedores, finanzas, alertas y asistente' },
       { n: '7', l: 'Tipos de alerta que explican y proponen' },
       { n: '1', l: 'Lenguaje de punta a punta: TypeScript' },
     ],

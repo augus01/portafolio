@@ -41,12 +41,8 @@ test('zam: tiene al menos 5 capturas de producto', () => {
   assert.ok(unicas.size >= 6, `hay ${unicas.size}`);
 });
 
-test('zam: cada imagen existe y tiene la medida de su dispositivo', () => {
-  for (const s of shots(zam)) {
-    const file = `public${s.src}`;
-    assert.ok(existsSync(file), `falta ${file}`);
-    assert.deepEqual(webpSize(file), s.device, s.src);
-  }
+test('zam: cada imagen existe', () => {
+  for (const s of shots(zam)) assert.ok(existsSync(`public${s.src}`), `falta public${s.src}`);
 });
 
 test('zam: cada imagen tiene alt en español y no vacío', () => {
@@ -61,4 +57,24 @@ test('zam: la etapa 3D se rotula como próxima etapa', () => {
 
 test('zam: el texto ya no dice que no hay capturas', () => {
   assert.doesNotMatch(zam.intro.body, /no tiene capturas/);
+});
+
+test('zam: el intro aclara que las pantallas son diseños, no capturas de un producto funcionando', () => {
+  assert.match(zam.intro.body, /diseños/);
+});
+
+test('zam: el dato de módulos calza con los 7 módulos de los preDocs', () => {
+  const mod = zam.facts.find((f) => /Módulos/.test(f.l));
+  assert.equal(mod.n, '7');
+});
+
+test('zam: no se versiona el runtime de Claude Design', () => {
+  assert.ok(!existsSync('docs/zam-pantallas/fuente/support.js'));
+});
+
+test('zam: las imágenes van al doble de la medida del dispositivo para que el texto se lea', () => {
+  for (const s of shots(zam)) {
+    const [w, h] = webpSize(`public${s.src}`);
+    assert.deepEqual([w, h], [s.device[0] * 2, s.device[1] * 2], s.src);
+  }
 });
