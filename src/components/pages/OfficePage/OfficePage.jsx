@@ -10,13 +10,16 @@ import * as en from '../../../content/en/office';
 import { langToggle as esToggle } from '../../../content/home';
 import { langToggle as enToggle } from '../../../content/en/home';
 import { useLang } from '../../../hooks/useLang';
-import { pickLang } from '../../../lib/lang';
+import { otherLang, pickLang } from '../../../lib/lang';
 import { readOfficeLink } from '../../../lib/officeLink';
 
 // "Visita mi oficina" en su propia página (/oficina/): recepción te trae desde Contacto y te devuelve allá.
 export function OfficePage() {
   const { lang, toggle } = useLang();
   const { officePage, themes, stage, agents, chat, leadEmail } = pickLang(lang, { en, es });
+  // Contenido del otro idioma: si el visitante escribe en él, los agentes le responden en él.
+  const other = pickLang(otherLang(lang), { en, es });
+  const alt = { chat: other.chat, agents: other.agents };
   const langToggle = { ...pickLang(lang, { en: enToggle, es: esToggle }), onSelect: toggle };
   const stageRef = useRef(null);
   const swap = useThemeSwap(stageRef, themes.items[0].id);
@@ -57,6 +60,7 @@ export function OfficePage() {
           agents={agents}
           leadEmail={leadEmail}
           link={link}
+          alt={alt}
         />
       </OfficePageTemplate>
       <PageWipe phase={wipe.phase} />

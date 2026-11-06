@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { answer, bubbleMap, greeting, isConfirm, isQuestion, leadMailto, leadNext, wantsContact } from '../lib/officeChat';
 import { historialParaApi, pedirRespuesta } from '../lib/chatAgentesApi';
+import { detectLang } from '../lib/detectLang';
 
 const STORE = 'ap-office-visit';
 // Recepción atiende primero y es a quien le hablas si no eliges a otro.
@@ -21,8 +22,10 @@ const writeStore = (patch) => { try { localStorage.setItem(STORE, JSON.stringify
  * agente si lo eliges antes de empezar a hablar; desde tu primer mensaje queda en la vista general, con el globo del que habla.
  * `scene` es el control de useOfficeScene (globos y anillo del que habla). `link` ({ to, draft }) llega desde el landing
  * ("Seguir con stack en la oficina"): ese agente queda elegido y la pregunta escrita. Devuelve el estado y las acciones.
+ * Los agentes responden en el idioma en que les escriben (lib/detectLang), aunque el sitio esté en el otro: `alt`
+ * ({ chat, agents }) es el contenido del otro idioma para las reglas locales y para reconocer un recado.
  */
-export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang }) {
+export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt }) {
   const sceneRef = useRef(scene);
   sceneRef.current = scene;
   const idRef = useRef(0);
@@ -162,7 +165,10 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang }) {
     push([msg('visitor', text, heard)], { draft: '', to: toNow });
     if ((!opts || opts.to === undefined || opts.to === MAIN) && leadOpen(lead) && leadInput(text, lead)) return;
     askedRef.current = askedRef.current.concat(text);
-    if (wantsContact(text, chat.leadRx)) { startLead(); return; }
+    // Idioma del mensaje: el del sitio salvo que escribas claramente en el otro.
+    const msgLang = alt ? detectLang(text, lang) : lang;
+    const own = msgLang === lang || !alt ? { chat, agents } : alt;
+    if (wantsContact(text, chat.leadRx) || wantsContact(text, own.chat.leadRx)) { startLead(); return; }
     writeStore({ last: text.slice(0, 80) });
     const to = toNow;
     const from = to || lastRef.current;
@@ -170,13 +176,14 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang }) {
     clearTimeout(seqRef.current);
     // Mientras piensa, la cámara se queda con el agente al que le hablaste (o el último que habló), con sus puntos.
     sceneRef.current.say(from ? { [from]: '…' } : {}, { focus: !!focusRef.current });
-    const local = () => answer(text, { topics: chat.topics, agents, small: chat.small, to, from, noMatch: chat.noMatch, noMatchHanded: chat.noMatchHanded, handoff: chat.handoff, handoffMore: chat.handoffMore, handoffUnknown: chat.handoffUnknown });
+    const c = own.chat;
+    const local = () => answer(text, { topics: c.topics, agents: own.agents, small: c.small, to, from, noMatch: c.noMatch, noMatchHanded: c.noMatchHanded, handoff: c.handoff, handoffMore: c.handoffMore, handoffUnknown: c.handoffUnknown });
     // Con VITE_CHAT_API_URL pide la respuesta a la IA; si no hay URL o falla (null), responde con las reglas locales.
     // Todo pasa por la IA, también saludos y agradecimientos: el modelo distingue la intención del visitante.
     // En todo caso espera al menos TYPING_MS para que los puntos se vean.
     const espera = new Promise((resolve) => { timerRef.current = setTimeout(resolve, TYPING_MS); });
     Promise.all([
-      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs), lang }),
+      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs), lang: msgLang }),
       espera,
     ]).then(([remotas]) => {
       if (!vivoRef.current) return;
