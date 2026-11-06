@@ -14,7 +14,7 @@ const SPOTS = {
   stack: { pos: [1.3, 1.3, -4.25], hit: { c: [1.6, 1.0, -3.9], s: [3.2, 2.0, 1.9] } },
 };
 
-export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) {
+export function mountOffice({ stage, holder, labelsEl, theme, agents, deco = {}, onPick }) {
   if (!stage || !holder || !labelsEl || !theme) return null;
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let renderer;
@@ -120,7 +120,7 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, onPick }) 
     return el;
   };
   AG.forEach((a) => { a.tagEl = addLabel(a.name, 'agent', () => new THREE.Vector3(a.pos[0], a.mesh.position.y + 0.75, a.pos[2])); });
-  (theme.labels || []).forEach(([t, p]) => addLabel(t, 'deco', () => new THREE.Vector3(...p)));
+  (theme.labels || []).forEach(([t, p]) => addLabel(deco[t] || t, 'deco', () => new THREE.Vector3(...p)));
   const says = {};
   AG.forEach((a) => {
     const el = document.createElement('div');

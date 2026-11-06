@@ -11,7 +11,10 @@ const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener n
 // `brand` ({ href, label }) agrega el logo "apinto" en negro como primer elemento de la cápsula, enlace al inicio;
 // en ventanas angostas pasa al monograma "ap" (layout.css).
 // `onNavigate(e, href)` recibe los clics en anclas de la misma página (#…), para saltar con el scroll suave del landing.
-export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', label = 'Principal', onNavigate, className }) {
+// `labels` ({ region, menu, close }) son los textos de la barra, que salen del contenido.
+const LABELS = { region: 'Principal', menu: 'Menú', close: 'Cerrar' };
+
+export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', labels = LABELS, onNavigate, className }) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
   const rootRef = useRef(null);
@@ -48,7 +51,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
 
   return (
     <div ref={rootRef} className={['ap-nav', `ap-nav--${tone}`, brand && 'ap-nav--brand', className].filter(Boolean).join(' ')}>
-      <nav aria-label={label} className="ap-nav__bar">
+      <nav aria-label={labels.region} className="ap-nav__bar">
         {brand && (
           <a className="ap-nav__brand" href={brand.href} aria-label={brand.label}>
             <Logo tone="dark" height={32} decorative className="ap-nav__logo" />
@@ -69,7 +72,7 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
           onClick={() => setOpen((v) => !v)}
         >
           <Icon name={open ? 'x' : 'menu'} size="sm" />
-          <span>{open ? 'Cerrar' : 'Menú'}</span>
+          <span>{open ? labels.close : labels.menu}</span>
         </Pill>
         <div id={panelId} className={`ap-nav__panel ap-nav__panel--${menuPlacement}`} hidden={!open}>
           <ul>

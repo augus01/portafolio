@@ -26,6 +26,8 @@ export const themes = {
 
 export const stage = {
   fallback: 'No se pudo abrir la vista 3D en este navegador. Igual puedes conversar con la oficina aquí abajo.',
+  // Rótulos de los decorados 3D (la clave la pone el tema en src/lib/officeThemes.js).
+  deco: { core: 'núcleo de IA' },
 };
 
 // Los tres agentes, con su nombre en minúsculas (su color, el del personaje, vive en src/styles/oficina.css).
@@ -77,6 +79,7 @@ export const chat = {
     talking: 'Conversando', talkTo: (name) => `Hablar con ${name}`, change: 'Cambiar de agente',
     thread: (name) => `Conversación con ${name}`, input: (name) => `Tu pregunta para ${name}`,
   },
+  welcomeBack: (last) => `¡Volviste! La última vez preguntaste “${last}”. ¿Seguimos por ahí?`,
   welcome: '¡Bienvenido! Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. ¿Qué te trae por aquí?',
   noMatch: 'Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde.',
   visitorsLabel: '¿Qué te trae por aquí?',

@@ -6,7 +6,7 @@ import { PeekPill } from '../../atoms/PeekPill';
 // `tone="dark"` sobre el hero (transparente, icono blanco); `light` sobre la página (vidrio claro con línea inferior).
 // Con `brand` ({ href, label }) el logo es el enlace al inicio. Con `peek` ({ href, label }) la píldora Contacto queda
 // junto al menú, con recepción asomada por detrás; `onNavigate(e, href)` la hace saltar con el scroll suave.
-export function MobileNavBar({ tone = 'light', brand, peek, onNavigate, open, menuId, onOpen, buttonRef }) {
+export function MobileNavBar({ tone = 'light', brand, peek, onNavigate, open, menuId, onOpen, buttonRef, openLabel = 'Abrir menú' }) {
   const logo = <Logo tone={tone === 'dark' ? 'light' : 'dark'} height={30} decorative={Boolean(brand)} />;
   return (
     <div className="ap-mnav" data-tone={tone}>
@@ -18,7 +18,7 @@ export function MobileNavBar({ tone = 'light', brand, peek, onNavigate, open, me
         ref={buttonRef}
         type="button"
         className="ap-mnav__toggle"
-        aria-label="Abrir menú"
+        aria-label={openLabel}
         aria-expanded={open}
         aria-controls={menuId}
         onClick={onOpen}

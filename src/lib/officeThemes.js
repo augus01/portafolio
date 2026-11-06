@@ -716,7 +716,7 @@ T.sopranos = {
   /* Oficina-E-Orbital */
 T.odisea = {
   clear: 0x050608, hemi: [0xffffff, 0x8a9099, 1.05], sun: [0xffffff, 0.55], ring: 0xd8232a,
-  labels: [['núcleo de IA', [4.0, 3.0, -4.5]]],
+  labels: [['core', [4.0, 3.0, -4.5]]],
   build(api) {
     const { THREE, scene, M, box, cyl, sphere, torus, discZ } = api;
     const K = kit(api), S = K.S;

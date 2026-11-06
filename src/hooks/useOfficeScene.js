@@ -7,7 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
  * Devuelve un control estable: `say(map, opts)`, `speak(id)`, `select(id)`, `unfocus()`, `setMode(m)`, más `mode` y `failed`.
  * `onPick(id | null)` avisa cuando el visitante hace clic en un agente dentro de la maqueta.
  */
-export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents, onPick }) {
+export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents, deco, onPick }) {
   const [mode, setModeState] = useState('iso');
   const [failed, setFailed] = useState(false);
   const engineRef = useRef(null);
@@ -25,7 +25,7 @@ export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents
       if (cancelled) return;
       const engine = mountOffice({
         stage, holder: canvasRef.current, labelsEl: labelsRef.current,
-        theme: officeThemes[themeId] || officeThemes.original, agents,
+        theme: officeThemes[themeId] || officeThemes.original, agents, deco,
         onPick: (id) => { last.current.select = id; if (pickRef.current) pickRef.current(id); },
       });
       if (!engine) { setFailed(true); return; }
@@ -42,7 +42,7 @@ export function useOfficeScene({ stageRef, canvasRef, labelsRef, themeId, agents
       cancelled = true;
       if (engineRef.current) { engineRef.current.dispose(); engineRef.current = null; }
     };
-  }, [stageRef, canvasRef, labelsRef, themeId, agents]);
+  }, [stageRef, canvasRef, labelsRef, themeId, agents, deco]);
 
   const control = useMemo(() => ({
     say(map, opts) { last.current.say = map; engineRef.current?.say(map, opts); },

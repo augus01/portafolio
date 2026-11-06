@@ -20,7 +20,7 @@ export function ContactSection({ id, headline, enter, meta, hint, desk }) {
     d.say(desk.follow, 3, true);
     d.lead(() => wipe.leave(enter.href));
   };
-  const deskRef = useContactDesk(stageRef, desk.lines, { onTriple: go, tickles: desk.tickles });
+  const deskRef = useContactDesk(stageRef, desk.lines, { onTriple: go, tickles: desk.tickles, ding: desk.ding, elsewhere: desk.elsewhere });
   // Al volver con "Atrás" el navegador puede restaurar la página tal cual: se suelta el seguro para poder entrar otra vez.
   useEffect(() => {
     const reset = () => { goingRef.current = false; };

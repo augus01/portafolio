@@ -48,7 +48,7 @@ test('answer: el agente al que le hablaron pasa la palabra si no es su tema', ()
 });
 
 test('greeting retoma la última pregunta salvo que fuera un contacto', () => {
-  const g = { welcome: chat.welcome, leadRx: chat.leadRx };
+  const g = { welcome: chat.welcome, welcomeBack: chat.welcomeBack, leadRx: chat.leadRx };
   assert.equal(greeting(null, g), chat.welcome);
   assert.match(greeting({ last: '¿Qué stack usa?' }, g), /Volviste/);
   assert.equal(greeting({ last: 'Quiero contactarlo' }, g), chat.welcome);

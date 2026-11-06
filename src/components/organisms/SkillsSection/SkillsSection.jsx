@@ -10,7 +10,7 @@ import { createCheer, marqueePeriod } from '../../../lib/techMarquee';
 // Clic en un logo: se abre su ficha (con stack y sus preguntas listas de `ask`) y la cinta se detiene hasta cerrarla.
 // En cada fila va stack sentado leyendo (`reader`); en la de arriba justo antes de `reader.before` y en la de abajo a
 // media vuelta, así se turnan.
-export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, reader }) {
+export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, reader, rowLabel = (n) => `Tecnologías, fila ${n}` }) {
   const [first, second] = title;
   const sectionRef = useRef(null);
   const cardId = useId();
@@ -36,7 +36,7 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, 
             key={i}
             slots={slots}
             reader={stackReader}
-            label={`Tecnologías, fila ${i + 1}`}
+            label={rowLabel(i + 1)}
             variant={i % 2 ? 'b' : 'a'}
             activeId={picker.open}
             paused={!!picker.open}

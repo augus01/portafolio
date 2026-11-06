@@ -36,8 +36,8 @@ export function ProjectPage({ slug }) {
         theme={data.theme}
         nav={(
           <div className="ap-navwrap is-static">
-            <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} tone="light" />
-            <MobileNavBar tone="light" brand={nav.brand} open={menu.open} menuId={menuId} onOpen={menu.openMenu} buttonRef={menu.openRef} />
+            <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} labels={nav.labels} tone="light" />
+            <MobileNavBar tone="light" brand={nav.brand} openLabel={nav.labels?.openMenu} open={menu.open} menuId={menuId} onOpen={menu.openMenu} buttonRef={menu.openRef} />
             <MobileMenu id={menuId} open={menu.open} {...mobileMenu} onClose={menu.closeMenu} onNavigate={menu.navigate} closeRef={menu.closeRef} />
           </div>
         )}

@@ -105,8 +105,8 @@ export function leadNext(lead, text, { isQuestion: esPregunta }) {
 }
 
 /** Saludo de recepción: si el visitante ya vino y preguntó algo (que no era un contacto), lo retoma. */
-export function greeting(seen, { welcome, leadRx }) {
-  if (seen && seen.last && !wantsContact(seen.last, leadRx)) return `¡Volviste! La última vez preguntaste “${seen.last}”. ¿Seguimos por ahí?`;
+export function greeting(seen, { welcome, welcomeBack, leadRx }) {
+  if (seen && seen.last && !wantsContact(seen.last, leadRx)) return welcomeBack(seen.last);
   return welcome;
 }
 
@@ -118,12 +118,12 @@ export function bubbleMap(replies) {
 }
 
 /** Enlace mailto con el recado listo para enviar. */
-export function leadMailto(email, subject, card) {
+export function leadMailto(email, subject, card, labels = { name: 'Nombre', need: 'Necesita', email: 'Correo', topics: 'Preguntó por' }) {
   const body = [
-    `Nombre: ${card.name}`,
-    `Necesita: ${card.need}`,
-    `Correo: ${card.email}`,
-    `Preguntó por: ${card.topics}`,
+    `${labels.name}: ${card.name}`,
+    `${labels.need}: ${card.need}`,
+    `${labels.email}: ${card.email}`,
+    `${labels.topics}: ${card.topics}`,
   ].join('\n');
   return `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }

@@ -40,7 +40,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
 
   const [state, setState] = useState(() => {
     const seen = readStore();
-    const text = greeting(seen, { welcome: chat.welcome, leadRx: chat.leadRx });
+    const text = greeting(seen, { welcome: chat.welcome, welcomeBack: chat.welcomeBack, leadRx: chat.leadRx });
     return {
       msgs: [{ id: ++idRef.current, who: 'recepcion', text }],
       visitor: seen?.visitor || null,
@@ -127,7 +127,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
   const leadSend = (lead) => {
     const L = { ...lead, step: 'sent' };
     if (leadEmail) {
-      window.location.href = leadMailto(leadEmail, chat.lead.subject, L.card);
+      window.location.href = leadMailto(leadEmail, chat.lead.subject, L.card, chat.lead.card);
       recep(chat.lead.sentMail(L.email), { lead: L });
     } else recep(chat.lead.sent(L.email), { lead: L });
   };

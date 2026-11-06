@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
  * `lead(done)` (tres saltos y luego `done`); sin WebGL queda en null y la sección se ve igual, sin el personaje.
  * `onTriple` corre al hacerle tres clics seguidos a recepción; `tickles`, lo que dice con el primer y segundo clic.
  */
-export function useContactDesk(stageRef, lines, { onTriple, tickles } = {}) {
+export function useContactDesk(stageRef, lines, { onTriple, tickles, ding, elsewhere } = {}) {
   const deskRef = useRef(null);
   const tripleRef = useRef(onTriple);
   tripleRef.current = onTriple;
@@ -20,7 +20,7 @@ export function useContactDesk(stageRef, lines, { onTriple, tickles } = {}) {
       io.disconnect();
       import('../lib/contactDesk').then(({ mountContactDesk }) => {
         if (cancelled) return;
-        deskRef.current = mountContactDesk(stage, { lines, tickles, onTriple: () => tripleRef.current?.() });
+        deskRef.current = mountContactDesk(stage, { lines, tickles, ding, elsewhere, onTriple: () => tripleRef.current?.() });
       }).catch(() => { /* sin escritorio 3D */ });
     }, { rootMargin: '600px 0px' });
     io.observe(stage);

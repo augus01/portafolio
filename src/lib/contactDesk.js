@@ -196,7 +196,7 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
     var tickles = opts.tickles || ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'];
     var clicks = 0, lastClick = -10;
     var onCanvasClick = function (e) {
-      if (hitAt(e, [bell, bellKnob])) { ringBell(); hop(false); say('¡Ding! Ya voy', 2.4); return; }
+      if (hitAt(e, [bell, bellKnob])) { ringBell(); hop(false); say(opts.ding || '¡Ding! Ya voy', 2.4); return; }
       if (!hitAt(e, agentMeshes) || leading) return;
       var t = now();
       clicks = t - lastClick < 0.8 ? clicks + 1 : 1;
@@ -213,7 +213,7 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
     var onEnter = function (e) {
       var t = e.currentTarget;
       hop(false);
-      say(t.getAttribute('data-contact-say') || '¡Por ahí también!', 30, true);
+      say(t.getAttribute('data-contact-say') || opts.elsewhere || '¡Por ahí también!', 30, true);
       var r = t.getBoundingClientRect(), s = stage.getBoundingClientRect();
       st.goalX = Math.max(-1, Math.min(1, (r.left + r.width / 2 - (s.left + s.width / 2)) / (s.width * 0.6)));
       st.goalY = Math.max(-1, Math.min(1, (r.top + r.height / 2 - (s.top + s.height * 0.42)) / (s.height * 0.6)));

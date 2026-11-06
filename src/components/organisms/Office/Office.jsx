@@ -16,7 +16,7 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
   const agentList = useMemo(() => Object.values(agents), [agents]);
   const chatRef = useRef(null);
   const scene = useOfficeScene({
-    stageRef, canvasRef, labelsRef, themeId, agents: agentList,
+    stageRef, canvasRef, labelsRef, themeId, agents: agentList, deco: stage.deco,
     onPick: (id) => chatRef.current?.setTo(id, true),
   });
   const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail, link });

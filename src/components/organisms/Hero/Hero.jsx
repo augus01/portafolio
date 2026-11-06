@@ -4,7 +4,7 @@ import { Wordmark } from '../../atoms/Wordmark';
 
 // Apertura a pantalla completa: fondo de rayos, logo, rol (· lugar, opcional) y el nombre gigante.
 // En contenedores de menos de 600px el nombre se parte en una línea por palabra.
-export function Hero({ name = 'augusto pinto', role, location, uppercase, height = '100svh', className }) {
+export function Hero({ name = 'augusto pinto', role, location, uppercase, height = '100svh', regionLabel = 'Presentación', className }) {
   const ref = useRef(null);
   const [narrow, setNarrow] = useState(false);
 
@@ -20,7 +20,7 @@ export function Hero({ name = 'augusto pinto', role, location, uppercase, height
   const lines = narrow && words.length > 1 ? words : [words.join(' ')];
 
   return (
-    <section ref={ref} className={['ap-hero', className].filter(Boolean).join(' ')} style={{ minHeight: height }} aria-label="Presentación">
+    <section ref={ref} className={['ap-hero', className].filter(Boolean).join(' ')} style={{ minHeight: height }} aria-label={regionLabel}>
       <div className="ap-hero__bg" aria-hidden="true">
         <div className="ap-hero__rays" />
         <div className="ap-hero__vignette" />

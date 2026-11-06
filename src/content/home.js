@@ -4,6 +4,7 @@
 export const nav = {
   // Logo "apinto" en negro a la izquierda de la nav: lleva al inicio.
   brand: { label: 'Augusto Pinto, ir al inicio', href: '/' },
+  labels: { region: 'Principal', menu: 'Menú', close: 'Cerrar', openMenu: 'Abrir menú' },
   items: [
     { label: 'Sobre mí', href: '#sobre-mi' },
     { label: 'Superpoderes', href: '#superpoderes' },
@@ -27,6 +28,7 @@ export const mobileMenu = {
   cta: { label: 'Pasa por recepción', href: '#contacto' },
   secondary: { label: 'GitHub', href: 'https://github.com/augus01', external: true },
   meta: 'Ingeniería Civil Informática · Santiago',
+  labels: { dialog: 'Menú de navegación', close: 'Cerrar menú', nav: 'Principal' },
 };
 
 export const hero = {
@@ -34,6 +36,7 @@ export const hero = {
   uppercase: true,
   role: 'Menos promesas, más productos que ayudan cada día',
   height: '100svh',
+  regionLabel: 'Presentación',
 };
 
 export const about = {
@@ -66,6 +69,7 @@ export const skills = {
   id: 'superpoderes',
   // La segunda parte del título va en gris.
   title: ['Con qué', 'construyo'],
+  rowLabel: (n) => `Tecnologías, fila ${n}`,
   lead: 'Las 17 tecnologías que uso en mis proyectos, de la interfaz al despliegue. Pasa el cursor sobre una fila para detenerla y haz clic en una para ver qué logré con ella.',
   // Textos de la ficha. Stack presenta la herramienta: preguntas listas, su respuesta y el paso a la oficina con la pregunta ya escrita.
   card: {
@@ -326,6 +330,8 @@ export const contact = {
     greet: 'Hola, soy recepción. ¿En qué te ayudo?',
     // Lo que dice con el primer y el segundo clic; al tercero te lleva a la oficina.
     tickles: ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'],
+    ding: '¡Ding! Ya voy',
+    elsewhere: '¡Por ahí también!',
   },
 };
 
