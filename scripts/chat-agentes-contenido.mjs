@@ -1,4 +1,4 @@
-// Genera infra/lambda/contenido.json desde src/content/office.js (única fuente de verdad del contenido).
+// Genera infra/lambda/contenido.json ({ es, en }) desde src/content/office.js y src/content/en/office.js (única fuente de verdad del contenido).
 import { writeFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -21,9 +21,13 @@ export function construirContenido({ agents, chat }) {
   };
 }
 
+// El contenido de la Lambda en los dos idiomas del sitio: { es, en }.
+export const construirIdiomas = ({ es, en }) => ({ es: construirContenido(es), en: construirContenido(en) });
+
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const { agents, chat } = await import('../src/content/office.js');
+  const es = await import('../src/content/office.js');
+  const en = await import('../src/content/en/office.js');
   const destino = fileURLToPath(new URL('../infra/lambda/contenido.json', import.meta.url));
-  writeFileSync(destino, JSON.stringify(construirContenido({ agents, chat }), null, 2) + '\n');
+  writeFileSync(destino, JSON.stringify(construirIdiomas({ es, en }), null, 2) + '\n');
   console.log(`Escrito ${destino}`);
 }

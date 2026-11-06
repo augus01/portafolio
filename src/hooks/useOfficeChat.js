@@ -22,7 +22,7 @@ const writeStore = (patch) => { try { localStorage.setItem(STORE, JSON.stringify
  * `scene` es el control de useOfficeScene (globos y anillo del que habla). `link` ({ to, draft }) llega desde el landing
  * ("Seguir con stack en la oficina"): ese agente queda elegido y la pregunta escrita. Devuelve el estado y las acciones.
  */
-export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
+export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang }) {
   const sceneRef = useRef(scene);
   sceneRef.current = scene;
   const idRef = useRef(0);
@@ -176,7 +176,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link }) {
     // En todo caso espera al menos TYPING_MS para que los puntos se vean.
     const espera = new Promise((resolve) => { timerRef.current = setTimeout(resolve, TYPING_MS); });
     Promise.all([
-      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs) }),
+      pedirRespuesta({ url: import.meta.env.VITE_CHAT_API_URL, mensaje: text, agente: to || from || null, historial: historialParaApi(state.msgs), lang }),
       espera,
     ]).then(([remotas]) => {
       if (!vivoRef.current) return;

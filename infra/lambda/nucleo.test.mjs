@@ -2,11 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { validarPeticion, costoUsd, armarSistema, armarMensajes, interpretarRespuesta, crearHandler, mesDe } from './nucleo.mjs';
-const contenido = JSON.parse(readFileSync(new URL('./contenido.json', import.meta.url)));
+const todo = JSON.parse(readFileSync(new URL('./contenido.json', import.meta.url)));
+const contenido = todo.es;
 
 test('validarPeticion acepta una petición normal', () => {
   const r = validarPeticion({ mensaje: ' ¿Qué es Zam? ', agente: 'arquitecto', historial: [] });
-  assert.deepEqual(r, { ok: true, mensaje: '¿Qué es Zam?', agente: 'arquitecto', historial: [] });
+  assert.deepEqual(r, { ok: true, mensaje: '¿Qué es Zam?', agente: 'arquitecto', historial: [], lang: 'es' });
 });
 test('validarPeticion rechaza mensaje vacío', () => {
   assert.equal(validarPeticion({ mensaje: '   ' }).ok, false);
@@ -98,7 +99,7 @@ const ev = (b) => ({ body: JSON.stringify(b) });
 const falsos = (over = {}) => {
   const llamadas = { invocar: 0, sumado: [] };
   const deps = {
-    contenido, topeUsd: 8, ahora: () => new Date('2026-11-15T12:00:00Z'),
+    contenido: todo, topeUsd: 8, ahora: () => new Date('2026-11-15T12:00:00Z'),
     leerGasto: async () => 0,
     sumarGasto: async (mes, usd) => { llamadas.sumado.push([mes, usd]); },
     invocar: async () => { llamadas.invocar++; return { texto: '{"agente":"stack","texto":"Usa React."}', inputTokens: 1000, outputTokens: 100 }; },
@@ -172,4 +173,32 @@ test('una pregunta de otro territorio deriva como antes', () => {
 });
 test('con agente pedido, el saludo va con la voz de ese agente', () => {
   assert.match(armarSistema(contenido, 'stack'), /te presentas como stack, que sabe de/);
+});
+
+test('validarPeticion: sin lang o con uno desconocido responde en español', () => {
+  assert.equal(validarPeticion({ mensaje: 'hola' }).lang, 'es');
+  assert.equal(validarPeticion({ mensaje: 'hi', lang: 'en' }).lang, 'en');
+  const raro = validarPeticion({ mensaje: 'hola', lang: 'fr' });
+  assert.equal(raro.ok, true);
+  assert.equal(raro.lang, 'es');
+});
+test('contenido.json trae los dos idiomas con la misma forma', () => {
+  assert.deepEqual(Object.keys(todo).sort(), ['en', 'es']);
+  assert.deepEqual(Object.keys(todo.en).sort(), Object.keys(todo.es).sort());
+  assert.equal(todo.en.agentes.arquitecto.name, 'architect');
+});
+test('armarSistema pide responder en el idioma del sitio', () => {
+  assert.match(armarSistema(todo.en, null, 'en'), /Respond in English/);
+  assert.match(armarSistema(todo.en, null, 'en'), /architect/);
+  assert.doesNotMatch(armarSistema(todo.en, null, 'en'), /Responde en español de Chile/);
+  assert.match(armarSistema(todo.es), /Responde en español de Chile/);
+});
+test('el handler usa el contenido del idioma pedido', async () => {
+  let sistema = '';
+  const { h } = falsos({ invocar: async (s) => { sistema = s; return { texto: '{"agente":"arquitecto","texto":"Zam is a corner store app."}', inputTokens: 10, outputTokens: 10 }; } });
+  const r = JSON.parse((await h(ev({ mensaje: 'what is zam?', agente: 'stack', lang: 'en' }))).body);
+  assert.match(sistema, /Respond in English/);
+  assert.deepEqual(r.replies[0], { agent: 'stack', handoff: true, text: todo.en.derivar.arquitecto });
+  const sinLang = JSON.parse((await h(ev({ mensaje: 'que es zam?', agente: 'stack' }))).body);
+  assert.equal(sinLang.replies[0].text, todo.es.derivar.arquitecto);
 });

@@ -1,147 +1,296 @@
 {
-  "agentes": {
-    "recepcion": {
-      "name": "recepción",
-      "topic": "quién es Augusto y cómo dejarle un recado",
-      "intro": "Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.",
-      "reglas": [
-        "Recepción habla solo de Augusto como persona y profesional: quién es, qué estudia, cómo trabaja, su experiencia y su meta.",
-        "Recepción no nombra proyectos ni tecnologías; lo más que dice es que Augusto trabajó como desarrollador frontend en Inkvibe.",
-        "Si preguntan qué ha hecho Augusto o por un proyecto, eso es de arquitecto; si preguntan cómo está construido algo, es de stack.",
-        "Las organizaciones donde Augusto trabaja fuera de la informática no se nombran: se dice \"en las organizaciones donde se desempeña Augusto\".",
-        "Recepción toma el recado de quien quiera hablar con Augusto y nunca da teléfono, correo ni dirección."
-      ]
+  "es": {
+    "agentes": {
+      "recepcion": {
+        "name": "recepción",
+        "topic": "quién es Augusto y cómo dejarle un recado",
+        "intro": "Hola, soy recepción. Te cuento quién es Augusto y, si quieres hablar con él, tomo tu recado.",
+        "reglas": [
+          "Recepción habla solo de Augusto como persona y profesional: quién es, qué estudia, cómo trabaja, su experiencia y su meta.",
+          "Recepción no nombra proyectos ni tecnologías; lo más que dice es que Augusto trabajó como desarrollador frontend en Inkvibe.",
+          "Si preguntan qué ha hecho Augusto o por un proyecto, eso es de arquitecto; si preguntan cómo está construido algo, es de stack.",
+          "Las organizaciones donde Augusto trabaja fuera de la informática no se nombran: se dice \"en las organizaciones donde se desempeña Augusto\".",
+          "Recepción toma el recado de quien quiera hablar con Augusto y nunca da teléfono, correo ni dirección."
+        ]
+      },
+      "arquitecto": {
+        "name": "arquitecto",
+        "topic": "qué es cada proyecto y qué logra",
+        "intro": "Soy arquitecto. Te cuento qué es cada proyecto de Augusto y qué logra: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?",
+        "reglas": [
+          "Arquitecto habla solo de los proyectos: qué es cada uno, para quién es, su objetivo y qué logra (premios, alcance, rol de Augusto).",
+          "Arquitecto no nombra tecnologías, frameworks ni servicios: cómo está construido un proyecto es de stack.",
+          "Si preguntan quién es Augusto o cómo trabaja, eso es de recepción."
+        ]
+      },
+      "stack": {
+        "name": "stack",
+        "topic": "cómo está construido cada proyecto",
+        "intro": "Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.",
+        "reglas": [
+          "Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.",
+          "Stack siempre amarra una tecnología al proyecto donde Augusto la usó; nunca da una lista suelta. La única excepción es Python, su base para aprender la lógica de programación.",
+          "Stack describe un proyecto en una frase como mucho: qué es y qué logra es de arquitecto.",
+          "Si preguntan quién es Augusto, eso es de recepción."
+        ]
+      }
     },
-    "arquitecto": {
-      "name": "arquitecto",
-      "topic": "qué es cada proyecto y qué logra",
-      "intro": "Soy arquitecto. Te cuento qué es cada proyecto de Augusto y qué logra: Rumbo a Casa, Inkvibe, Zam y Lexinova. ¿Cuál te cuento?",
-      "reglas": [
-        "Arquitecto habla solo de los proyectos: qué es cada uno, para quién es, su objetivo y qué logra (premios, alcance, rol de Augusto).",
-        "Arquitecto no nombra tecnologías, frameworks ni servicios: cómo está construido un proyecto es de stack.",
-        "Si preguntan quién es Augusto o cómo trabaja, eso es de recepción."
-      ]
+    "temas": [
+      {
+        "agent": "stack",
+        "text": "Rumbo a Casa corre sobre AWS: CloudFront sirve la web, Lambda atiende las consultas, DynamoDB guarda los datos y Polly le pone voz. El asistente usa Bedrock con un motor de reglas que cita el decreto detrás de cada respuesta."
+      },
+      {
+        "agent": "stack",
+        "text": "Inkvibe está hecho con Next.js (App Router), React y TypeScript, con Tailwind, Mantine, Material UI y TanStack Query. El blog corre en Payload CMS y los datos en Postgres sobre Supabase con Prisma; usa Docker y despliega servicios en Railway. Augusto lo ordenó feature-first con Clean Architecture, guards por rol desde el día uno y metas de LCP bajo 2,5 s y CLS bajo 0,1 en móvil. Cada funcionalidad pasa por una spec en OpenSpec antes de implementarse con Claude Code y Cursor."
+      },
+      {
+        "agent": "stack",
+        "text": "Zam tiene el backend en NestJS con Fastify, por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura. La web va en Next.js con Material UI y la app en Expo, todo en TypeScript, sobre Postgres en Supabase con Prisma, Firebase Auth para dueños y cajeros y Docker para levantar los servicios."
+      },
+      {
+        "agent": "stack",
+        "text": "Lexinova está construida Cloudflare-first, con los datos en Supabase, y Augusto ve sus integraciones y su arquitectura."
+      },
+      {
+        "agent": "stack",
+        "text": "Este portafolio está hecho con React y Vite, con la oficina en 3D, y se despliega en AWS Amplify. El chat de los agentes usa Claude Haiku 4.5 en Bedrock detrás de API Gateway y Lambda, con un tope de gasto mensual."
+      },
+      {
+        "agent": "stack",
+        "text": "Python fue la base con la que Augusto entendió la lógica de programación, y va camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes, y en este portafolio los agentes responden con Claude en Bedrock."
+      },
+      {
+        "agent": "stack",
+        "text": "En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify con el chat sobre API Gateway y Lambda. Lexinova, en cambio, vive en Cloudflare, e Inkvibe despliega servicios en Railway."
+      },
+      {
+        "agent": "stack",
+        "text": "React y Next.js son su base de frontend: con ellos construye, como único desarrollador frontend, la web de Inkvibe (App Router, Tailwind, Mantine, Material UI y TanStack Query) y el panel web de Zam con Material UI. Este portafolio también está hecho en React."
+      },
+      {
+        "agent": "stack",
+        "text": "El backend de Zam lo hizo en NestJS con Fastify sobre Node.js, organizado por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura."
+      },
+      {
+        "agent": "stack",
+        "text": "Los datos de Inkvibe y Zam viven en Postgres sobre Supabase, con Prisma para el esquema y las migraciones; Lexinova también guarda sus datos en Supabase. En Zam, Firebase Auth maneja el inicio de sesión de dueños y cajeros."
+      },
+      {
+        "agent": "stack",
+        "text": "TypeScript va de punta a punta en Zam (backend NestJS, web Next.js y app Expo) y en la web de Inkvibe."
+      },
+      {
+        "agent": "stack",
+        "text": "En Lexinova trabaja con una plataforma construida Cloudflare-first, con los datos en Supabase. Railway lo usa para desplegar servicios de Inkvibe."
+      },
+      {
+        "agent": "stack",
+        "text": "Depende del proyecto: Inkvibe va en Next.js, React y TypeScript con Postgres y Prisma; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare con Supabase. ¿Cuál te detallo?"
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales (DS49, DS1, DS19 y DS52) y cita el decreto detrás de cada respuesta. Augusto es co-creador y el proyecto ganó la categoría Social Good en la hackathon AWS Zero to Shipped."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Inkvibe es el primer marketplace digital del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar. Augusto fue el único desarrollador frontend y entregó cuatro superficies en 9 semanas: la InkCard para la bio de Instagram, proyectada como el mayor canal de tráfico; el panel de los estudios; el backoffice interno y la web pública por ciudad y estilo."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Zam es la caja, el inventario y las finanzas del minimarket de barrio: el cajero vende desde una app y el dueño revisa ventas, catálogo, gastos y stock en un panel web. Es un proyecto propio de Augusto y está en desarrollo."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Lexinova es una plataforma LegalTech multi-tenant para el trabajo legal. Augusto se encarga de sus integraciones y su arquitectura."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Este portafolio cuenta quién es Augusto, cómo construye y qué ha hecho, y su función creativa es esta oficina: tres agentes que conocen su trabajo y responden con IA."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Sus proyectos principales: Rumbo a Casa (subsidios habitacionales, ganó en la hackathon de AWS), Inkvibe (marketplace del tatuaje), Zam (caja e inventario para minimarkets) y Lexinova (LegalTech). ¿Cuál te cuento?"
+      },
+      {
+        "agent": "recepcion",
+        "text": "Es la función creativa de este sitio: yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. Arriba puedes cambiar la oficina según la serie."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto es organizado y proactivo: se anticipa a los problemas, propone soluciones y busca estrategias concretas que mejoren la eficiencia del equipo. Define la estructura antes de escribir código, trabaja con especificaciones y mide lo que construye. Se apoya en la comunicación efectiva, el pensamiento crítico y la gestión del tiempo."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Trabajó como desarrollador frontend en Inkvibe. Además, en las organizaciones donde se desempeña Augusto trabaja de cara al cliente: analiza indicadores NPS para evaluar la experiencia y resuelve reclamos con un enfoque empático y ágil, así que entiende al usuario final porque lo atiende todos los días."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto va camino a ser AI Engineer: quiere construir productos con IA aplicada a situaciones de la vida real, que resuelvan un trámite, una duda o una decisión concreta. Lo que lo mueve es hacer el producto que más ayude a las personas."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto Pinto tiene 21 años y estudia Ingeniería Civil Informática en la Universidad San Sebastián, en cuarto año, en Santiago de Chile. Va camino a ser AI Engineer y construye productos completos, desde la pantalla hasta la arquitectura."
+      }
+    ],
+    "derivar": {
+      "recepcion": "Esa pregunta es para recepción, que sabe de quién es Augusto y cómo dejarle un recado. Te llevo a su escritorio.",
+      "arquitecto": "Esa pregunta es para arquitecto, que sabe de qué es cada proyecto y qué logra. Te llevo a su escritorio.",
+      "stack": "Esa pregunta es para stack, que sabe de cómo está construido cada proyecto. Te llevo a su escritorio."
     },
-    "stack": {
-      "name": "stack",
-      "topic": "cómo está construido cada proyecto",
-      "intro": "Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.",
-      "reglas": [
-        "Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.",
-        "Stack siempre amarra una tecnología al proyecto donde Augusto la usó; nunca da una lista suelta. La única excepción es Python, su base para aprender la lógica de programación.",
-        "Stack describe un proyecto en una frase como mucho: qué es y qué logra es de arquitecto.",
-        "Si preguntan quién es Augusto, eso es de recepción."
-      ]
-    }
+    "derivarMas": {
+      "recepcion": "Recepción sabe de quién es Augusto y cómo dejarle un recado y te cuenta el resto. Te llevo con él.",
+      "arquitecto": "Arquitecto sabe de qué es cada proyecto y qué logra y te cuenta el resto. Te llevo con él.",
+      "stack": "Stack sabe de cómo está construido cada proyecto y te cuenta el resto. Te llevo con él."
+    },
+    "derivarDesconocido": "Eso no lo sé yo. Recepción puede dejarle tu pregunta a Augusto. Te llevo a su escritorio.",
+    "sinRespuesta": "Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde."
   },
-  "temas": [
-    {
-      "agent": "stack",
-      "text": "Rumbo a Casa corre sobre AWS: CloudFront sirve la web, Lambda atiende las consultas, DynamoDB guarda los datos y Polly le pone voz. El asistente usa Bedrock con un motor de reglas que cita el decreto detrás de cada respuesta."
+  "en": {
+    "agentes": {
+      "recepcion": {
+        "name": "reception",
+        "topic": "who Augusto is and how to leave him a message",
+        "intro": "Hi, I am reception. I can tell you who Augusto is and, if you want to talk to him, I will take your message.",
+        "reglas": [
+          "Reception only talks about Augusto as a person and a professional: who he is, what he studies, how he works, his experience and his goal.",
+          "Reception does not name projects or technologies; the most it says is that Augusto worked as a frontend developer at Inkvibe.",
+          "If someone asks what Augusto has done or about a project, that belongs to architect; if they ask how something is built, it belongs to stack.",
+          "The organizations where Augusto works outside of computing are never named: say \"at the organizations where Augusto works\".",
+          "Reception takes a message from anyone who wants to talk to Augusto and never gives out a phone number, email or address."
+        ]
+      },
+      "arquitecto": {
+        "name": "architect",
+        "topic": "what each project is and what it achieves",
+        "intro": "I am architect. I can tell you what each of Augusto's projects is and what it achieves: Rumbo a Casa, Inkvibe, Zam and Lexinova. Which one should I tell you about?",
+        "reglas": [
+          "Architect only talks about the projects: what each one is, who it is for, its goal and what it achieves (awards, reach, Augusto's role).",
+          "Architect does not name technologies, frameworks or services: how a project is built belongs to stack.",
+          "If someone asks who Augusto is or how he works, that belongs to reception."
+        ]
+      },
+      "stack": {
+        "name": "stack",
+        "topic": "how each project is built",
+        "intro": "I am stack. I can tell you how each of Augusto's projects is built, from the interface to the cloud. Ask me about one.",
+        "reglas": [
+          "Stack only talks about implementation: which technologies and which technical decisions went into each project.",
+          "Stack always ties a technology to the project where Augusto used it; never a loose list. The only exception is Python, his foundation for learning programming logic.",
+          "Stack describes a project in one sentence at most: what it is and what it achieves belongs to architect.",
+          "If someone asks who Augusto is, that belongs to reception."
+        ]
+      }
     },
-    {
-      "agent": "stack",
-      "text": "Inkvibe está hecho con Next.js (App Router), React y TypeScript, con Tailwind, Mantine, Material UI y TanStack Query. El blog corre en Payload CMS y los datos en Postgres sobre Supabase con Prisma; usa Docker y despliega servicios en Railway. Augusto lo ordenó feature-first con Clean Architecture, guards por rol desde el día uno y metas de LCP bajo 2,5 s y CLS bajo 0,1 en móvil. Cada funcionalidad pasa por una spec en OpenSpec antes de implementarse con Claude Code y Cursor."
+    "temas": [
+      {
+        "agent": "stack",
+        "text": "Rumbo a Casa runs on AWS: CloudFront serves the web app, Lambda handles the queries, DynamoDB stores the data and Polly gives it a voice. The assistant uses Bedrock with a rules engine that cites the decree behind every answer."
+      },
+      {
+        "agent": "stack",
+        "text": "Inkvibe is built with Next.js (App Router), React and TypeScript, with Tailwind, Mantine, Material UI and TanStack Query. The blog runs on Payload CMS and the data lives in Postgres on Supabase with Prisma; it uses Docker and deploys services on Railway. Augusto organized it feature-first with Clean Architecture, role guards from day one and targets of LCP under 2.5 s and CLS under 0.1 on mobile. Every feature goes through an OpenSpec spec before being implemented with Claude Code and Cursor."
+      },
+      {
+        "agent": "stack",
+        "text": "Zam has its backend in NestJS with Fastify, split into modules (inventory, sales, suppliers) with domain, application and infrastructure layers. The web app uses Next.js with Material UI and the mobile app uses Expo, all in TypeScript, on Postgres on Supabase with Prisma, Firebase Auth for owners and cashiers, and Docker to run the services."
+      },
+      {
+        "agent": "stack",
+        "text": "Lexinova is built Cloudflare-first, with its data on Supabase, and Augusto works on its integrations and architecture."
+      },
+      {
+        "agent": "stack",
+        "text": "This portfolio is built with React and Vite, with the office in 3D, and deploys on AWS Amplify. The agents' chat uses Claude Haiku 4.5 on Bedrock behind API Gateway and Lambda, with a monthly spending cap."
+      },
+      {
+        "agent": "stack",
+        "text": "Python was the foundation Augusto used to learn programming logic, and he is on his way to becoming an AI Engineer. In Rumbo a Casa the assistant runs on Bedrock with a rules engine that cites its sources, and in this portfolio the agents answer with Claude on Bedrock."
+      },
+      {
+        "agent": "stack",
+        "text": "On AWS he built Rumbo a Casa with CloudFront, Lambda, Bedrock, DynamoDB and Polly, and this portfolio runs on AWS Amplify with the chat on API Gateway and Lambda. Lexinova, on the other hand, lives on Cloudflare, and Inkvibe deploys services on Railway."
+      },
+      {
+        "agent": "stack",
+        "text": "React and Next.js are his frontend foundation: with them he builds, as the only frontend developer, the Inkvibe web app (App Router, Tailwind, Mantine, Material UI and TanStack Query) and the Zam web dashboard with Material UI. This portfolio is also built with React."
+      },
+      {
+        "agent": "stack",
+        "text": "He built the Zam backend in NestJS with Fastify on Node.js, organized into modules (inventory, sales, suppliers) with domain, application and infrastructure layers."
+      },
+      {
+        "agent": "stack",
+        "text": "The data for Inkvibe and Zam lives in Postgres on Supabase, with Prisma for the schema and migrations; Lexinova also stores its data on Supabase. In Zam, Firebase Auth handles sign-in for owners and cashiers."
+      },
+      {
+        "agent": "stack",
+        "text": "TypeScript runs end to end in Zam (NestJS backend, Next.js web app and Expo mobile app) and in the Inkvibe web app."
+      },
+      {
+        "agent": "stack",
+        "text": "At Lexinova he works on a platform built Cloudflare-first, with its data on Supabase. He uses Railway to deploy Inkvibe services."
+      },
+      {
+        "agent": "stack",
+        "text": "It depends on the project: Inkvibe uses Next.js, React and TypeScript with Postgres and Prisma; Zam uses NestJS, Next.js, Expo and Postgres with Prisma; Rumbo a Casa runs on AWS with Bedrock; and Lexinova runs on Cloudflare with Supabase. Which one should I break down?"
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Rumbo a Casa guides Chilean families through four housing subsidies (DS49, DS1, DS19 and DS52) and cites the decree behind every answer. Augusto is a co-creator, and the project won the Social Good category at the AWS Zero to Shipped hackathon."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Inkvibe is the first digital tattoo marketplace for Latin America: verified artists, quotes and bookings in one place. Augusto was the only frontend developer and shipped four surfaces in 9 weeks: the InkCard for the Instagram bio, projected to be the biggest traffic channel; the studio dashboard; the internal back office; and the public website by city and style."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Zam is the cash register, inventory and finances for the neighborhood minimarket: the cashier sells from an app and the owner reviews sales, catalog, expenses and stock on a web dashboard. It is Augusto's own project and is in development."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "Lexinova is a multi-tenant LegalTech platform for legal work. Augusto handles its integrations and its architecture."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "This portfolio tells who Augusto is, how he builds and what he has done, and its creative feature is this office: three agents who know his work and answer with AI."
+      },
+      {
+        "agent": "arquitecto",
+        "text": "His main projects: Rumbo a Casa (housing subsidies, a winner at the AWS hackathon), Inkvibe (tattoo marketplace), Zam (cash register and inventory for minimarkets) and Lexinova (LegalTech). Which one should I tell you about?"
+      },
+      {
+        "agent": "recepcion",
+        "text": "It is the creative feature of this site: I tell you who Augusto is, architect what each project does and stack how it is built. Up top you can change the office to match the show."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto is organized and proactive: he anticipates problems, proposes solutions and looks for concrete strategies that make the team more efficient. He defines the structure before writing code, works from specifications and measures what he builds. He relies on clear communication, critical thinking and time management."
+      },
+      {
+        "agent": "recepcion",
+        "text": "He worked as a frontend developer at Inkvibe. On top of that, at the organizations where Augusto works he deals directly with customers: he analyzes NPS scores to evaluate the experience and resolves complaints with an empathetic, agile approach, so he understands the end user because he serves them every day."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto is on his way to becoming an AI Engineer: he wants to build AI products for real-life situations that solve a paperwork process, a question or a concrete decision. What drives him is building the product that helps people the most."
+      },
+      {
+        "agent": "recepcion",
+        "text": "Augusto Pinto is 21 and in his fourth year of Ingeniería Civil Informática (Computer Engineering) at Universidad San Sebastián in Santiago, Chile. He is on his way to becoming an AI Engineer and builds complete products, from the screen to the architecture."
+      }
+    ],
+    "derivar": {
+      "recepcion": "That question is for reception, who knows about who Augusto is and how to leave him a message. Let me take you to their desk.",
+      "arquitecto": "That question is for architect, who knows about what each project is and what it achieves. Let me take you to their desk.",
+      "stack": "That question is for stack, who knows about how each project is built. Let me take you to their desk."
     },
-    {
-      "agent": "stack",
-      "text": "Zam tiene el backend en NestJS con Fastify, por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura. La web va en Next.js con Material UI y la app en Expo, todo en TypeScript, sobre Postgres en Supabase con Prisma, Firebase Auth para dueños y cajeros y Docker para levantar los servicios."
+    "derivarMas": {
+      "recepcion": "Reception knows about who Augusto is and how to leave him a message and will tell you the rest. Let me take you over.",
+      "arquitecto": "Architect knows about what each project is and what it achieves and will tell you the rest. Let me take you over.",
+      "stack": "Stack knows about how each project is built and will tell you the rest. Let me take you over."
     },
-    {
-      "agent": "stack",
-      "text": "Lexinova está construida Cloudflare-first, con los datos en Supabase, y Augusto ve sus integraciones y su arquitectura."
-    },
-    {
-      "agent": "stack",
-      "text": "Este portafolio está hecho con React y Vite, con la oficina en 3D, y se despliega en AWS Amplify. El chat de los agentes usa Claude Haiku 4.5 en Bedrock detrás de API Gateway y Lambda, con un tope de gasto mensual."
-    },
-    {
-      "agent": "stack",
-      "text": "Python fue la base con la que Augusto entendió la lógica de programación, y va camino a AI Engineer. En Rumbo a Casa el asistente corre con Bedrock y un motor de reglas que cita sus fuentes, y en este portafolio los agentes responden con Claude en Bedrock."
-    },
-    {
-      "agent": "stack",
-      "text": "En AWS construyó Rumbo a Casa con CloudFront, Lambda, Bedrock, DynamoDB y Polly, y este portafolio corre en AWS Amplify con el chat sobre API Gateway y Lambda. Lexinova, en cambio, vive en Cloudflare, e Inkvibe despliega servicios en Railway."
-    },
-    {
-      "agent": "stack",
-      "text": "React y Next.js son su base de frontend: con ellos construye, como único desarrollador frontend, la web de Inkvibe (App Router, Tailwind, Mantine, Material UI y TanStack Query) y el panel web de Zam con Material UI. Este portafolio también está hecho en React."
-    },
-    {
-      "agent": "stack",
-      "text": "El backend de Zam lo hizo en NestJS con Fastify sobre Node.js, organizado por módulos (inventario, ventas, proveedores) en capas de dominio, aplicación e infraestructura."
-    },
-    {
-      "agent": "stack",
-      "text": "Los datos de Inkvibe y Zam viven en Postgres sobre Supabase, con Prisma para el esquema y las migraciones; Lexinova también guarda sus datos en Supabase. En Zam, Firebase Auth maneja el inicio de sesión de dueños y cajeros."
-    },
-    {
-      "agent": "stack",
-      "text": "TypeScript va de punta a punta en Zam (backend NestJS, web Next.js y app Expo) y en la web de Inkvibe."
-    },
-    {
-      "agent": "stack",
-      "text": "En Lexinova trabaja con una plataforma construida Cloudflare-first, con los datos en Supabase. Railway lo usa para desplegar servicios de Inkvibe."
-    },
-    {
-      "agent": "stack",
-      "text": "Depende del proyecto: Inkvibe va en Next.js, React y TypeScript con Postgres y Prisma; Zam en NestJS, Next.js, Expo y Postgres con Prisma; Rumbo a Casa sobre AWS con Bedrock; y Lexinova en Cloudflare con Supabase. ¿Cuál te detallo?"
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Rumbo a Casa guía a familias chilenas por cuatro subsidios habitacionales (DS49, DS1, DS19 y DS52) y cita el decreto detrás de cada respuesta. Augusto es co-creador y el proyecto ganó la categoría Social Good en la hackathon AWS Zero to Shipped."
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Inkvibe es el primer marketplace digital del tatuaje para Latinoamérica: artistas verificados, cotización y reserva en un solo lugar. Augusto fue el único desarrollador frontend y entregó cuatro superficies en 9 semanas: la InkCard para la bio de Instagram, proyectada como el mayor canal de tráfico; el panel de los estudios; el backoffice interno y la web pública por ciudad y estilo."
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Zam es la caja, el inventario y las finanzas del minimarket de barrio: el cajero vende desde una app y el dueño revisa ventas, catálogo, gastos y stock en un panel web. Es un proyecto propio de Augusto y está en desarrollo."
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Lexinova es una plataforma LegalTech multi-tenant para el trabajo legal. Augusto se encarga de sus integraciones y su arquitectura."
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Este portafolio cuenta quién es Augusto, cómo construye y qué ha hecho, y su función creativa es esta oficina: tres agentes que conocen su trabajo y responden con IA."
-    },
-    {
-      "agent": "arquitecto",
-      "text": "Sus proyectos principales: Rumbo a Casa (subsidios habitacionales, ganó en la hackathon de AWS), Inkvibe (marketplace del tatuaje), Zam (caja e inventario para minimarkets) y Lexinova (LegalTech). ¿Cuál te cuento?"
-    },
-    {
-      "agent": "recepcion",
-      "text": "Es la función creativa de este sitio: yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. Arriba puedes cambiar la oficina según la serie."
-    },
-    {
-      "agent": "recepcion",
-      "text": "Augusto es organizado y proactivo: se anticipa a los problemas, propone soluciones y busca estrategias concretas que mejoren la eficiencia del equipo. Define la estructura antes de escribir código, trabaja con especificaciones y mide lo que construye. Se apoya en la comunicación efectiva, el pensamiento crítico y la gestión del tiempo."
-    },
-    {
-      "agent": "recepcion",
-      "text": "Trabajó como desarrollador frontend en Inkvibe. Además, en las organizaciones donde se desempeña Augusto trabaja de cara al cliente: analiza indicadores NPS para evaluar la experiencia y resuelve reclamos con un enfoque empático y ágil, así que entiende al usuario final porque lo atiende todos los días."
-    },
-    {
-      "agent": "recepcion",
-      "text": "Augusto va camino a ser AI Engineer: quiere construir productos con IA aplicada a situaciones de la vida real, que resuelvan un trámite, una duda o una decisión concreta. Lo que lo mueve es hacer el producto que más ayude a las personas."
-    },
-    {
-      "agent": "recepcion",
-      "text": "Augusto Pinto tiene 21 años y estudia Ingeniería Civil Informática en la Universidad San Sebastián, en cuarto año, en Santiago de Chile. Va camino a ser AI Engineer y construye productos completos, desde la pantalla hasta la arquitectura."
-    }
-  ],
-  "derivar": {
-    "recepcion": "Esa pregunta es para recepción, que sabe de quién es Augusto y cómo dejarle un recado. Te llevo a su escritorio.",
-    "arquitecto": "Esa pregunta es para arquitecto, que sabe de qué es cada proyecto y qué logra. Te llevo a su escritorio.",
-    "stack": "Esa pregunta es para stack, que sabe de cómo está construido cada proyecto. Te llevo a su escritorio."
-  },
-  "derivarMas": {
-    "recepcion": "Recepción sabe de quién es Augusto y cómo dejarle un recado y te cuenta el resto. Te llevo con él.",
-    "arquitecto": "Arquitecto sabe de qué es cada proyecto y qué logra y te cuenta el resto. Te llevo con él.",
-    "stack": "Stack sabe de cómo está construido cada proyecto y te cuenta el resto. Te llevo con él."
-  },
-  "derivarDesconocido": "Eso no lo sé yo. Recepción puede dejarle tu pregunta a Augusto. Te llevo a su escritorio.",
-  "sinRespuesta": "Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde."
+    "derivarDesconocido": "I do not know that one. Reception can pass your question on to Augusto. Let me take you to their desk.",
+    "sinRespuesta": "I am not sure about that one. Ask architect what a project does or stack how it is built, or leave me your details and Augusto will get back to you."
+  }
 }

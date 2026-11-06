@@ -9,7 +9,7 @@ import { useOfficeChat } from '../../../hooks/useOfficeChat';
 // el agente que habla (la cámara se le acerca y solo entonces se ve su globo; Esc vuelve a la vista general), caja para escribir abajo; el historial de cada agente se despliega en su tarjeta. El cambio de oficina
 // (`swap`) la tapa con cuadrados. Arrastrar gira la maqueta; clic en un agente lo elige para hablarle directo.
 // `link` ({ to, draft }) llega desde el landing con un agente elegido y la pregunta ya escrita.
-export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, link, className }) {
+export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget, stage, chat: texts, agents, leadEmail, link, lang, className }) {
   const canvasRef = useRef(null);
   const labelsRef = useRef(null);
   const historyId = useId();
@@ -19,7 +19,7 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
     stageRef, canvasRef, labelsRef, themeId, agents: agentList, deco: stage.deco,
     onPick: (id) => chatRef.current?.setTo(id, true),
   });
-  const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail, link });
+  const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail, link, lang });
   chatRef.current = chat;
 
   // Esc saca el zoom del agente que habla (y su globo) y vuelve a la vista general.

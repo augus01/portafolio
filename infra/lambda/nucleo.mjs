@@ -11,6 +11,8 @@ export const PRECIO_ENTRADA_USD_MTOK = 1.1;
 export const PRECIO_SALIDA_USD_MTOK = 5.5;
 
 const QUIENES = [...AGENTES, 'visitor'];
+// Idiomas del sitio. Sin `lang` (versiones anteriores del sitio) o con uno desconocido, español.
+export const IDIOMAS = ['es', 'en'];
 
 export function validarPeticion(body) {
   if (!body || typeof body !== 'object' || typeof body.mensaje !== 'string') return { ok: false };
@@ -24,14 +26,16 @@ export function validarPeticion(body) {
         .map((h) => ({ quien: h.quien, texto: h.texto.slice(0, MAX_MENSAJE) }))
         .slice(-MAX_HISTORIAL)
     : [];
-  return { ok: true, mensaje, agente, historial };
+  const lang = IDIOMAS.includes(body.lang) ? body.lang : 'es';
+  return { ok: true, mensaje, agente, historial, lang };
 }
 
 export function costoUsd({ inputTokens, outputTokens }) {
   return (inputTokens * PRECIO_ENTRADA_USD_MTOK + outputTokens * PRECIO_SALIDA_USD_MTOK) / 1_000_000;
 }
 
-export function armarSistema(contenido, pedido = null) {
+// `contenido` es el de un idioma (contenido.json trae `es` y `en`); `lang` elige el idioma de la respuesta.
+export function armarSistema(contenido, pedido = null, lang = 'es') {
   const agentes = Object.entries(contenido.agentes)
     .map(([id, a]) => `- ${id} (${a.name}): sabe de ${a.topic}.`)
     .join('\n');
@@ -57,7 +61,9 @@ export function armarSistema(contenido, pedido = null) {
     hechos,
     '',
     'Reglas:',
-    '- Responde en español de Chile, con un máximo de 3 frases por agente, sin emojis.',
+    lang === 'en'
+      ? '- Respond in English, with at most 3 sentences per agent, no emojis. The facts above are already in English: use them as they are.'
+      : '- Responde en español de Chile, con un máximo de 3 frases por agente, sin emojis.',
     '- Habla solo del trabajo de Augusto y de la oficina. Si te piden otra cosa, vuelve al tema con amabilidad.',
     '- Usa solo los hechos de arriba. Si el dato no está, no lo inventes.',
     '- Cada agente responde solo con hechos de su territorio. Recepción nunca nombra proyectos ni tecnologías. Stack siempre habla de cómo se implementó algo en un proyecto concreto.',
@@ -150,6 +156,7 @@ export function crearHandler({ invocar, leerGasto, sumarGasto, ahora, topeUsd, c
     }
     const p = validarPeticion(body);
     if (!p.ok) return respuesta(400, { error: 'peticion-invalida' });
+    const c = contenido[p.lang] ?? contenido.es;
 
     const mes = mesDe(ahora());
     let gasto;
@@ -163,7 +170,7 @@ export function crearHandler({ invocar, leerGasto, sumarGasto, ahora, topeUsd, c
 
     let salida;
     try {
-      salida = await invocar(armarSistema(contenido, p.agente), armarMensajes({ historial: p.historial, mensaje: p.mensaje }));
+      salida = await invocar(armarSistema(c, p.agente, p.lang), armarMensajes({ historial: p.historial, mensaje: p.mensaje }));
     } catch (e) {
       console.error('falló la invocación a Bedrock', e);
       return respaldo('error');
@@ -175,7 +182,7 @@ export function crearHandler({ invocar, leerGasto, sumarGasto, ahora, topeUsd, c
       console.error('no se pudo sumar el gasto', e);
     }
 
-    const replies = interpretarRespuesta(salida.texto, { pedido: p.agente, contenido });
+    const replies = interpretarRespuesta(salida.texto, { pedido: p.agente, contenido: c });
     if (!replies) return respaldo('formato');
     return respuesta(200, { replies });
   };

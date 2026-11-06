@@ -28,3 +28,10 @@ test('pedirRespuesta devuelve null al vencer el tiempo', async () => {
   assert.equal(await pedirRespuesta({ ...base, timeoutMs: 50, fetchImpl: colgado }), null);
   assert.ok(Date.now() - t0 < 1000);
 });
+
+test('pedirRespuesta envía el idioma del sitio', async () => {
+  let enviado = null;
+  const fetchImpl = async (url, init) => { enviado = JSON.parse(init.body); return { ok: true, status: 200, json: async () => ({ replies: [{ agent: 'stack', text: 'React' }] }) }; };
+  await pedirRespuesta({ ...base, lang: 'en', fetchImpl });
+  assert.equal(enviado.lang, 'en');
+});
