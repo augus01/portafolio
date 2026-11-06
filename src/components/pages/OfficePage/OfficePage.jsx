@@ -5,11 +5,19 @@ import { Office } from '../../organisms/Office';
 import { OfficePageTemplate } from '../../templates/OfficePageTemplate';
 import { useThemeSwap } from '../../../hooks/useThemeSwap';
 import { usePageWipe } from '../../../hooks/usePageWipe';
-import { officePage, themes, stage, agents, chat, leadEmail } from '../../../content/office';
+import * as es from '../../../content/office';
+import * as en from '../../../content/en/office';
+import { langToggle as esToggle } from '../../../content/home';
+import { langToggle as enToggle } from '../../../content/en/home';
+import { useLang } from '../../../hooks/useLang';
+import { pickLang } from '../../../lib/lang';
 import { readOfficeLink } from '../../../lib/officeLink';
 
 // "Visita mi oficina" en su propia página (/oficina/): recepción te trae desde Contacto y te devuelve allá.
 export function OfficePage() {
+  const { lang, toggle } = useLang();
+  const { officePage, themes, stage, agents, chat, leadEmail } = pickLang(lang, { en, es });
+  const langToggle = { ...pickLang(lang, { en: enToggle, es: esToggle }), onSelect: toggle };
   const stageRef = useRef(null);
   const swap = useThemeSwap(stageRef, themes.items[0].id);
   const wipe = usePageWipe();
@@ -20,7 +28,7 @@ export function OfficePage() {
     if (window.location.search) window.history.replaceState(null, '', window.location.pathname + window.location.hash);
   }, []);
 
-  useEffect(() => { document.title = officePage.documentTitle; }, []);
+  useEffect(() => { document.title = officePage.documentTitle; }, [officePage]);
 
   const onBack = (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
@@ -31,9 +39,13 @@ export function OfficePage() {
   return (
     <>
       <OfficePageTemplate
-        header={<OfficeHeader {...officePage} onBack={onBack} />}
+        header={<OfficeHeader {...officePage} onBack={onBack} langToggle={langToggle} />}
       >
+        {/* Al cambiar de idioma la oficina se monta de nuevo: la conversación parte con la bienvenida del nuevo idioma
+            y una respuesta que venía en camino se descarta. */}
         <Office
+          key={lang}
+          lang={lang}
           stageRef={stageRef}
           themeId={swap.current}
           themes={themes}

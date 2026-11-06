@@ -14,7 +14,7 @@ const extProps = (item) => (item.external ? { target: '_blank', rel: 'noopener n
 // `labels` ({ region, menu, close }) son los textos de la barra, que salen del contenido.
 const LABELS = { region: 'Principal', menu: 'Menú', close: 'Cerrar' };
 
-export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', labels = LABELS, onNavigate, className }) {
+export function NavBar({ items, actions = [], brand, tone = 'light', menuPlacement = 'down', labels = LABELS, langToggle, onNavigate, className }) {
   const [open, setOpen] = useState(false);
   const toggleRef = useRef(null);
   const rootRef = useRef(null);
@@ -59,7 +59,17 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
           </a>
         )}
         <ul className="ap-nav__group">{items.map(pill)}</ul>
-        {actions.length > 0 && <ul className="ap-nav__group ap-nav__group--end">{actions.map(pill)}</ul>}
+        {(actions.length > 0 || langToggle) && (
+          <ul className="ap-nav__group ap-nav__group--end">
+            {/* Píldora de idioma: muestra el idioma al que cambia y se anuncia completa ("View in English"). */}
+            {langToggle && (
+              <li>
+                <Pill as="button" lang={langToggle.target} aria-label={langToggle.ariaLabel} onClick={langToggle.onSelect}>{langToggle.label}</Pill>
+              </li>
+            )}
+            {actions.map(pill)}
+          </ul>
+        )}
         {/* Píldora con icono y texto, como en el landing aprobado (ver design-system/INTEGRACION.md). */}
         <Pill
           as="button"

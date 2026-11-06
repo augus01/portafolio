@@ -294,7 +294,7 @@ export const contact = {
   },
   enter: { label: 'Step into the office', href: '/oficina/' },
   meta: 'Chile · GMT−3',
-  hint: 'Click reception three times and you will be taken to the office',
+  hint: 'Triple-click reception to go in',
   desk: {
     lines: ['Hi! I am reception', 'Leave a message for Augusto', 'Coming to the office? I will take you', 'Ring the bell if you like'],
     follow: 'Follow me!',

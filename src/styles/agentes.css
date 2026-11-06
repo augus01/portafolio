@@ -37,8 +37,11 @@
 /* Barra móvil: Contacto queda junto al menú, apoyada abajo para dejarle espacio a recepción, más chica, asomando. */
 .ap-mnav__peek{margin-left:auto;align-self:flex-end;--nav-scale:.72;--pk-head-sink:-26px}
 .ap-mnav__peek .ap-pk__peek{bottom:100%}
-.ap-mnav__peek .ap-pill{min-height:36px}
-.ap-mnav[data-tone="dark"] .ap-mnav__peek .ap-pill{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
+/* Píldora de idioma en la barra móvil: mismo tamaño y vidrio que Contacto; sin Contacto (proyectos), empuja a la derecha. */
+.ap-mnav__lang{margin-left:auto;align-self:flex-end;--nav-scale:.72}
+.ap-mnav__peek + .ap-mnav__lang{margin-left:0}
+.ap-mnav__peek .ap-pill,.ap-mnav .ap-mnav__lang.ap-pill{min-height:36px}
+.ap-mnav[data-tone="dark"] .ap-mnav__peek .ap-pill,.ap-mnav[data-tone="dark"] .ap-mnav__lang.ap-pill{background:rgba(255,255,255,.55);border-color:rgba(255,255,255,.4);color:var(--ink-primary)}
 
 /* ---------- Stack en la ficha de cada tecnología ---------- */
 /* El logo a la izquierda y stack 3D (el de la oficina) a la derecha, mirándolo. */

@@ -11,11 +11,19 @@ import { CaseNext } from '../../organisms/CaseNext';
 import { Footer } from '../../organisms/Footer';
 import { useCaseParallax } from '../../../hooks/useCaseParallax';
 import { useMobileMenu } from '../../../hooks/useMobileMenu';
-import { casePage, getCase } from '../../../content/projects';
+import * as es from '../../../content/projects';
+import * as en from '../../../content/en/projects';
+import { langToggle as esToggle } from '../../../content/home';
+import { langToggle as enToggle } from '../../../content/en/home';
+import { useLang } from '../../../hooks/useLang';
+import { pickLang } from '../../../lib/lang';
 
 // Página dedicada de un proyecto (/proyectos/<slug>/), con la misma nav del landing (sin el paso del hero: siempre
 // visible y clara). Si el slug no existe, vuelve a la galería.
 export function ProjectPage({ slug }) {
+  const { lang, toggle } = useLang();
+  const { casePage, getCase } = pickLang(lang, { en, es });
+  const langToggle = { ...pickLang(lang, { en: enToggle, es: esToggle }), onSelect: toggle };
   const data = getCase(slug);
   const rootRef = useRef(null);
   const motionRef = useRef({ lenis: null, jump: false });
@@ -26,7 +34,7 @@ export function ProjectPage({ slug }) {
   useEffect(() => {
     if (!data) { window.location.replace(casePage.back.href); return; }
     document.title = casePage.documentTitle(data.name);
-  }, [data]);
+  }, [data, casePage]);
 
   if (!data) return null;
   const { nav, mobileMenu } = casePage;
@@ -36,8 +44,8 @@ export function ProjectPage({ slug }) {
         theme={data.theme}
         nav={(
           <div className="ap-navwrap is-static">
-            <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} labels={nav.labels} tone="light" />
-            <MobileNavBar tone="light" brand={nav.brand} openLabel={nav.labels?.openMenu} open={menu.open} menuId={menuId} onOpen={menu.openMenu} buttonRef={menu.openRef} />
+            <NavBar items={nav.items} actions={nav.actions} brand={nav.brand} labels={nav.labels} langToggle={langToggle} tone="light" />
+            <MobileNavBar tone="light" brand={nav.brand} openLabel={nav.labels?.openMenu} langToggle={langToggle} open={menu.open} menuId={menuId} onOpen={menu.openMenu} buttonRef={menu.openRef} />
             <MobileMenu id={menuId} open={menu.open} {...mobileMenu} onClose={menu.closeMenu} onNavigate={menu.navigate} closeRef={menu.closeRef} />
           </div>
         )}

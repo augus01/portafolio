@@ -11,7 +11,8 @@
   --off-stroke:2px;--off-focus-width:3px}
 .ap-ofp__main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 /* La oficina ocupa toda la pantalla: la cabecera es solo el botón de vuelta, flotando arriba a la derecha. */
-.ap-ofp__head{position:absolute;z-index:6;top:14px;right:14px}
+.ap-ofp__head{position:absolute;z-index:6;top:14px;right:14px;display:flex;align-items:center;gap:var(--space-2)}
+.ap-ofp__lang{cursor:pointer;justify-content:center}
 .ap-ofp__back.label{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--target-min);padding:0 18px;box-sizing:border-box;border:var(--off-stroke) solid var(--ink-primary);border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-primary);font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:background var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
 @media (hover: hover){.ap-ofp__back.label:hover{background:var(--action);color:var(--on-action)}}
 .ap-ofp__back.label:focus-visible{outline:var(--off-focus-width) solid var(--focus-ring);outline-offset:var(--focus-ring-offset)}
@@ -134,7 +135,7 @@
   .ap-ofp__head{top:var(--space-2);right:var(--space-2)}
   .ap-ofp__back.label{width:var(--target-min);padding:0;justify-content:center}
   .ap-ofp__backtxt{display:none}
-  .ap-ofsw--stage{top:var(--space-2);left:var(--space-2);right:calc(var(--target-min) + var(--space-2) * 2);max-width:none}
+  .ap-ofsw--stage{top:var(--space-2);left:var(--space-2);right:calc(var(--target-min) * 2 + var(--space-2) * 3);max-width:none}
   .ap-ofsw__group{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;border-radius:var(--radius-pill)}
   .ap-ofsw__group::-webkit-scrollbar{display:none}
   .ap-ofsw__btn.label{flex:none;min-height:40px;padding:0 14px}
