@@ -133,7 +133,7 @@ export const cases = [
         { label: 'Ver sitio', href: 'https://www.inkvibe.app/' },
         { label: 'Leer el blog', href: 'https://www.inkvibe.app/blog' },
       ],
-      stack: ['Next.js', 'React', 'Payload CMS', 'PostgreSQL'],
+      stack: ['Next.js', 'React', 'TypeScript', 'Tailwind', 'Mantine', 'Material UI', 'TanStack Query', 'Payload CMS', 'PostgreSQL', 'Prisma', 'Supabase', 'Docker', 'Railway'],
       lead: 'El marketplace del tatuaje para Latinoamérica: los clientes descubren artistas verificados por estilo y ciudad, revisan portafolios reales, cotizan y reservan en un solo lugar.',
       body: 'Soy el único desarrollador frontend del equipo y construyo la web con React y Next.js sobre un backend separado. El blog corre en Payload CMS con su Local API sobre un Postgres dedicado: las páginas leen el contenido directo desde el servidor y el equipo lo edita desde el panel, sin tocar código. Cada artista tiene su InkCard, un perfil que comparte con un link.',
     },
@@ -198,7 +198,7 @@ export const cases = [
       { label: 'Estado', value: 'En desarrollo' },
       { label: 'Lugar y año', value: 'Chile © 2026' },
     ],
-    theme: { brand: 'var(--surface-inverse)', tint: 'var(--surface-sunken)', cta: '#d97706', onCta: 'var(--ink-primary)', next: 'var(--surface-inverse)' },
+    theme: { brand: 'var(--surface-inverse)', tint: 'var(--surface-sunken)', cta: 'var(--surface-inverse)', onCta: 'var(--ink-on-dark)', next: 'var(--surface-inverse)' },
     // Sin app pública todavía: en vez de "Ver la app", arquitecto trabaja en el plano dentro del círculo.
     building: { label: 'En construcción' },
     cover: {

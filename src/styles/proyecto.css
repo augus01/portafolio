@@ -51,7 +51,7 @@ body:has(.ap-case){background:var(--surface-canvas)}
 .ap-case-cta:hover{transform:translateY(-50%) scale(var(--case-hover-scale))}
 .ap-case-cta:active{transform:translateY(-50%) scale(var(--scale-press))}
 .ap-case-cta:focus-visible{outline-color:var(--focus-ring)}
-.ap-case-cta--wip{flex-direction:column;gap:0;margin:0;line-height:1.1;text-align:center}
+.ap-case-cta--wip{flex-direction:column;gap:0;margin:0;border:var(--stroke-hairline) solid var(--border-on-dark);line-height:1.1;text-align:center}
 .ap-case-cta--wip:hover,.ap-case-cta--wip:active{transform:translateY(-50%)}
 .ap-case-cta__gl{display:none;width:58%;height:auto;aspect-ratio:1 / 1;margin-top:-8%}
 .ap-case-cta--wip.is-3d .ap-case-cta__gl{display:block}
