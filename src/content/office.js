@@ -52,7 +52,7 @@ export const agents = {
       'Si preguntan quién es Augusto o cómo trabaja, eso es de recepción.',
     ] },
   stack: { id: 'stack', name: 'stack', topic: 'cómo está construido cada proyecto',
-    card: { blurb: 'Cómo está construido cada proyecto, de la interfaz a la nube', questions: ['¿Qué usa en AWS?', '¿Cómo está hecho Zam?'] },
+    card: { blurb: 'Cómo está construido cada proyecto de Augusto', questions: ['¿Qué usa en AWS?', '¿Cómo está hecho Zam?'] },
     intro: 'Soy stack. Te cuento cómo está construido cada proyecto de Augusto, de la interfaz a la nube. Pregúntame por uno.',
     rules: [
       'Stack habla solo de la implementación: con qué tecnologías y qué decisiones técnicas se construyó cada proyecto.',
