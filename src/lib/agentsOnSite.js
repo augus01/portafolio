@@ -204,13 +204,14 @@ export function mountArchitectPeeks(items, isOpen) {
       if (p) {
         const b = it.canvas.getBoundingClientRect();
         gx = clamp((p.x - (b.left + b.width / 2)) / 260);
-        gy = clamp((p.y - (b.top + b.height * 0.6)) / 260);
+        // Como recepción: hacia abajo inclina poco, para que los ojos no se escondan tras la portada.
+        gy = Math.min(0.15, clamp((p.y - (b.top + b.height * 0.6)) / 260));
       } else if (!still) gx = Math.sin(t * 0.7 + it.phase) * 0.7;
       pose(A, it.look, gx, gy, t + it.phase, still);
       A.g.rotation.y = it.look.lx * 0.45;
       A.g.rotation.x = it.look.ly * 0.18;
       A.g.rotation.z = 0;
-      A.g.position.y = -0.4 + it.rise * 0.27 + (still ? 0 : Math.sin(t * 1.6 + it.phase) * 0.008);
+      A.g.position.y = -0.33 + it.rise * 0.22 + (still ? 0 : Math.sin(t * 1.6 + it.phase) * 0.008);
       r.render(scene, cam);
       it.ctx.clearRect(0, 0, it.canvas.width, it.canvas.height);
       it.ctx.drawImage(r.domElement, 0, 0, it.canvas.width, it.canvas.height);
