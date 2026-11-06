@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Icon } from '../../atoms/Icon';
 import { Pill } from '../../atoms/Pill';
+import { PeekPill } from '../../atoms/PeekPill';
 import { Logo } from '../../atoms/Logo';
 
 // Un ítem `external` abre en otra pestaña.
@@ -33,11 +34,17 @@ export function NavBar({ items, actions = [], brand, tone = 'light', menuPlaceme
     };
   }, [open]);
 
-  const pill = (item) => (
-    <li key={item.label}>
-      <Pill href={item.href} current={item.current} onClick={onNavigate && item.href.charAt(0) === '#' ? (e) => onNavigate(e, item.href) : undefined} {...extProps(item)}>{item.label}</Pill>
-    </li>
-  );
+  // Un ítem con `peek` lleva a recepción asomada por detrás de su píldora (PeekPill).
+  const pill = (item) => {
+    const onClick = onNavigate && item.href.charAt(0) === '#' ? (e) => onNavigate(e, item.href) : undefined;
+    return (
+      <li key={item.label}>
+        {item.peek
+          ? <PeekPill href={item.href} current={item.current} onClick={onClick}>{item.label}</PeekPill>
+          : <Pill href={item.href} current={item.current} onClick={onClick} {...extProps(item)}>{item.label}</Pill>}
+      </li>
+    );
+  };
 
   return (
     <div ref={rootRef} className={['ap-nav', `ap-nav--${tone}`, brand && 'ap-nav--brand', className].filter(Boolean).join(' ')}>

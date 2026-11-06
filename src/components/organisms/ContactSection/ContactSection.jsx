@@ -27,6 +27,12 @@ export function ContactSection({ id, headline, enter, meta, hint, desk }) {
     window.addEventListener('pageshow', reset);
     return () => window.removeEventListener('pageshow', reset);
   }, []);
+  // Al llegar desde la píldora Contacto de la nav (recepción se agachó allá), salta y saluda desde su escritorio.
+  useEffect(() => {
+    const greet = () => { const d = deskRef.current; if (d) { d.hop(true); d.say(desk.greet, 2.4); } };
+    window.addEventListener('ap:recepcion-saluda', greet);
+    return () => window.removeEventListener('ap:recepcion-saluda', greet);
+  }, [deskRef, desk.greet]);
 
   const onEnter = (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
