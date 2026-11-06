@@ -199,6 +199,8 @@ export const cases = [
       { label: 'Lugar y año', value: 'Chile © 2026' },
     ],
     theme: { brand: 'var(--surface-inverse)', tint: 'var(--surface-sunken)', next: 'var(--surface-inverse)' },
+    // Sin app pública todavía: en vez de "Ver la app", arquitecto trabaja en el plano dentro del círculo.
+    building: { label: 'App en construcción' },
     cover: {
       badge: 'En desarrollo',
       logo: { brand: 'zam', symbol: '/proyectos/zam-simbolo-claro.svg', symbolWidth: 466, symbolHeight: 466, wordmark: 'zam' },

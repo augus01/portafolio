@@ -142,3 +142,28 @@ export function useAgentTrio(hostRef) {
     return () => { cancelled = true; io.disconnect(); if (ctl) ctl.dispose(); host.classList.remove('is-3d'); };
   }, [hostRef]);
 }
+
+/**
+ * Arquitecto trabajando en su plano dentro del lienzo `canvasRef` (círculo "en construcción" de la portada). Se monta
+ * cuando se acerca a la pantalla y solo se anima mientras se ve.
+ */
+export function useArchitectBusy(canvasRef) {
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !('IntersectionObserver' in window)) return undefined;
+    let cancelled = false, loading = false, visible = false, ctl = null;
+    const io = new IntersectionObserver((es) => {
+      visible = es[0].isIntersecting;
+      if (ctl) { ctl.setVisible(visible); return; }
+      if (!visible || loading) return;
+      loading = true;
+      load().then(({ mountArchitectBusy }) => {
+        if (cancelled) return;
+        ctl = mountArchitectBusy(canvas);
+        if (ctl) { canvas.closest('.ap-case-cta')?.classList.add('is-3d'); ctl.setVisible(visible); }
+      }).catch(() => { /* sin WebGL: queda el texto */ });
+    }, { rootMargin: '200px 0px' });
+    io.observe(canvas.closest('.ap-case-cta') || canvas); // el lienzo está oculto hasta que carga el 3D
+    return () => { cancelled = true; io.disconnect(); if (ctl) ctl.dispose(); };
+  }, [canvasRef]);
+}

@@ -95,3 +95,9 @@ test('cada caso muestra abajo los otros dos proyectos, en orden y solo con su lo
     }
   }
 });
+
+test('zam: sin app pública, la portada lleva el círculo "en construcción" en vez de "Ver la app"', () => {
+  assert.equal(zam.cta, undefined);
+  assert.match(zam.building?.label || '', /construcción/);
+  for (const c of cases.filter((o) => o.slug !== 'zam')) assert.equal(c.building, undefined, c.slug);
+});

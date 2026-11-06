@@ -368,3 +368,89 @@ export function mountAgentTrio(canvas, host) {
     },
   };
 }
+
+/**
+ * Arquitecto ocupado (portada de un proyecto sin app pública, dentro del círculo "en construcción"): de pie tras su
+ * plano desenrollado, el plano de planta de un minimarket con sus estantes, lo recorre con la mirada mientras el lápiz
+ * traza y asiente de vez en cuando. No sigue el cursor: está trabajando. Solo anima mientras se ve (`setVisible`);
+ * con `prefers-reduced-motion` o el nivel de rendimiento mínimo queda quieto, mirando el plano.
+ */
+export function mountArchitectBusy(canvas) {
+  const r = makeRenderer(canvas);
+  if (!r) return null;
+  r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene();
+  lights(scene, [5, 12, 9]);
+  const cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
+  cam.position.set(0, 0.62, 3.1);
+  cam.lookAt(0, -0.28, 0);
+  const A = buildAgent('arquitecto');
+  A.g.children.filter((o) => o.type === 'Group' && o !== A.head).forEach((o) => A.g.remove(o)); // el plano ya no va enrollado
+  scene.add(A.g);
+
+  // Plano desenrollado, inclinado hacia él, con los bordes aún curvos; encima, la planta de la tienda.
+  const sheet = new THREE.Group();
+  sheet.position.set(0, -0.5, 0.46);
+  sheet.rotation.x = -1.05;
+  scene.add(sheet);
+  sheet.add(new THREE.Mesh(new THREE.PlaneGeometry(0.96, 0.6), mat(0xf3f5fb, { roughness: 0.7, side: THREE.DoubleSide })));
+  [-0.48, 0.48].forEach((x) => {
+    const curl = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.6, 16), mat(0xf3f5fb, { roughness: 0.7 }));
+    curl.position.set(x, 0, 0.03);
+    sheet.add(curl);
+  });
+  const rect = (x0, y0, x1, y1) => [x0, y0, x1, y0, x1, y0, x1, y1, x1, y1, x0, y1, x0, y1, x0, y0];
+  const pts = [
+    ...rect(-0.4, -0.25, 0.4, 0.25), // muros
+    ...rect(-0.3, 0.08, 0.12, 0.13), ...rect(-0.3, -0.04, 0.12, 0.01), ...rect(-0.3, -0.16, 0.12, -0.11), // estantes
+    ...rect(0.22, -0.2, 0.34, 0.16), // caja
+  ];
+  const v = [];
+  for (let i = 0; i + 3 < pts.length; i += 4) v.push(pts[i], pts[i + 1], 0.004, pts[i + 2], pts[i + 3], 0.004);
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+  sheet.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({ color: COLORS.arquitecto })));
+
+  // Lápiz: la punta toca el plano y el cuerpo sale inclinado hacia él.
+  const pencil = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.24, 10), mat(INK));
+  body.position.y = 0.15;
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.016, 0.04, 10), mat(0x9fb1ee));
+  tip.position.y = 0.02; tip.rotation.x = Math.PI;
+  pencil.add(body, tip);
+  pencil.rotation.set(0.75, 0, -0.45);
+  sheet.add(pencil);
+
+  const L = newLook();
+  L.ly = 0.95;
+  const clock = new THREE.Clock();
+  const still = isStill();
+  let visible = false;
+  const size = () => {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    r.setSize(w, h, false);
+    cam.aspect = w / h; cam.updateProjectionMatrix();
+    lp.kick();
+  };
+  const ro = new ResizeObserver(size);
+  ro.observe(canvas);
+  const lp = loop(() => {
+    if (!canvas.clientWidth) return false;
+    const t = still ? 0 : clock.getElapsedTime();
+    // El lápiz recorre los estantes de izquierda a derecha y vuelve, con pequeños toques.
+    const px = Math.sin(t * 0.9) * 0.24 - 0.05;
+    const py = 0.04 + Math.sin(t * 2.3) * 0.08;
+    pencil.position.set(px, py, still ? 0 : Math.abs(Math.sin(t * 7)) * 0.012);
+    const nod = still ? 0 : Math.max(0, Math.sin(t * 0.7)) ** 8 * 0.5;
+    pose(A, L, px * 1.1, 0.95 + nod, clock.getElapsedTime(), still);
+    A.g.position.y = still ? 0 : Math.sin(t * 1.2) * 0.015;
+    r.render(scene, cam);
+    return visible && !still;
+  });
+  size();
+  return {
+    setVisible(vis) { visible = vis; if (vis || still) lp.kick(); },
+    dispose() { lp.stop(); ro.disconnect(); freeRenderer(r); },
+  };
+}

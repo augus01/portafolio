@@ -1,11 +1,13 @@
+import { ArchitectBusy } from '../../atoms/ArchitectBusy';
 import { Device } from '../../atoms/Device';
 import { Icon } from '../../atoms/Icon';
 import { CaseLockup } from '../../molecules/CaseLockup';
 
 // Portada: banda 16:9 (4:5 en teléfono) en el color de la marca, con el logo en blanco, tres teléfonos que asoman
 // desde abajo y el círculo del enlace principal montado sobre el borde. Logo y teléfonos se mueven en parallax suave
-// (`data-par`, hook useCaseParallax). Si el proyecto no tiene sitio público, no hay círculo.
-export function CaseCover({ label, cta, badge, logo, phones }) {
+// (`data-par`, hook useCaseParallax). Si el proyecto no tiene sitio público pero está en construcción (`building`), el
+// círculo muestra a arquitecto trabajando en el plano; si no tiene ninguno de los dos, no hay círculo.
+export function CaseCover({ label, cta, building, badge, logo, phones }) {
   return (
     <section className={`ap-case-cover${phones.length ? '' : ' ap-case-cover--solo'}`} aria-label={label}>
       {cta && (
@@ -13,6 +15,7 @@ export function CaseCover({ label, cta, badge, logo, phones }) {
           {cta.label} <Icon name="arrow-up-right" size="sm" />
         </a>
       )}
+      {!cta && building && <ArchitectBusy label={building.label} />}
       <div className="ap-case-cover__band">
         {badge && <span className="ap-case-cover__badge ap-case-mono">{badge}</span>}
         <div className="ap-case-cover__brand" data-par="0.06"><CaseLockup {...logo} /></div>

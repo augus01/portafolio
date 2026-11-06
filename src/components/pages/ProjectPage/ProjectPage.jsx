@@ -44,7 +44,7 @@ export function ProjectPage({ slug }) {
         )}
         back={<CaseBackButton {...casePage.back} />}
         head={<CaseHead index={data.index} eyebrow={data.eyebrow} name={data.name} meta={data.meta} />}
-        cover={<CaseCover label={casePage.coverLabel} cta={data.cta} {...data.cover} />}
+        cover={<CaseCover label={casePage.coverLabel} cta={data.cta} building={data.building} {...data.cover} />}
         intro={<CaseIntro labels={{ project: casePage.projectLabel, links: casePage.linksLabel, stack: casePage.stackLabel }} {...data.intro} facts={data.facts} />}
         stages={data.stages.map((s) => <CaseStage key={s.label} {...s} />)}
         next={<CaseNext labels={casePage.next} others={data.others} />}
