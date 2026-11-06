@@ -15,9 +15,9 @@ export function isEmail(text) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(text || '').trim());
 }
 
-/** "sí", "enviar", "ok"… confirman el recado. */
+/** "sí", "enviar", "ok", "yes", "send"… confirman el recado (español o inglés). */
 export function isConfirm(text) {
-  return /^(si|enviar|envialo|ok|dale|listo)/.test(normalize(text));
+  return /^(si|enviar|envialo|ok|dale|listo|yes|yep|yeah|send|sure)/.test(normalize(text));
 }
 
 /**
@@ -64,7 +64,7 @@ export function answer(question, { topics, agents, small, to, from, noMatch, noM
 }
 
 // Palabras que no son un dato del recado: saludos y cortesías.
-const CORTESIA = /^(hola|holi|buenas|hey|hi|hello|gracias|ok|okay|si|no|dale|listo|vale|bueno|que tal)$/;
+const CORTESIA = /^(hola|holi|buenas|hey|hi|hello|gracias|thanks|thank you|ok|okay|si|yes|sure|no|dale|listo|vale|bueno|que tal)$/;
 /**
  * true si el texto es una pregunta explícita (con signo de interrogación). Solo eso saca del recado: una necesidad o
  * un nombre pueden calzar con un tema ("Tengo un proyecto…", "Ernesto") y siguen siendo datos.

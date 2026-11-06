@@ -226,3 +226,102 @@ test('respaldo: "¿qué te puedo preguntar?" lo responde el agente al que le hab
   }
   assert.equal(answer('¿Qué te puedo preguntar?', { ...opts(), small: chat.small })[0].agent, 'recepcion');
 });
+
+// ---------- Inglés: src/content/en/office.js ----------
+import * as en from '../content/en/office.js';
+
+const enOpts = (to = null) => ({ topics: en.chat.topics, agents: en.agents, to, noMatch: en.chat.noMatch });
+const NOMBRES_OK = /Ingeniería Civil Informática|Universidad San Sebastián/g;
+const sinEspanol = (out, q) => out.forEach((r) => assert.doesNotMatch(r.text.replace(NOMBRES_OK, ''), /[áéíóúñ¿¡]/i, q));
+
+test('en: mismos exports y estructura que el contenido en español', async () => {
+  const es = await import('../content/office.js');
+  assert.deepEqual(Object.keys(en).sort(), Object.keys(es).sort());
+  const forma = (v) => {
+    if (Array.isArray(v)) return v.map(forma);
+    if (v instanceof RegExp) return 'regexp';
+    if (typeof v === 'function') return `function/${v.length}`;
+    if (v && typeof v === 'object') return Object.fromEntries(Object.keys(v).sort().map((k) => [k, forma(v[k])]));
+    return v === null ? 'null' : typeof v;
+  };
+  for (const k of Object.keys(es)) assert.deepEqual(forma(en[k]), forma(es[k]), k);
+  assert.deepEqual(Object.values(en.agents).map((a) => [a.id, a.name]), [['recepcion', 'reception'], ['arquitecto', 'architect'], ['stack', 'stack']]);
+  assert.deepEqual(en.themes.items.map((t) => t.id), es.themes.items.map((t) => t.id));
+  assert.equal(en.officePage.back.href, '/#contacto');
+  assert.equal(en.leadEmail, es.leadEmail);
+});
+
+test('en: saludo y agradecimiento en inglés los responde recepción', () => {
+  const out = answer('Hi', { ...enOpts(), small: en.chat.small });
+  assert.deepEqual(out[0], { agent: 'recepcion', text: en.chat.small.greet.recepcion });
+  assert.equal(answer('Thanks!', { ...enOpts(), small: en.chat.small })[0].text, en.chat.small.thanks.recepcion);
+  sinEspanol(out, 'Hi');
+});
+
+test('en: "hi" solo como palabra completa', () => {
+  const out = answer('History of his projects', { ...enOpts(), small: en.chat.small });
+  assert.notEqual(out[0].text, en.chat.small.greet.recepcion);
+});
+
+test('en: temas en inglés', () => {
+  const a = answer('What is Inkvibe?', enOpts());
+  assert.equal(a[0].agent, 'arquitecto');
+  assert.ok(en.chat.topics.some((t) => t.text === a[0].text));
+  const b = answer('How is Rumbo a Casa built on AWS?', enOpts());
+  assert.ok(b.some((r) => r.agent === 'stack'));
+  const c = answer('Whats your favorite food', enOpts());
+  assert.equal(c[0].text, en.chat.noMatch);
+  for (const [q, out] of [['What is Inkvibe?', a], ['How is Rumbo a Casa built on AWS?', b], ['food', c]]) sinEspanol(out, q);
+});
+
+test('en: el visitante también puede escribir en español', () => {
+  assert.equal(answer('¿Qué es Inkvibe?', enOpts())[0].agent, 'arquitecto');
+  assert.deepEqual(answer('¿Cómo está hecho Zam?', enOpts()).map((r) => r.agent), ['stack']);
+  assert.equal(answer('hola', { ...enOpts(), small: en.chat.small })[0].text, en.chat.small.greet.recepcion);
+});
+
+test('en: contacto y confirmación en inglés', () => {
+  assert.equal(wantsContact('I want to hire him', en.chat.leadRx), true);
+  assert.equal(wantsContact('Quiero contactarlo', en.chat.leadRx), true);
+  assert.equal(wantsContact('What stack does he use?', en.chat.leadRx), false);
+  assert.equal(isConfirm('yes'), true);
+  assert.equal(isConfirm('send'), true);
+  assert.equal(isConfirm('Sure, send it'), true);
+  assert.equal(isConfirm('no thanks'), false);
+});
+
+test('en: cortesías inglesas no sirven de nombre', () => {
+  for (const t of ['Hello', 'thanks', 'thank you', 'yes', 'sure']) assert.equal(leadNext({ step: 'name' }, t, q).say, 'badName', t);
+  assert.equal(leadNext({ step: 'name' }, 'Mary Jones', q).say, 'need');
+});
+
+test('en: las preguntas listas de cada tarjeta y de cada visitante tienen respuesta', () => {
+  const preguntas = [...Object.values(en.agents).flatMap((a) => a.card.questions), ...en.chat.visitors.flatMap((v) => v.sugs)];
+  for (const p of preguntas) {
+    const out = answer(p, { ...enOpts(), small: en.chat.small });
+    assert.ok(wantsContact(p, en.chat.leadRx) || out[0].text !== en.chat.noMatch, p);
+    sinEspanol(out, p);
+  }
+});
+
+test('en: cada agente responde a su propia pregunta lista', () => {
+  for (const a of Object.values(en.agents)) {
+    for (const p of a.card.questions) {
+      if (wantsContact(p, en.chat.leadRx)) continue;
+      assert.equal(answer(p, enOpts(a.id))[0].agent, a.id, p);
+    }
+  }
+});
+
+test('en: ningún texto lleva caracteres del español', () => {
+  const textos = [];
+  const juntar = (v) => {
+    if (typeof v === 'string') textos.push(v);
+    else if (typeof v === 'function') textos.push(String(v.length === 1 ? v({ name: 'stack', topic: 'x' }) : v()));
+    else if (Array.isArray(v)) v.forEach(juntar);
+    else if (v && typeof v === 'object' && !(v instanceof RegExp)) Object.values(v).forEach(juntar);
+  };
+  juntar(en);
+  const permitidos = /Ingeniería Civil Informática|Universidad San Sebastián/g;
+  for (const t of textos) assert.doesNotMatch(t.replace(permitidos, ''), /[áéíóúñ¿¡]/i, t);
+});
