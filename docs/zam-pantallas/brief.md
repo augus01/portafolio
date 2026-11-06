@@ -44,7 +44,24 @@ Lorem ipsum, emojis, destellos, insignias "IA" o "con IA", degradados, heros mor
 
 ## Referencias de Refero (solo layout y densidad; color y fuentes los manda Zam)
 
-(Se completa en la Tarea 2.)
+De la búsqueda "Light minimal SaaS with neutral surfaces" en Refero Styles se eligieron solo estilos claros y casi monocromos:
+
+1. **Seline Analytics**: https://styles.refero.design/style/7967c6d9-e50c-42b5-b4d1-74003ba41781
+   - Se toma: líneas de 1px como estructura principal en vez de paneles pesados; un solo color con voz propia, que es lo más fuerte de la pantalla por la contención de todo lo demás; densidad compacta con separación de 8px dentro de un grupo; los datos reales del producto como prueba.
+   - No se toma: el fondo cálido, el cian, la mascota ni los botones pill.
+2. **Hellotime**: https://styles.refero.design/style/dbc5ecba-7309-456f-93b4-4356c6b0d293
+   - Se toma: la jerarquía por contraste de peso tipográfico y no por color; superficies planas con borde fino y sin elevación; el botón oscuro como único elemento lleno, para que cada acción se sienta deliberada.
+   - No se toma: el degradado azul de los titulares (prohibido en Zam) ni los titulares de 64–80px.
+3. **Visitors**: https://styles.refero.design/style/e7876363-181a-44a9-9e5c-2255cf98aea5
+   - Se toma: la columna vertebral en escala de grises de un producto de analítica; no mezclar acentos dentro de un componente; sombras chicas o ninguna.
+   - No se toma: el lavanda ni la tipografía OpenRunde.
+
+Patrones concretos para las pantallas:
+- Las cifras del día van en una fila, separadas por líneas verticales de 1px, sin una card por cifra.
+- Las tablas son de filas de 44px con borde inferior de 1px, encabezado en 13px peso 500 color ink-secondary, montos alineados a la derecha en tabular-nums y n.º de boleta en mono.
+- El header de la web mide 56px, con el selector de tienda a la izquierda y la fecha y las iniciales de la dueña a la derecha.
+- Hay una acción negra por pantalla y el resto son botones con borde.
+- El aire viene del espacio, no de cajas: se agrupa con espacio y líneas antes que con cards.
 
 ## Pantallas
 
