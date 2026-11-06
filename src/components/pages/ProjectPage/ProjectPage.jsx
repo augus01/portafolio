@@ -47,7 +47,7 @@ export function ProjectPage({ slug }) {
         cover={<CaseCover label={casePage.coverLabel} cta={data.cta} {...data.cover} />}
         intro={<CaseIntro labels={{ project: casePage.projectLabel, links: casePage.linksLabel, stack: casePage.stackLabel }} {...data.intro} facts={data.facts} />}
         stages={data.stages.map((s) => <CaseStage key={s.label} {...s} />)}
-        next={<CaseNext labels={casePage.next} next={data.next} />}
+        next={<CaseNext labels={casePage.next} others={data.others} />}
         footer={<Footer {...casePage.footer} />}
       />
     </div>

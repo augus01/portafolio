@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { cases } from './projects.js';
+import { cases, getCase } from './projects.js';
 
 const zam = cases.find((c) => c.slug === 'zam');
 const LAPTOP = [1508, 784];
@@ -76,5 +76,20 @@ test('zam: las imágenes van al doble de la medida del dispositivo para que el t
   for (const s of shots(zam)) {
     const [w, h] = webpSize(`public${s.src}`);
     assert.deepEqual([w, h], [s.device[0] * 2, s.device[1] * 2], s.src);
+  }
+});
+
+test('cada caso muestra abajo los otros dos proyectos, en orden y solo con su logo y color', () => {
+  for (const c of cases) {
+    const { others } = getCase(c.slug);
+    const esperados = cases.filter((o) => o.slug !== c.slug);
+    assert.equal(others.length, cases.length - 1, c.slug);
+    assert.ok(others.every((o) => esperados.some((e) => e.name === o.name)), c.slug);
+    assert.equal(others[0].name, cases[(cases.indexOf(c) + 1) % cases.length].name, `${c.slug}: primero el siguiente`);
+    for (const o of others) {
+      assert.ok(o.logo && (o.logo.symbol || o.logo.image), `${o.name} sin logo`);
+      assert.ok(o.color, `${o.name} sin color`);
+      assert.equal(o.thumb, undefined, `${o.name} no lleva pantallas`);
+    }
   }
 });

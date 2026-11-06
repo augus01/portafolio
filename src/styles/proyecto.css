@@ -140,12 +140,14 @@ body:has(.ap-case){background:var(--surface-canvas)}
 
 /* Siguiente proyecto */
 .ap-case-next{padding:176px var(--case-gutter) var(--space-section);text-align:center}
-.ap-case-next__link{display:inline-flex;flex-direction:column;align-items:center;text-decoration:none}
+.ap-case-next__list{margin:0;padding:0;list-style:none}
+.ap-case-next__list li + li{margin-top:var(--space-section)}
+.ap-case-next__link{display:inline-flex;flex-direction:column;align-items:center;max-width:100%;margin-top:20px;text-decoration:none}
 .ap-case-next__label{color:var(--ink-secondary)}
-.ap-case-next__title{margin:20px 0 0;font-family:var(--font-text);font-weight:400;font-size:clamp(64px, 13cqw, 200px);line-height:.9;letter-spacing:-0.055em;transition:opacity var(--dur-move) var(--ease-in-out)}
+.ap-case-next__title{font-family:var(--font-text);font-weight:400;font-size:clamp(64px, 13cqw, 200px);line-height:.9;letter-spacing:-0.055em;transition:opacity var(--dur-move) var(--ease-in-out)}
 .ap-case-next__thumb{position:relative;overflow:hidden;width:min(72cqw, 380px);aspect-ratio:4 / 3;margin-top:var(--case-gutter);background:var(--case-next);transition:transform var(--dur-move) var(--ease-in-out)}
-.ap-case-next__thumb img{position:absolute;left:50%;top:18%;width:42%;border:5px solid var(--case-device);border-radius:20px;transform:translateX(-50%)}
-.ap-case-next__thumb--logo img{top:50%;width:30%;border:0;border-radius:0;transform:translate(-50%,-50%)}
+.ap-case-next__thumb img{position:absolute;left:50%;top:50%;width:30%;height:auto;transform:translate(-50%,-50%)}
+.ap-case-next__thumb--word img{width:60%}
 .ap-case-next__link:hover .ap-case-next__thumb{transform:scale(1.02)}
 .ap-case-next__link:hover .ap-case-next__title{opacity:.6}
 .ap-case-all{display:inline-flex;align-items:center;gap:10px;min-height:var(--target-lg);margin-top:72px;padding:0 28px;border:var(--stroke-hairline) solid var(--border-strong);border-radius:var(--radius-pill);text-decoration:none;font-family:var(--font-oswald);font-size:18px;transition:background-color var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}

@@ -4,7 +4,6 @@
 // vite.config.js lee `caseSlugs` para copiar index.html a cada ruta en el build (por eso solo importa contenido plano).
 import { nav as landingNav, mobileMenu as landingMenu, footer as landingFooter } from './home.js';
 
-const PHONE = { width: 387, height: 784 };
 const dir = '/proyectos/casos';
 
 // La misma nav del landing (píldoras en escritorio, barra y menú en móvil), con las anclas apuntando al landing y
@@ -31,12 +30,12 @@ export const casePage = {
   linksLabel: 'Enlaces del proyecto',
   stackLabel: 'Stack',
   coverLabel: 'Portada del proyecto',
-  next: { label: 'Siguiente proyecto', all: 'Ver todos los proyectos', allHref: '/#proyectos' },
+  next: { label: 'Otros proyectos', all: 'Ver todos los proyectos', allHref: '/#proyectos' },
   documentTitle: (name) => `${name} · Proyecto · Augusto Pinto`,
 };
 
 // `theme`: color de marca (portada y escenarios de marca), fondo de los escenarios, acento, círculo del enlace principal
-// y color con que aparece en "Siguiente proyecto". `stages`: secciones a sangre; cada bloque es un dispositivo con su
+// y color con que aparece en "Otros proyectos". `stages`: secciones a sangre; cada bloque es un dispositivo con su
 // captura (laptop, teléfonos, tablet + teléfono) o texto.
 export const cases = [
   {
@@ -108,7 +107,6 @@ export const cases = [
         ],
       },
     ],
-    nextThumb: { src: `${dir}/rumbo-tel-plan.webp`, ...PHONE },
   },
   {
     slug: 'inkvibe',
@@ -190,7 +188,6 @@ export const cases = [
         ],
       },
     ],
-    nextThumb: { src: `${dir}/inkvibe-siguiente.jpg`, width: 500, height: 1200 },
   },
   {
     slug: 'zam',
@@ -271,22 +268,22 @@ export const cases = [
         ],
       },
     ],
-    nextThumb: { src: `${dir}/zam-tel-alerta.webp`, ...PHONE },
   },
 ];
 
 export const caseSlugs = cases.map((c) => c.slug);
 export const caseHref = (slug) => `/proyectos/${slug}/`;
 
-// Datos de la página de un proyecto, con su número y el siguiente (en bucle).
+// Datos de la página de un proyecto, con su número y los otros proyectos, empezando por el siguiente (en bucle).
 export function getCase(slug) {
   const i = cases.findIndex((c) => c.slug === slug);
   if (i < 0) return null;
-  const next = cases[(i + 1) % cases.length];
+  const others = cases.slice(i + 1).concat(cases.slice(0, i))
+    .map((o) => ({ name: o.name, href: caseHref(o.slug), color: o.theme.next, logo: o.cover.logo }));
   const pad = (n) => String(n).padStart(2, '0');
   return {
     ...cases[i],
     index: `Proyecto ${pad(i + 1)} / ${pad(cases.length)}`,
-    next: { name: next.name, href: caseHref(next.slug), color: next.theme.next, thumb: next.nextThumb, logo: next.cover.logo },
+    others,
   };
 }
