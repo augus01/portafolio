@@ -1,6 +1,7 @@
 // Superpoderes: stack (el agente naranja de la oficina) sentado en un pufón sobre la cinta de tecnologías, leyendo sin
 // enterarse de nada. Si el cursor pasa por encima (o lo tocas), se despierta y salta asustado; el libro sale volando y
-// vuelve a leer. Al pasar el cursor por un logo de la cinta se emociona y salta igual (`cheer`). Del artefacto "Hero · Augusto Pinto" (stack-reader.js, 6 nov 2026). Three.js r128, cargado aparte.
+// vuelve a leer. Al pasar el cursor por un logo de la cinta se emociona y salta igual (`cheer`). La ficha de cada
+// tecnología usa este mismo stack (hooks/useStackReader.js, useStackCard): salta de emoción al responder. Del artefacto "Hero · Augusto Pinto" (stack-reader.js, 6 nov 2026). Three.js r128, cargado aparte.
 // Mismo personaje y colores que la oficina (excepción aprobada, design-system/INTEGRACION.md).
 import * as THREE from 'three';
 import { getPerfTier } from './perfTier';
@@ -62,7 +63,8 @@ export function mountStackReader(stage, opts) {
   var bulb = add(new THREE.SphereGeometry(0.055, 12, 10), M(0xf5a8c0), 0, 0.54, 0, head);
   var SIT_Y = 0.36 + 0.78; /* asiento + altura del cuerpo */
   agent.position.set(0, SIT_Y, 0);
-  agent.rotation.y = Math.PI / 4 - 0.15;
+  /* De frente a la cámara; `facing` lo gira (en la ficha mira hacia el logo, a su izquierda). */
+  agent.rotation.y = opts.facing == null ? Math.PI / 4 - 0.15 : opts.facing;
   scene.add(agent);
 
   /* Brazos: dos cilindros cortos que sostienen el libro */
@@ -84,7 +86,8 @@ export function mountStackReader(stage, opts) {
   var BOOK_REST = { y: -0.55, z: 0.3, rx: -0.9 };
 
   /* Cámara fija, isométrica */
-  var target = new THREE.Vector3(0, 0.68, 0), size = 1.4;
+  /* `size` es la mitad del alto visible (menos = más grande); la ficha lo acerca. */
+  var target = new THREE.Vector3(0, opts.lookY || 0.68, 0), size = opts.size || 1.4;
   var resize = function () {
     var W = stage.clientWidth, H = stage.clientHeight;
     if (!W || !H) return;
@@ -104,7 +107,7 @@ export function mountStackReader(stage, opts) {
   var S = { mode: 'read', t0: 0, blinkAt: 3, blinkT: -1, pageAt: 2.4, pageT: -1, nodSeed: Math.random() * 6 };
   var sayT = 0;
   var say = function (txt, ms) {
-    if (!bubble) return;
+    if (!bubble || !txt) return;
     bubble.textContent = txt; bubble.classList.add('is-on');
     clearTimeout(sayT); sayT = setTimeout(function () { bubble.classList.remove('is-on'); }, ms || 2200);
   };
@@ -120,7 +123,7 @@ export function mountStackReader(stage, opts) {
     kick();
   };
   var scare = function () { jumpWith('scare', opts.scare || '¡AAH! ¡Me asustaste!'); };
-  var cheer = function (txt) { if (txt) jumpWith('cheer', txt); };
+  var cheer = function (txt) { jumpWith('cheer', txt); };
   stage.addEventListener('pointerenter', scare);
   stage.addEventListener('pointerdown', scare);
 

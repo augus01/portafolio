@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 /**
  * Monta a stack leyendo (Three.js, `lib/stackReader.js`) en `stageRef` mientras su puesto de la cinta está cerca de
@@ -42,4 +42,33 @@ export function useStackReader(stageRef, scare, cheer) {
       if (reader) { reader.dispose(); reader = null; }
     };
   }, [stageRef, scare, cheer]);
+}
+
+/**
+ * stack de la cinta en la ficha de una tecnología (`SkillCard`): sentado leyendo, girado hacia el logo. Se monta al
+ * abrir la ficha y se libera al cerrarla; cada vez que sube `talkKey` (respondió una pregunta) salta de emoción.
+ */
+export function useStackCard(stageRef, open, talkKey) {
+  const readerRef = useRef(null);
+  const lastTalk = useRef(talkKey);
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!open || !stage) return undefined;
+    let cancelled = false;
+    import('../lib/stackReader').then(({ mountStackReader }) => {
+      if (cancelled) return;
+      readerRef.current = mountStackReader(stage, { facing: 0.4, size: 1.05, lookY: 0.8 });
+    }).catch(() => { /* sin stack 3D */ });
+    return () => {
+      cancelled = true;
+      if (readerRef.current) { readerRef.current.dispose(); readerRef.current = null; }
+    };
+  }, [open, stageRef]);
+
+  useEffect(() => {
+    // Salta solo cuando hay una respuesta nueva (al cambiar de ficha el contador vuelve a 0 y no salta).
+    if (talkKey > lastTalk.current) readerRef.current?.cheer();
+    lastTalk.current = talkKey;
+  }, [talkKey]);
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from '../../atoms/Icon';
-import { useAgentCard } from '../../../hooks/useAgentsOnSite';
+import { useStackCard } from '../../../hooks/useStackReader';
 import { officeHref } from '../../../lib/officeLink';
 
 // Halo detrás del logo: el color de la marca al 22%.
@@ -11,7 +11,7 @@ const halo = (hex) => {
 };
 
 // Ficha de una tecnología, al centro de la pantalla sobre un velo: categoría, logo a color flotando en 3D con stack
-// (el agente de la oficina) mirándolo, qué logré con ella y en qué proyectos la usé. Stack responde las preguntas
+// (el mismo de la cinta: sentado en su pufón leyendo, girado hacia el logo; salta de emoción al responder), qué logré con ella y en qué proyectos la usé. Stack responde las preguntas
 // listas de `ask` en un hilo y "Seguir con stack en la oficina" abre la oficina con él elegido y la pregunta escrita.
 // Va en <body> para quedar sobre la página. Al abrir, el foco va a "Cerrar".
 export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {
@@ -20,7 +20,7 @@ export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {
   const [asked, setAsked] = useState([]);
   useEffect(() => { if (open) closeRef.current?.focus({ preventScroll: true }); }, [open, n]);
   useEffect(() => { setAsked([]); }, [n]);
-  useAgentCard(glRef, texts.agent, open, asked.length);
+  useStackCard(glRef, open, asked.length);
   if (!item) return null;
   const pending = ask.map((x, i) => ({ ...x, i })).filter((x) => !asked.includes(x.i));
   return createPortal(
@@ -46,7 +46,7 @@ export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {
             <img key={n} className="hab-pop__logo" src={`/habilidades/${item.logo}-color.webp`} alt={texts.alt(item.name)} width="480" height="480" />
           </span>
           <span className="hab-pop__shadow" aria-hidden="true" />
-          <canvas ref={glRef} className="hab-pop__gl" aria-hidden="true" />
+          <span ref={glRef} className="hab-pop__gl" aria-hidden="true"><span className="hab-rd__gl" data-rd-canvas="" /></span>
         </div>
         <h3 className="hab-pop__name heading">{item.name}</h3>
         <div className="hab-pop__thread" aria-live="polite">
