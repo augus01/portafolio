@@ -59,9 +59,9 @@
   .ap-menu__cta--ghost{min-height:var(--target-min);background:transparent;color:var(--ink-primary)}
   .ap-menu__meta.label{margin:0;text-align:center;font-size:var(--m-meta-size);font-weight:400;color:var(--ink-secondary)}
 
-  /* Hero: el logo vive en la barra; rol y lugar bajan al pie del escenario; el nombre ocupa el ancho en dos líneas. */
-  .ap-hero__top .ap-logo{display:none}
-  .ap-hero__top{position:absolute;left:var(--space-4);right:var(--space-4);bottom:max(var(--m-hero-foot), env(safe-area-inset-bottom, 0px));justify-content:center}
+  /* Hero: el logo carga centrado arriba (la barra aún no se ve) y se desvanece con el resto de la cabecera al bajar;
+     rol y lugar van al pie del escenario; el nombre ocupa el ancho en dos líneas. */
+  .ap-hero__top{position:absolute;left:var(--space-4);right:var(--space-4);top:max(var(--space-6), env(safe-area-inset-top, 0px));bottom:max(var(--m-hero-foot), env(safe-area-inset-bottom, 0px));flex-direction:column;justify-content:space-between;align-items:center;pointer-events:none;--top-scale:1.4}
   .ap-hero__top .ap-hero__meta{justify-content:center;max-width:30ch}
   .ap-hero__top .ap-hero__role{text-align:center}
   .ap-sticky .ap-hero__inner{grid-template-rows:1fr;padding:var(--space-4)}
