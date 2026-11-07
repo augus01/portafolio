@@ -192,8 +192,8 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       return ray.intersectObjects(list, false).length > 0;
     };
     var onCanvasMove = function (e) { canvas.style.cursor = (hitAt(e, agentMeshes) || hitAt(e, [bell, bellKnob])) ? 'pointer' : ''; };
-    /* Tres clics seguidos (menos de 0,8 s entre uno y otro) sobre recepción: te lleva a la oficina (`opts.onTriple`). */
-    var tickles = opts.tickles || ['¡Jaja, me haces cosquillas!', 'Una vez más y te llevo a la oficina'];
+    /* Dos clics seguidos (menos de 0,8 s entre uno y otro) sobre recepción: te lleva a la oficina (`opts.onDouble`). */
+    var tickles = opts.tickles || ['¡Jaja, me haces cosquillas! Una vez más y te llevo a la oficina'];
     var clicks = 0, lastClick = -10;
     var onCanvasClick = function (e) {
       if (hitAt(e, [bell, bellKnob])) { ringBell(); hop(false); say(opts.ding || '¡Ding! Ya voy', 2.4); return; }
@@ -201,7 +201,7 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       var t = now();
       clicks = t - lastClick < 0.8 ? clicks + 1 : 1;
       lastClick = t;
-      if (clicks >= 3 && opts.onTriple) { clicks = 0; opts.onTriple(); return; }
+      if (clicks >= 2 && opts.onDouble) { clicks = 0; opts.onDouble(); return; }
       hop(true);
       say(tickles[Math.min(clicks, tickles.length) - 1], 2.4);
     };

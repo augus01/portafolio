@@ -7,7 +7,7 @@ import { usePageWipe } from '../../../hooks/usePageWipe';
 
 // Contacto: en vez de formulario, el agente amarillo de recepción en su escritorio 3D.
 // "Pasa a la oficina" es la pista visible de la función creativa: recepción dice "¡Sígueme!", salta tres veces y te lleva
-// a /oficina/. Tres clics seguidos sobre recepción hacen lo mismo.
+// a /oficina/. Dos clics seguidos sobre recepción hacen lo mismo.
 export function ContactSection({ id, headline, enter, meta, hint, desk }) {
   const stageRef = useRef(null);
   const wipe = usePageWipe();
@@ -20,7 +20,7 @@ export function ContactSection({ id, headline, enter, meta, hint, desk }) {
     d.say(desk.follow, 3, true);
     d.lead(() => wipe.leave(enter.href));
   };
-  const deskRef = useContactDesk(stageRef, desk.lines, { onTriple: go, tickles: desk.tickles, ding: desk.ding, elsewhere: desk.elsewhere });
+  const deskRef = useContactDesk(stageRef, desk.lines, { onDouble: go, tickles: desk.tickles, ding: desk.ding, elsewhere: desk.elsewhere });
   // Al volver con "Atrás" el navegador puede restaurar la página tal cual: se suelta el seguro para poder entrar otra vez.
   useEffect(() => {
     const reset = () => { goingRef.current = false; };
