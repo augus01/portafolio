@@ -162,7 +162,7 @@
    Toman los colores de cada serie (--off-panel-*, --off-q-*) y el color de cada agente (--ap-agent-*). */
 .ap-ofd{left:50%;right:auto;bottom:var(--space-6);transform:translateX(-50%);width:min(1240px,calc(100% - 48px));max-width:none;gap:var(--space-3);padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;pointer-events:none}
 .ap-ofd > *{pointer-events:auto}
-.ap-ofd__ask{align-self:flex-start;display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--space-1) var(--space-3);padding:var(--space-2) var(--space-3);border-radius:var(--radius-pill);background:var(--off-panel-bg);box-shadow:var(--off-panel-shadow);pointer-events:none}
+.ap-ofd__ask{align-self:flex-start;display:flex;align-items:baseline;flex-wrap:wrap;gap:var(--space-1) var(--space-2);padding:var(--space-2) var(--space-3);border-radius:var(--radius-pill);background:var(--off-panel-bg);box-shadow:var(--off-panel-shadow);pointer-events:none}
 .ap-ofd__title.subheading{margin:0;font-family:"Oswald","Helvetica Neue",Arial,sans-serif;font-weight:400;font-size:20px;line-height:1.1;letter-spacing:0;color:var(--off-panel-ink)}
 .ap-ofd__lead.body-sm{margin:0;font-size:13px;color:var(--off-panel-muted)}
 .ap-ofd__cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--space-3);align-items:stretch}
@@ -187,8 +187,8 @@
 .ap-ofc__av .ap-agent__eye{fill:#fff}
 .ap-ofc__av .ap-agent__pupil{fill:var(--ink-primary)}
 .ap-ofc__av .ap-agent__smile{stroke:var(--ink-primary)}
-.ap-ofc__name{display:flex;flex-direction:column;gap:2px;min-width:0}
-.ap-ofc__who.subheading{margin:0;font-family:"Oswald","Helvetica Neue",Arial,sans-serif;font-weight:500;font-size:22px;line-height:1.1;letter-spacing:0;color:var(--off-panel-ink)}
+.ap-ofc__name{display:flex;flex-direction:column;gap:var(--space-1);min-width:0}
+.ap-ofc__who.subheading{margin:0;font-family:"Oswald","Helvetica Neue",Arial,sans-serif;font-weight:500;font-size:22px;line-height:1.1;letter-spacing:0;text-transform:capitalize;color:var(--off-panel-ink)}
 .ap-ofc__blurb.body-sm{margin:0;font-size:13px;line-height:1.35;color:var(--off-panel-muted)}
 .ap-ofc__state.label{margin-left:auto;flex:none;padding:var(--space-1) var(--space-2);border-radius:var(--radius-pill);font:500 11px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;background:var(--ap-agent-recepcion);color:var(--ap-agent-ink)}
 .ap-ofc--arquitecto .ap-ofc__state.label{background:var(--ap-agent-arquitecto);color:var(--ap-agent-arquitecto-ink)}
