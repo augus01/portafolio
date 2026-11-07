@@ -102,6 +102,14 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
     var BASE_Y = 1.48;
     agent.position.set(0, BASE_Y, 0);
     scene.add(agent);
+    /* Zona de clic fija e invisible: va de la cubierta del mostrador a la cabeza en lo alto del salto. El primer clic
+       lo hace saltar, y si el segundo se probara contra el personaje en el aire fallaría la mitad de las veces. */
+    var hitTop = BASE_Y + 0.3 + 0.45 + 0.06;
+    var agentHit = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.32, hitTop - top, 16), new THREE.MeshBasicMaterial());
+    agentHit.position.set(0, (top + hitTop) / 2, 0);
+    agentHit.visible = false;
+    scene.add(agentHit);
+    agentHit.updateMatrixWorld(true);
     var shadowDisc = new THREE.Mesh(new THREE.CircleGeometry(0.34, 32), new THREE.MeshBasicMaterial({ color: 0x0e0f12, transparent: true, opacity: 0.0 }));
     shadowDisc.rotation.x = -Math.PI / 2; shadowDisc.position.set(0, 0.46, 0); scene.add(shadowDisc);
 
@@ -114,6 +122,7 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       var W = stage.clientWidth, H = stage.clientHeight;
       if (!W || !H) return;
       renderer.setSize(W, H);
+      if (bubble) bubbleW = bubble.offsetWidth;
       var aspect = W / H;
       size = 1.9 * Math.max(1, 1.2 / aspect);
     };
@@ -139,9 +148,13 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
     /* Globo de diálogo */
     var lines = opts.lines || ['¡Hola! Soy recepción', 'Deja tu mensaje para Augusto', 'Toca el timbre si quieres', 'Hoy atiendo yo'];
     var lineI = 0, sayUntil = 0, pinned = false;
+    /* El globo hace salto de línea (ancho máximo en CSS) y no se sale del recuadro: se mide al cambiar de frase. */
+    var bubbleW = 0, bubbleGap = 0, tailDx = 0;
     var say = function (text, ms, pin) {
       if (!bubble) return;
       bubble.textContent = text;
+      bubbleW = bubble.offsetWidth;
+      bubbleGap = parseFloat(getComputedStyle(bubble).getPropertyValue('--ct-bubble-gap')) || 0;
       bubble.classList.add('is-on');
       sayUntil = now() + (ms || 3);
       pinned = !!pin;
@@ -184,7 +197,7 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
 
     /* Clic sobre el personaje o el timbre */
     var ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
-    var agentMeshes = []; agent.traverse(function (o) { if (o.isMesh) agentMeshes.push(o); });
+    var agentMeshes = [agentHit];
     var hitAt = function (e, list) {
       var r = canvas.getBoundingClientRect();
       ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
@@ -297,7 +310,13 @@ import { createFrameCap, getPerfTier, onPerfTier } from './perfTier';
       if (bubble) {
         v.set(agent.position.x, agent.position.y + 0.45, agent.position.z).project(cam);
         var W = stage.clientWidth, H = stage.clientHeight;
-        bubble.style.transform = 'translate(' + ((v.x + 1) / 2 * W) + 'px,' + ((1 - v.y) / 2 * H) + 'px) translate(-50%,-100%)';
+        var bx = (v.x + 1) / 2 * W, half = bubbleW / 2;
+        var cx2 = Math.max(half + bubbleGap, Math.min(W - half - bubbleGap, bx));
+        if (half + bubbleGap > W / 2) cx2 = W / 2;
+        /* La punta sigue apuntando a la cabeza aunque el globo se corra, sin salirse de sus bordes. */
+        var dx = Math.round(Math.max(-(half - 20), Math.min(half - 20, bx - cx2)));
+        if (dx !== tailDx) { tailDx = dx; bubble.style.setProperty('--ct-tail-dx', dx + 'px'); }
+        bubble.style.transform = 'translate(' + cx2 + 'px,' + ((1 - v.y) / 2 * H) + 'px) translate(-50%,-100%)';
       }
       raf = requestAnimationFrame(frame);
     };
