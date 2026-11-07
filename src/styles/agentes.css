@@ -76,7 +76,8 @@
 @container (max-width: 719px){.ap-gal:has(.ap-arq) .ap-gal__item:nth-child(n+2){margin-top:calc(var(--space-16) - var(--space-2) + var(--arq-peek-h) * .5)}}
 .ap-arq{appearance:none;-webkit-appearance:none;position:absolute;z-index:0;right:clamp(16px,6%,28px);top:calc(var(--arq-peek-h) * -1);width:var(--arq-peek-w);height:var(--arq-peek-h);margin:0;padding:0;border:0;background:transparent;cursor:pointer;overflow:visible;border-radius:var(--radius-lg) var(--radius-lg) 0 0;color:var(--ink-primary)}
 .ap-arq__gl{position:absolute;left:0;top:0;display:block;width:var(--arq-peek-w);height:var(--arq-peek-w);pointer-events:none}
-.ap-arq:focus-visible{outline:var(--focus-ring-width) solid var(--focus-ring);outline-offset:4px}
+/* Sin anillo de foco alrededor del arquitecto asomado: con teclado lo indica la etiqueta "Ver el plano" (abajo). */
+.ap-arq:focus,.ap-arq:focus-visible{outline:none}
 .ap-arq__tip.label{position:absolute;z-index:1;left:0;top:var(--space-2);padding:6px 10px;border-radius:var(--radius-md);background:var(--surface-inverse);color:var(--ink-on-dark);font:500 11px/1.2 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;opacity:0;transform:translateX(4px);transition:opacity 200ms var(--ease-out),transform 200ms var(--ease-out);pointer-events:none}
 @media (hover: hover){.ap-arq:hover .ap-arq__tip{opacity:1;transform:none}}
 .ap-arq:focus-visible .ap-arq__tip{opacity:1;transform:none}
