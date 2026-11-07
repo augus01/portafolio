@@ -63,6 +63,8 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, deco = {},
     isActive: (id) => (active && active.id === id) || (speaking && speaking.id === id),
   };
   const extra = theme.build(api) || {};
+  // Caja del decorado (piso, muros y muebles) para encuadrar la vista general en el hueco libre del escenario.
+  const roomBox = new THREE.Box3().setFromObject(scene);
 
   const hitMat = new THREE.MeshBasicMaterial({ visible: false });
   const ringMat = new THREE.MeshBasicMaterial({ color: theme.ring, transparent: true, opacity: 0.9 });
@@ -170,6 +172,32 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, deco = {},
     goal.target.set(0, 0.6, 0);
     goal.size = baseSize() * (mode === 'top' ? 0.85 : 1);
   };
+  // Vista general: proyecta la caja del decorado con la orientación de destino y ajusta tamaño, lift y shift para
+  // que la maqueta quepa entera y centrada en el rectángulo libre [ceil, floor] del escenario (px).
+  const FIT = 0.9;
+  const fitBack = new THREE.Vector3(), fitUp = new THREE.Vector3(), fitRight = new THREE.Vector3(), fitP = new THREE.Vector3();
+  const fitOverview = (w, h, ceil, floor) => {
+    fitBack.set(Math.cos(goal.el) * Math.sin(goal.theta), Math.sin(goal.el), Math.cos(goal.el) * Math.cos(goal.theta));
+    if (mode === 'top') fitUp.set(-Math.sin(goal.theta), 0, -Math.cos(goal.theta)); else fitUp.set(0, 1, 0);
+    fitRight.crossVectors(fitUp, fitBack).normalize();
+    fitUp.crossVectors(fitBack, fitRight).normalize();
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (let i = 0; i < 8; i++) {
+      fitP.set(i & 1 ? roomBox.max.x : roomBox.min.x, i & 2 ? roomBox.max.y : roomBox.min.y, i & 4 ? roomBox.max.z : roomBox.min.z).sub(goal.target);
+      const u = fitP.dot(fitRight), v = fitP.dot(fitUp);
+      if (u < x0) x0 = u; if (u > x1) x1 = u; if (v < y0) y0 = v; if (v > y1) y1 = v;
+    }
+    const gap = floor - ceil;
+    // En ortográfica, 2·size unidades ocupan h px en vertical y 2·size·aspect ocupan w px en horizontal.
+    const size = Math.max((y1 - y0) * h / (2 * gap * FIT), (x1 - x0) * h / (2 * w * FIT));
+    const cu = (x0 + x1) / 2, cv = (y0 + y1) / 2;
+    goal.size = size;
+    goal.lift = 0.5 - cv / (2 * size) - (ceil + floor) / 2 / h;
+    goal.shift = -cu * h / (2 * size * w);
+    // El primer encuadre se aplica de inmediato, sin el viaje de la cámara al cargar.
+    if (!fitted) { fitted = true; view.size = goal.size; view.lift = goal.lift; view.shift = goal.shift; }
+  };
+  let fitted = false;
   const setOverview = () => {
     goal.el = mode === 'top' ? Math.PI / 2 - 0.001 : Math.atan(1 / Math.SQRT2);
     goal.theta = mode === 'top' ? 0 : Math.PI / 4;
@@ -351,13 +379,16 @@ export function mountOffice({ stage, holder, labelsEl, theme, agents, deco = {},
       s.el.style.transform = `translate(${Math.round(cx - bw / 2)}px, ${Math.round(top)}px)`;
       s.el.style.setProperty('--tail', Math.round(Math.max(18, Math.min(bw - 18, bw / 2 + (x - cx)))) + 'px');
     });
-    // En pantallas angostas la maqueta (o el agente, de cerca) se centra en el hueco libre entre la cabecera y los
-    // globos de arriba y la conversación del pie, así no queda pegada arriba ni tapada por el globo.
-    if (narrow) {
+    // La maqueta (o el agente, de cerca, en pantallas angostas) se centra en el hueco libre entre la cabecera (y los
+    // globos apilados arriba) y la conversación del pie, así no queda pegada arriba, cortada ni tapada.
+    {
       const dock = stage.querySelector('.ap-ofd');
-      const floor = dock ? dock.getBoundingClientRect().top - stage.getBoundingClientRect().top - 8 : h - 8;
-      const ceil = stackY;
-      if (floor - ceil > 80) goal.lift = Math.max(-0.3, Math.min(0.45, 0.5 - (ceil + floor) / 2 / h));
+      const floor = dock ? dock.getBoundingClientRect().top - stage.getBoundingClientRect().top - 12 : h - 12;
+      const ceil = narrow ? stackY : headBottom + 12;
+      if (floor - ceil > 80) {
+        if (!focus) fitOverview(w, h, ceil, floor);
+        else if (narrow) goal.lift = Math.max(-0.3, Math.min(0.45, 0.5 - (ceil + floor) / 2 / h));
+      }
     }
     off.raf = requestAnimationFrame(frame);
   };
