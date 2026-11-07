@@ -11,6 +11,8 @@ const TYPING_MS = 550;
 // respuesta, según su largo. La última respuesta se queda hasta que pase otra cosa.
 const HANDOFF_MS = 2200;
 const holdFor = (r) => (r.handoff ? HANDOFF_MS : Math.min(9000, Math.max(2600, r.text.length * 45)));
+// Cuánto dura a la vista el globo de una bienvenida de recepción: lo que toma leerla (unos 18 caracteres por segundo).
+const readFor = (text) => Math.min(12000, Math.max(4000, text.length * 55));
 
 // Recuerda quién visita y su última pregunta (solo en este navegador; sin acceso, la oficina funciona igual).
 const readStore = () => { try { return JSON.parse(localStorage.getItem(STORE) || 'null'); } catch (e) { return null; } };
@@ -86,11 +88,22 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt,
     setState((st) => ({ ...st, live: replies.map((r) => `${agents[r.agent].name}: ${r.text}`).join(' ') }));
   }, [agents]);
 
+  // Bienvenida de recepción: su globo se va solo después de leerla, si sigues en la vista general (de cerca, el globo
+  // es la conversación y se queda). Cualquier otro globo o mensaje antes de eso cancela la salida (comparten seqRef).
+  const welcomeBubble = (text) => {
+    bubbles([{ agent: MAIN, text }]);
+    seqRef.current = setTimeout(() => {
+      if (focusRef.current) return;
+      sceneRef.current.say({}, { focus: false });
+      sceneRef.current.speak(null);
+    }, readFor(text));
+  };
+
   // El saludo de recepción aparece en su globo apenas carga la oficina, con la oficina entera a la vista (sin zoom).
   // Si llegas desde el landing con un agente, ese agente te recibe: la cámara se le acerca y se presenta.
   useEffect(() => {
     if (link && link.to && link.to !== MAIN) { pick(link.to); return; }
-    bubbles([{ agent: MAIN, text: state.greet }]);
+    welcomeBubble(state.greet);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   // Al cambiar de oficina, recepción te da la bienvenida a la nueva y la explica en una frase (queda en su historial).
   // Su globo sale solo si no interrumpe: no mientras conversas de cerca con arquitecto o stack, hay un recado en curso
@@ -103,7 +116,7 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt,
     push([msg(MAIN, text)]);
     const busy = (focusRef.current && focusRef.current !== MAIN) || leadOpen(state.lead) || state.typing;
     if (busy) setState((st) => ({ ...st, live: `${agents[MAIN].name}: ${text}` }));
-    else bubbles([{ agent: MAIN, text }]);
+    else welcomeBubble(text);
   }, [themeId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     vivoRef.current = true;
