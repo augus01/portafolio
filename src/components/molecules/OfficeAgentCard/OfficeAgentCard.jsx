@@ -4,6 +4,13 @@ import { AgentFigure } from '../../atoms/AgentFigure';
 // Tarjeta de un agente en "¿Con quién quieres hablar?": su figura, nombre y qué sabe. Cerrada muestra dos preguntas
 // listas y "Hablar con …"; abierta (con quien conversas) lleva la marca "Conversando" y, como `children`, el hilo y la
 // caja para escribir.
+// "Hablar con …" con el nombre en su propio span, para que en pantallas angostas vaya en una segunda línea (oficina.css).
+const goLabel = (full, name) => {
+  const i = full.lastIndexOf(name);
+  if (i < 0) return full;
+  return <>{full.slice(0, i)}<span className="ap-ofc__gonm">{name}</span>{full.slice(i + name.length)}</>;
+};
+
 export const OfficeAgentCard = forwardRef(function OfficeAgentCard({ agent, open, texts, onAsk, onTalk, children }, ref) {
   return (
     // Cerrada, toda la tarjeta elige al agente (el botón "Hablar con …" sigue siendo el control para teclado).
@@ -27,7 +34,7 @@ export const OfficeAgentCard = forwardRef(function OfficeAgentCard({ agent, open
               <li key={q}><button type="button" className="ap-ofc__q body-sm" onClick={() => onAsk(q)}>{q}</button></li>
             ))}
           </ul>
-          <button type="button" ref={ref} className="ap-ofc__go label" onClick={onTalk}>{texts.talkTo(agent.name)}</button>
+          <button type="button" ref={ref} className="ap-ofc__go label" onClick={onTalk}>{goLabel(texts.talkTo(agent.name), agent.name)}</button>
         </>
       )}
     </article>

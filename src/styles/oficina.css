@@ -129,13 +129,19 @@
 .ap-wipe__band:nth-child(2){background:var(--ap-agent-arquitecto);transition-delay:70ms}
 .ap-wipe__band:nth-child(3){background:var(--ap-agent-stack);transition-delay:140ms}
 
+/* Bajo 920px el selector de serie no cabe junto a idioma y "volver": pasa a su propia fila, debajo y a lo ancho.
+   Los globos y el encuadre de la maqueta parten bajo él (officeEngine.js lo mide). */
+@media (max-width: 919px){
+  .ap-ofsw--stage{top:calc(14px + var(--target-min) + var(--space-2));max-width:calc(100% - 28px)}
+}
+
 /* ---------- Bajo 720px: cabecera compacta, sin vistas y conversación a lo ancho ---------- */
 @media (max-width: 719px){
   .ap-ofp{min-height:0}
   .ap-ofp__head{top:var(--space-2);right:var(--space-2)}
   .ap-ofp__back.label{width:var(--target-min);padding:0;justify-content:center}
   .ap-ofp__backtxt{display:none}
-  .ap-ofsw--stage{top:var(--space-2);left:var(--space-2);right:calc(var(--target-min) * 2 + var(--space-2) * 3);max-width:none}
+  .ap-ofsw--stage{top:calc(var(--space-2) * 2 + var(--target-min));left:var(--space-2);right:var(--space-2);max-width:none}
   .ap-ofsw__group{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;border-radius:var(--radius-pill)}
   .ap-ofsw__group::-webkit-scrollbar{display:none}
   .ap-ofsw__btn.label{flex:none;min-height:40px;padding:0 14px}
@@ -233,5 +239,10 @@
   .ap-ofc__thread{max-height:132px}
 }
 /* Teléfono: la maqueta se centra en el hueco libre (officeEngine.js) y se acerca un poco para usar el ancho. */
-@media (max-width: 559px){.ap-off__stage{--off-room-zoom:.98}}
+@media (max-width: 559px){
+  .ap-off__stage{--off-room-zoom:.98}
+  /* Tres botones angostos: "Hablar con …" se parte siempre igual, el verbo arriba y el nombre abajo. */
+  .ap-ofc__go.label{line-height:1.25;padding:var(--space-1) var(--space-2)}
+  .ap-ofc__gonm{display:block}
+}
 @media (prefers-reduced-motion: reduce){.ap-ofc__go.label{transition:none}}
