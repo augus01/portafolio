@@ -306,10 +306,10 @@
   .ap-foot__note{text-align:left}
 }
 
-/* Interruptor de idioma EN | ES (6 nov 2026, reemplaza a la píldora de idioma; 7 nov: discreto, sin pista ni tinta):
-   la perilla es un gris hundido bajo el idioma actual, que va en tinta y el otro en gris secundario; se desliza con --dur-move. Mismo alto que las píldoras de la nav (escala con --nav-scale). */
+/* Interruptor de idioma EN | ES (6 nov 2026, reemplaza a la píldora de idioma; 7 nov: discreto, sin tinta):
+   un contorno fino lo une en un solo control; la perilla es un gris hundido bajo el idioma actual, que va en tinta y el otro en gris secundario; se desliza con --dur-move. Mismo alto que las píldoras de la nav (escala con --nav-scale). */
 .ap-lsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;align-items:center;flex:none;box-sizing:border-box;
-  min-height:calc(var(--target-min) * var(--nav-scale, 1));padding:var(--space-1);margin:0;border:var(--stroke-hairline) solid transparent;
+  min-height:calc(var(--target-min) * var(--nav-scale, 1));padding:var(--space-1);margin:0;border:var(--stroke-hairline) solid var(--border-hairline);
   border-radius:var(--radius-pill);background:transparent;color:var(--ink-secondary);font-weight:500;cursor:pointer}
 .ap-lsw__opt{position:relative;z-index:1;display:inline-flex;align-items:center;justify-content:center;
   padding-inline:calc(var(--space-3) * var(--nav-scale, 1));line-height:1;transition:color var(--dur-move) var(--ease-out)}
