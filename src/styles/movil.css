@@ -17,15 +17,17 @@
     --m-link-min:52px;--m-link-pad:6px;--m-link-size:clamp(28px, 8.4vw, 34px);--m-link-leading:1.15;
     --m-cta-min:50px;--m-cta-size:1.0625rem;--m-cta-tracking:.04em;--m-meta-size:.6875rem;
     --m-hero-foot:20px;
-    /* Barra móvil: su alto es el botón más 16px; las anclas dejan 16px más bajo ella (--nav-clearance en layout.css). */
-    --nav-band:calc(var(--m-toggle-size) + var(--space-4));
+    /* Barra móvil: su alto es el botón más 32px (20px arriba para que recepción asome sobre Contacto sin tocar el borde,
+       12px abajo); las anclas dejan 16px más bajo ella (--nav-clearance en layout.css). */
+    --m-bar-pad-top:calc(var(--space-4) + var(--space-1));
+    --nav-band:calc(var(--m-toggle-size) + var(--space-8));
     /* Título de sección común (Sobre mí, Superpoderes, Proyectos y Contacto) en móvil. */
     --section-title-size:clamp(28px, 7.6vw, 48px);--section-title-leading:1.1}
 
   /* Barra: pegada al tope (sticky, alto 0). Reemplaza a la NavBar de píldoras. */
   .ap-navwrap{top:0}
   .ap-navwrap .ap-nav{display:none}
-  .ap-mnav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);box-sizing:border-box;padding:var(--space-2) var(--space-4);
+  .ap-mnav{position:absolute;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);box-sizing:border-box;padding:var(--m-bar-pad-top) var(--space-4) var(--space-3);
     transition:background var(--dur-enter) var(--ease-out),border-color var(--dur-enter) var(--ease-out)}
   .ap-mnav[data-tone="light"]{background:var(--m-bar-surface);-webkit-backdrop-filter:blur(var(--m-bar-blur));backdrop-filter:blur(var(--m-bar-blur));border-bottom:var(--stroke-hairline) solid var(--border-hairline)}
   /* Nivel mínimo de rendimiento: barra sólida, sin desenfoque. */
@@ -45,7 +47,7 @@
     opacity:0;visibility:hidden;transform:translateY(var(--m-menu-shift));
     transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out),visibility 0s linear var(--dur-enter)}
   .ap-menu.is-open{opacity:1;visibility:visible;transform:none;transition:opacity var(--dur-enter) var(--ease-out),transform var(--dur-enter) var(--ease-out),visibility 0s}
-  .ap-menu__top{flex:none;display:flex;align-items:center;justify-content:space-between;padding:var(--space-2) var(--space-4)}
+  .ap-menu__top{flex:none;display:flex;align-items:center;justify-content:space-between;padding:var(--m-bar-pad-top) var(--space-4) var(--space-3)}
   .ap-menu__close{appearance:none;display:inline-flex;align-items:center;justify-content:center;width:var(--m-close-size);height:var(--m-close-size);padding:0;border:0;border-radius:var(--radius-pill);background:transparent;color:var(--ink-primary);cursor:pointer;-webkit-tap-highlight-color:transparent}
   .ap-menu__close .ap-icon{width:var(--m-close-icon);height:var(--m-close-icon)}
   .ap-menu__close svg{stroke-width:var(--m-close-stroke)}
