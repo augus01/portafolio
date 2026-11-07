@@ -112,7 +112,7 @@ export const cases = [
     eyebrow: 'Marketplace',
     meta: [
       { label: 'Role', value: 'Frontend developer' },
-      { label: 'Team', value: 'Only frontend developer, working with a separate backend' },
+      { label: 'Team', value: 'Only frontend developer, as an intern, working with a separate backend' },
       { label: 'Place and year', value: 'Latin America · 2026' },
     ],
     theme: { brand: '#2a2a2c', tint: '#313131', tintInk: '#ffffff', accent: '#c8403f', cta: '#c8403f', onCta: '#ffffff', next: '#d64d4b', dark: true },

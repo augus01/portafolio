@@ -115,7 +115,7 @@ export const cases = [
     eyebrow: 'Marketplace',
     meta: [
       { label: 'Rol', value: 'Desarrollador frontend' },
-      { label: 'Equipo', value: 'Único frontend, con un backend separado' },
+      { label: 'Equipo', value: 'Único frontend, en práctica, con un backend separado' },
       { label: 'Lugar y año', value: 'Latinoamérica © 2026' },
     ],
     theme: { brand: '#2a2a2c', tint: '#313131', tintInk: '#ffffff', accent: '#c8403f', cta: '#c8403f', onCta: '#ffffff', next: '#d64d4b', dark: true },
