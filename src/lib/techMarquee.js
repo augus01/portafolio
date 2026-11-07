@@ -33,6 +33,25 @@ export function marqueePeriod(items, row, vw, before) {
   return slots;
 }
 
+/* Cinta en móvil (hooks/useMarqueeDrag.js): la mueve JavaScript y se puede arrastrar con el dedo. */
+
+/** Desplazamiento de la pista con bucle: la pista lleva el período dos veces, así que da la vuelta cada `half`. */
+export function wrapOffset(x, half) {
+  if (!(half > 0)) return 0;
+  const r = x % half;
+  return r > 0 ? r - half : r === 0 ? 0 : r;
+}
+
+/** Sin bucle (sin movimiento, sin las copias): la pista no se sale de la fila por ningún lado. */
+export function clampOffset(x, trackWidth, rowWidth) {
+  return Math.min(0, Math.max(Math.min(0, rowWidth - trackWidth), x));
+}
+
+/** El dedo se movió lo bastante, y más de lado que hacia abajo, para ser un arrastre y no un toque. */
+export function isDrag(dx, dy) {
+  return Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy);
+}
+
 /** Aviso de la cinta a los stack montados: `emit(texto)` los hace saltar de emoción; `on(fn)` devuelve cómo soltarse. */
 export function createCheer() {
   const subs = new Set();

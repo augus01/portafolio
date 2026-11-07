@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { marqueeCount, marqueePeriod } from './techMarquee.js';
+import { clampOffset, isDrag, marqueeCount, marqueePeriod, wrapOffset } from './techMarquee.js';
 
 const items = ['react', 'python', 'aws', 'nextjs', 'nodejs', 'cloudflare', 'typescript', 'postgresql', 'railway'].map((logo) => ({ logo }));
 
@@ -39,4 +39,26 @@ test('el aviso de emoción llega a todos los stack suscritos y se puede soltar',
   off();
   cheer.emit('AWS');
   assert.deepEqual(got, ['a:React', 'b:React', 'b:AWS']);
+});
+
+test('cinta móvil: el desplazamiento da la vuelta dentro de (-mitad, 0]', () => {
+  assert.equal(wrapOffset(-50, 1000), -50);
+  assert.equal(wrapOffset(-1000, 1000), 0);
+  assert.equal(wrapOffset(-1250, 1000), -250);
+  assert.equal(wrapOffset(30, 1000), -970);
+  assert.equal(wrapOffset(2100, 1000), -900);
+  assert.equal(wrapOffset(-10, 0), 0);
+});
+
+test('cinta móvil sin bucle (sin movimiento): no pasa de los bordes', () => {
+  assert.equal(clampOffset(20, 1500, 375), 0);
+  assert.equal(clampOffset(-600, 1500, 375), -600);
+  assert.equal(clampOffset(-2000, 1500, 375), -1125);
+  assert.equal(clampOffset(-50, 300, 375), 0);
+});
+
+test('cinta móvil: un arrastre corto es un toque, uno largo no', () => {
+  assert.equal(isDrag(3, 2), false);
+  assert.equal(isDrag(12, 3), true);
+  assert.equal(isDrag(4, 30), false);
 });

@@ -69,11 +69,15 @@
   .ap-sticky .ap-hero__inner{grid-template-rows:1fr;padding:var(--space-4)}
 
   /* Sobre mí: la frase se achica, los párrafos ocupan todo el ancho y el ritmo se aprieta. 56px arriba = space-12 + space-2. */
-  .ap-about{gap:var(--space-8);padding:calc(var(--space-12) + var(--space-2)) var(--space-4) var(--space-12);--anchor-pad:calc(var(--space-12) + var(--space-2))}
+  /* Al terminar el paso guiado del hero, Sobre mí queda al tope de la pantalla: su relleno deja libre la barra móvil. */
+  .ap-about{gap:var(--space-8);padding:var(--nav-clearance) var(--space-4) var(--space-12);--anchor-pad:var(--nav-clearance)}
   .ap-about__text{gap:var(--space-4);width:100%}
 
   /* Superpoderes: el encabezado toma el relleno lateral de Sobre mí y el título se achica igual que su frase. */
   .hab-mq{gap:var(--space-12);padding:var(--space-12) 0;--anchor-pad:var(--space-12)}
+  /* Cinta deslizable (hooks/useMarqueeDrag.js): el dedo la mueve de lado; arriba y abajo sigue siendo la página. */
+  .hab-mq__row{touch-action:pan-y}
+  .hab-mq__row[data-drag] .hab-mq__track{animation:none}
   .hab-mq__head{padding:0 var(--space-4)}
 
   /* Proyectos: mismo relleno lateral que Sobre mí y su título se achica como la frase de Sobre mí. */
@@ -82,4 +86,7 @@
 
 @media (max-width: 599px) and (prefers-reduced-motion: reduce){
   .ap-menu,.ap-menu.is-open,.ap-mnav{transition:none}
+  /* Sin movimiento la cinta no avanza sola, pero sigue en una fila que se desliza con el dedo (la grilla de escritorio
+     en un teléfono quedaba como una lista vertical de un logo por línea). */
+  .hab-mq__track{width:max-content;flex-wrap:nowrap;justify-content:flex-start;padding:0 var(--space-4)}
 }

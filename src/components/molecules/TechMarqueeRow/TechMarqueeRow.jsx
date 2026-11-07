@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useInView } from '../../../hooks/useInView';
+import { useMarqueeDrag } from '../../../hooks/useMarqueeDrag';
 import { StackReader } from '../../atoms/StackReader';
 
 // Una fila de la cinta de tecnologías. `slots` es un período (logos y el puesto de stack leyendo, lib/techMarquee.js);
@@ -8,9 +9,11 @@ import { StackReader } from '../../atoms/StackReader';
 // Cada logo es un botón: al pasar gira a su versión a color; al hacer clic abre su ficha (`onPick`).
 // Al pasar el cursor (o el foco) por un logo, stack se emociona: `reader.cheer.emit(reader.excited(nombre))`.
 // La pista se detiene con el cursor encima, con una ficha abierta (`paused`) y fuera de pantalla.
+// En móvil la mueve useMarqueeDrag y se puede deslizar con el dedo.
 export function TechMarqueeRow({ slots, label, variant = 'a', activeId, paused, onPick, openLabel, controls, reader }) {
   const rowRef = useRef(null);
   const inView = useInView(rowRef);
+  useMarqueeDrag(rowRef, inView && !paused);
   const renderSlot = (slot, i, second) => {
     const key = `${second ? 'b' : 'a'}-${i}`;
     if (slot.reader) {

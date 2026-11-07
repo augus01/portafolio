@@ -66,7 +66,10 @@
 .hab-mq__track{list-style:none;margin:0;padding:0;display:flex;width:max-content;animation:hab-mq var(--hab-speed-a) linear infinite;will-change:transform}
 .hab-mq__track--b{animation-duration:var(--hab-speed-b);animation-delay:var(--hab-offset-b)}
 /* La cinta se detiene con el cursor encima, con una ficha abierta y fuera de pantalla (para ahorrar CPU). */
-.hab-mq__row:hover .hab-mq__track,.hab-mq__row.is-paused .hab-mq__track{animation-play-state:paused}
+/* Pausa con el cursor encima solo donde hay cursor: en pantallas táctiles el :hover queda pegado tras un toque y la
+   cinta no volvía a moverse al cerrar la ficha. */
+.hab-mq__row.is-paused .hab-mq__track{animation-play-state:paused}
+@media (hover: hover){.hab-mq__row:hover .hab-mq__track{animation-play-state:paused}}
 .hab-mq__item{flex:none;width:var(--hab-item-width);display:flex;flex-direction:column;align-items:center;gap:var(--space-3)}
 .hab-mq__logo{display:block;width:var(--hab-logo-size);height:var(--hab-logo-size);object-fit:contain}
 .hab-mq__name.body-sm{font-weight:500;color:var(--ink-primary)}
