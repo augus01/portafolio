@@ -15,13 +15,13 @@ const halo = (hex) => {
 // (el mismo de la cinta, sin pufón ni libro: de pie, atento y siguiendo el cursor; salta de emoción al responder), qué logré con ella y en qué proyectos la usé. Stack responde las preguntas
 // listas de `ask` en un hilo y "Seguir con stack en la oficina" abre la oficina con él elegido y la pregunta escrita.
 // Va en <body> para quedar sobre la página. Al abrir, el foco va a "Cerrar".
-export function SkillCard({ id, item, ask = [], open, n, texts, onClose }) {
+export function SkillCard({ id, item, ask = [], open, warm = false, n, texts, onClose }) {
   const closeRef = useRef(null);
   const glRef = useRef(null);
   const [asked, setAsked] = useState([]);
   useEffect(() => { if (open) closeRef.current?.focus({ preventScroll: true }); }, [open, n]);
   useEffect(() => { setAsked([]); }, [n]);
-  useStackCard(glRef, open, asked.length);
+  useStackCard(glRef, open, asked.length, warm);
   if (!item) return null;
   const pending = ask.map((x, i) => ({ ...x, i })).filter((x) => !asked.includes(x.i));
   return createPortal(

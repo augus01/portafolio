@@ -116,8 +116,9 @@ export function mountStackReader(stage, opts) {
     bubble.textContent = txt; bubble.classList.add('is-on');
     clearTimeout(sayT); sayT = setTimeout(function () { bubble.classList.remove('is-on'); }, ms || 2200);
   };
-  var raf = 0, visible = true;
-  var kick = function () { if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame); };
+  /* `active` en false: queda montado (contexto y sombreadores listos) pero no dibuja; la ficha lo prende al abrirse. */
+  var raf = 0, visible = true, active = opts.active !== false;
+  var kick = function () { if (!raf && visible && active && !document.hidden) raf = requestAnimationFrame(frame); };
   /* Mismo salto en dos ánimos: 'scare' (cursor encima: ojos de plato, boca en O) y 'cheer' (cursor sobre un logo de la
      cinta: se emociona, sonrisa grande y salto más corto). */
   var jumpWith = function (kind, txt) {
@@ -151,7 +152,7 @@ export function mountStackReader(stage, opts) {
   var ease = function (x) { return x < 0 ? 0 : x > 1 ? 1 : x; };
   function frame() {
     raf = 0;
-    if (!visible || document.hidden) return;
+    if (!visible || !active || document.hidden) return;
     var t = now(), tt = t - S.t0;
     var headX = 0.75, headY = 0, eyeS = 0.45, y = SIT_Y, squash = 1, armUp = 0, bookFlyT = 0, o = false, tilt = 0;
     if (S.mode === 'read' && attentive) {
@@ -252,10 +253,13 @@ export function mountStackReader(stage, opts) {
   ro.observe(stage);
   document.addEventListener('visibilitychange', kick);
   kick();
+  /* Montado apagado: un cuadro igual, para que el navegador compile los sombreadores ahora y no al abrir la ficha. */
+  if (!active) renderer.render(scene, cam);
 
   return {
     scare: scare,
     cheer: cheer,
+    setActive: function (on) { active = !!on; if (active) kick(); else if (raf) { cancelAnimationFrame(raf); raf = 0; } },
     dispose: function () {
       if (raf) cancelAnimationFrame(raf);
       clearTimeout(sayT);

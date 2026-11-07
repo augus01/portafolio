@@ -3,6 +3,7 @@ import { TechMarqueeRow } from '../../molecules/TechMarqueeRow';
 import { SkillCard } from '../../molecules/SkillCard';
 import { useSkillPicker } from '../../../hooks/useSkillPicker';
 import { useViewportWidth } from '../../../hooks/useViewportWidth';
+import { useInView } from '../../../hooks/useInView';
 import { createCheer, marqueePeriod } from '../../../lib/techMarquee';
 
 // Superpoderes: "Con qué construyo" (artefacto "Hero · Augusto Pinto"). Encabezado con la tipografía de Sobre mí y
@@ -15,7 +16,9 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, 
   const sectionRef = useRef(null);
   const cardId = useId();
   const picker = useSkillPicker(sectionRef);
-  const shown = rows.flat().find((s) => s.logo === picker.shown) || null;
+  // Sin ninguna elegida, la ficha queda montada (cerrada) con la primera: así stack se precarga antes del primer toque.
+  const shown = rows.flat().find((s) => s.logo === picker.shown) || rows[0]?.[0] || null;
+  const near = useInView(sectionRef, { rootMargin: '600px 0px' });
   const vw = useViewportWidth();
   // Un solo aviso para la sección: al pasar por cualquier logo saltan todos los stack que estén a la vista.
   const cheer = useMemo(() => createCheer(), []);
@@ -46,7 +49,7 @@ export function SkillsSection({ id, title, eyebrow, lead, rows, card, ask = {}, 
           />
         ))}
       </div>
-      <SkillCard id={cardId} item={shown} ask={(shown && ask[shown.logo]) || []} open={!!picker.open} n={picker.n} texts={card} onClose={picker.close} />
+      <SkillCard id={cardId} item={shown} ask={(shown && ask[shown.logo]) || []} open={!!picker.open} warm={near} n={picker.n} texts={card} onClose={picker.close} />
     </section>
   );
 }

@@ -46,26 +46,37 @@ export function useStackReader(stageRef, scare, cheer) {
 
 /**
  * stack de la cinta en la ficha de una tecnología (`SkillCard`): sin pufón ni libro, de pie y atento al usuario
- * (sigue el cursor con la mirada). Se monta al
- * abrir la ficha y se libera al cerrarla; cada vez que sube `talkKey` (respondió una pregunta) salta de emoción.
+ * (sigue el cursor con la mirada). Se monta apagado cuando Superpoderes se acerca (`warm`), en un momento libre, y
+ * queda listo: al abrir la ficha solo se prende, sin crear el contexto WebGL ni compilar sombreadores en ese instante
+ * (en un teléfono eso tardaba en mostrarlo). Se libera cuando la sección se aleja y la ficha está cerrada.
+ * Cada vez que sube `talkKey` (respondió una pregunta) salta de emoción.
  */
-export function useStackCard(stageRef, open, talkKey) {
+export function useStackCard(stageRef, open, talkKey, warm = false) {
   const readerRef = useRef(null);
   const lastTalk = useRef(talkKey);
+  const openRef = useRef(open);
+  openRef.current = open;
+  const keep = warm || open;
 
   useEffect(() => {
     const stage = stageRef.current;
-    if (!open || !stage) return undefined;
-    let cancelled = false;
-    import('../lib/stackReader').then(({ mountStackReader }) => {
-      if (cancelled) return;
-      readerRef.current = mountStackReader(stage, { attentive: true, facing: Math.PI / 4 - 0.2, size: 1.0, lookY: 0.8 });
+    if (!keep || !stage) return undefined;
+    let cancelled = false, idle = 0;
+    const mount = () => import('../lib/stackReader').then(({ mountStackReader }) => {
+      if (cancelled || readerRef.current) return;
+      readerRef.current = mountStackReader(stage, { attentive: true, facing: Math.PI / 4 - 0.2, size: 1.0, lookY: 0.8, active: openRef.current });
     }).catch(() => { /* sin stack 3D */ });
+    // Abierta: de inmediato. Solo precarga: cuando el navegador esté libre, para no trabar el scroll.
+    if (openRef.current || typeof requestIdleCallback === 'undefined') mount();
+    else idle = requestIdleCallback(mount, { timeout: 2000 });
     return () => {
       cancelled = true;
+      if (idle && typeof cancelIdleCallback !== 'undefined') cancelIdleCallback(idle);
       if (readerRef.current) { readerRef.current.dispose(); readerRef.current = null; }
     };
-  }, [open, stageRef]);
+  }, [keep, stageRef]);
+
+  useEffect(() => { readerRef.current?.setActive(open); }, [open]);
 
   useEffect(() => {
     // Salta solo cuando hay una respuesta nueva (al cambiar de ficha el contador vuelve a 0 y no salta).
