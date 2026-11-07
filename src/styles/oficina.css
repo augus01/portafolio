@@ -11,7 +11,9 @@
   --off-stroke:2px;--off-focus-width:3px}
 .ap-ofp__main{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
 /* La oficina ocupa toda la pantalla: la cabecera es solo el botón de vuelta, flotando arriba a la derecha. */
-.ap-ofp__head{position:absolute;z-index:6;top:14px;right:14px;display:flex;align-items:center;gap:var(--space-2)}
+/* Margen lateral de la cabecera y del selector de serie: el mismo de las tarjetas de agentes (.ap-ofd, 1240px máx.). */
+.ap-ofp{--off-edge:max(var(--space-6), calc((100% - 1240px) / 2))}
+.ap-ofp__head{position:absolute;z-index:6;top:14px;right:var(--off-edge);display:flex;align-items:center;gap:var(--space-2)}
 .ap-ofp__head .ap-lsw{min-height:var(--target-min);border:var(--off-stroke) solid var(--ink-primary);background:var(--surface-raised)}
 .ap-ofp__back.label{display:inline-flex;align-items:center;gap:var(--space-2);min-height:var(--target-min);padding:0 18px;box-sizing:border-box;border:var(--off-stroke) solid var(--ink-primary);border-radius:var(--radius-pill);background:var(--surface-raised);color:var(--ink-primary);font:500 12px/1 var(--font-mono);letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:background var(--dur-press) var(--ease-out),color var(--dur-press) var(--ease-out)}
 @media (hover: hover){.ap-ofp__back.label:hover{background:var(--action);color:var(--on-action)}}
@@ -48,7 +50,7 @@
 .ap-off__labels{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
 
 /* Selector de serie dentro del escenario, arriba a la izquierda, con los colores de la oficina (variables --off-*). */
-.ap-ofsw--stage{position:absolute;z-index:5;top:14px;left:14px;max-width:calc(100% - 28px)}
+.ap-ofsw--stage{position:absolute;z-index:5;top:14px;left:var(--off-edge);max-width:calc(100% - var(--off-edge) * 2)}
 .ap-ofsw--stage .ap-ofsw__group{border-color:var(--off-line);background:var(--off-btn-bg)}
 .ap-ofsw--stage .ap-ofsw__btn.label{font-size:var(--off-ui-size);letter-spacing:var(--off-ui-tracking);color:var(--off-btn-ink)}
 @media (hover: hover){.ap-ofsw--stage .ap-ofsw__btn.label:hover{background:color-mix(in srgb, var(--off-btn-on-bg) 14%, transparent)}}
@@ -133,7 +135,7 @@
 /* Bajo 920px el selector de serie no cabe junto a idioma y "volver": pasa a su propia fila, debajo y a lo ancho.
    Los globos y el encuadre de la maqueta parten bajo él (officeEngine.js lo mide). */
 @media (max-width: 919px){
-  .ap-ofsw--stage{top:calc(14px + var(--target-min) + var(--space-2));max-width:calc(100% - 28px)}
+  .ap-ofsw--stage{top:calc(14px + var(--target-min) + var(--space-2))}
 }
 
 /* ---------- Bajo 720px: cabecera compacta, sin vistas y conversación a lo ancho ---------- */
@@ -229,6 +231,7 @@
 
 /* Angosto: la tarjeta abierta arriba a lo ancho y las otras dos, solo con su botón, debajo en dos columnas. */
 @media (max-width: 899px){
+  .ap-ofp{--off-edge:var(--space-2)}
   .ap-off__stage{--off-room-lift:.22;--off-room-zoom:1.15}
   .ap-ofd{bottom:var(--space-2);width:calc(100% - var(--space-4))}
   .ap-off__stage{--off-focus-lift:.22;--off-focus-shift:0}
