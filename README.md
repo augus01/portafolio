@@ -1,15 +1,43 @@
-# Augusto Pinto · Portfolio
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/marca/apinto-oscuro.svg" />
+    <img src="docs/marca/apinto-claro.svg" alt="apinto logo" width="140" />
+  </picture>
+</p>
 
-> Fewer promises, more products that help every day.
+<h1 align="center">Augusto Pinto · Portfolio</h1>
 
-My personal portfolio for the **AWS Student Builder Challenge "Build Your Tech Superpower"**. I'm a 4th-year Computer Science Engineering student at Universidad San Sebastián in Santiago, Chile, and I'm working toward becoming an AI Engineer.
+<p align="center"><em>Fewer promises, more products that help every day.</em></p>
 
-**Live site:** https://main.d21d1ifzfdin9a.amplifyapp.com
-**Creative feature:** https://main.d21d1ifzfdin9a.amplifyapp.com/oficina/
+<p align="center">
+  <strong>A portfolio with an office instead of a contact form.</strong><br />
+  About Me, Skills and Projects, plus a 3D office where three AI agents on Amazon Bedrock show you around, deployed on AWS Amplify Hosting.
+</p>
+
+<p align="center">
+  <a href="https://main.d21d1ifzfdin9a.amplifyapp.com"><strong>Live site</strong></a> ·
+  <a href="https://main.d21d1ifzfdin9a.amplifyapp.com/oficina/">Visit my office</a> ·
+  <a href="https://github.com/augus01">GitHub @augus01</a>
+</p>
+
+<p align="center">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-156%20passing-1f7a4d" />
+  <img alt="React" src="https://img.shields.io/badge/React%2019-Vite%208-0e0f12" />
+  <img alt="AWS" src="https://img.shields.io/badge/AWS-Amplify%20%C2%B7%20Lambda%20%C2%B7%20Bedrock%20%C2%B7%20DynamoDB-b5542e" />
+  <img alt="Languages" src="https://img.shields.io/badge/UI-English%20%C2%B7%20Espa%C3%B1ol-555" />
+</p>
+
+<p align="center">
+  <a href="https://main.d21d1ifzfdin9a.amplifyapp.com"><img src="docs/capturas/portada.png" alt="Augusto Pinto, with the three office agents: reception, architect and stack" width="820" /></a>
+</p>
+
+> **AWS Student Builder Challenge** · "Build Your Tech Superpower" · 2026
+
+## About
+
+I'm a 4th-year Computer Science Engineering student at Universidad San Sebastián in Santiago, Chile, and I'm working toward becoming an AI Engineer. I build products where AI solves a real situation for someone, not as a demo.
 
 The site opens in English. You can switch to Chilean Spanish with the **EN | ES** toggle in the navigation bar.
-
----
 
 ## What's inside
 
@@ -21,9 +49,7 @@ The site opens in English. You can switch to Chilean Spanish with the **EN | ES*
 | **Creative feature: "Visit my office"** | `/oficina/` | An interactive 3D model of my office with three AI agents you can chat with. |
 | **Contact** | `/#contacto` | Reception. This is where the visible hint to the office lives. |
 
----
-
-## Creative feature: "Visit my office"
+## The creative feature: "Visit my office"
 
 Instead of a contact form, my portfolio has an office. It's a 3D model built with three.js. Each agent takes care of one part of my portfolio:
 
@@ -35,24 +61,30 @@ Instead of a contact form, my portfolio has an office. It's a 3D model built wit
 
 Each agent also lives in its section of the landing page:
 
-![Reception in Contact, the architect in Projects and stack in Skills](docs/capturas/agentes-landing.png)
+<p align="center">
+  <img src="docs/capturas/agentes-landing.png" alt="Reception in Contact, the architect in Projects and stack in Skills" width="820" />
+</p>
 
 When you ask the wrong agent, it hands the conversation to the right one. You can also restyle the office as one of three TV and film settings: *Mad Men*, *The Sopranos* or *2001: A Space Odyssey*.
 
-![The office in its original look and in the Mad Men, The Sopranos and 2001: A Space Odyssey themes](docs/capturas/temas.png)
+<p align="center">
+  <img src="docs/capturas/temas.png" alt="The office in its original look and in the Mad Men, The Sopranos and 2001: A Space Odyssey themes" width="820" />
+</p>
 
 **How to find it.** The Contact section has a visible hint, **"Step into the office"**, plus a reception character you can double-click to go in. The office also has a link in the footer and in the Skills and Projects sections ("Continue with stack in the office").
 
-**Why it reflects me.** I build products where AI solves a real situation for someone, not as a demo. The office applies that idea to my own portfolio: instead of reading about me, you ask the agents.
+**Why it reflects me.** The office applies the way I build products to my own portfolio: instead of reading about me, you ask the agents.
 
-**It never gets in the way:**
-- It lives on its own page. The portfolio loads and works without it.
+## The design decision that matters
+
+The creative feature must never get in the way of the portfolio. So **the AI is optional and the portfolio never depends on it**:
+
+- The office lives on its own page. The portfolio loads and works without it.
 - three.js loads lazily, only when you open the office.
 - If WebGL isn't available, a text fallback appears and you can still chat with the office.
-- If the AI API is down, slow (8 s timeout) or not configured, a rule-based chat answers instead. The chat never breaks.
+- If the AI API is down, slow (8 s timeout) or not configured, a rule-based chat answers instead, with the same agents and the same handoffs. The chat never breaks.
+- The agents' knowledge comes from one place: `src/content/office.js` and `src/content/en/office.js`. `scripts/chat-agentes-contenido.mjs` turns them into `infra/lambda/contenido.json`, so the AI and the rule-based fallback always say the same thing.
 - It works on mobile and respects `prefers-reduced-motion`.
-
----
 
 ## Architecture
 
@@ -69,9 +101,7 @@ flowchart LR
   bud[AWS Budgets] -.->|at 100%: attach Deny bedrock:* policy| fn
 ```
 
-### AWS services used
-
-| Service | What it does here |
+| Service | Role |
 |---|---|
 | **AWS Amplify Hosting** | Hosts the static site, with CI/CD from GitHub. Every push to `main` builds and deploys automatically (see `amplify.yml`). It serves the site over HTTPS from Amplify's managed CDN (CloudFront + S3). |
 | **Amazon API Gateway (HTTP API)** | Public `POST /chat` endpoint. CORS only allows the site's origin, and requests are throttled to 2 per second with a burst of 5. |
@@ -86,7 +116,9 @@ flowchart LR
 
 Three independent layers protect the chat: API Gateway throttling, an in-code spending counter in DynamoDB, and the Budgets action that denies Bedrock access at the IAM level. All resources carry the tags `project=portafolio` and `componente=chat-agentes`, so their cost can be broken down in Billing.
 
----
+### Routing without rewrite rules
+
+The office (`/oficina/`) and each case study (`/proyectos/<slug>/`) are real files. After the build, a small Vite plugin copies `index.html` into each route, so Amplify serves them directly and deep links never return 404.
 
 ## Tech stack
 
@@ -98,9 +130,7 @@ Three independent layers protect the chat: API Gateway throttling, an in-code sp
 
 Dependency versions are pinned.
 
----
-
-## Project structure
+## Repository layout
 
 ```
 src/
@@ -118,16 +148,11 @@ infra/
   lambda/              Lambda handler, its pure core (nucleo.mjs) and the agents' content
 scripts/               Content generation for the Lambda, deploy and cost check
 design-system/         Official visual system (tokens, components, rules)
+docs/                  README images and brand assets
 amplify.yml            Amplify build specification
 ```
 
-**Routing without rewrite rules.** The office (`/oficina/`) and each case study (`/proyectos/<slug>/`) are real files. After the build, a small Vite plugin copies `index.html` into each route, so Amplify serves them directly and deep links never return 404.
-
-**One source of truth for the agents.** The agents' knowledge comes from `src/content/office.js` and `src/content/en/office.js`. `scripts/chat-agentes-contenido.mjs` turns them into `infra/lambda/contenido.json`, so the AI and the rule-based fallback always say the same thing.
-
----
-
-## Run it locally
+## Run it
 
 Requirements: Node.js 22.
 
@@ -147,12 +172,10 @@ VITE_CHAT_API_URL=<your API Gateway URL>/chat
 
 Without this variable, the office still works and answers with the built-in rule-based chat.
 
-## Deployment
+## Deploy
 
 - **Frontend:** push to `main`. Amplify runs `npm ci` and `npm run build` with Node 22, then publishes `dist/`. `VITE_CHAT_API_URL` is set as an environment variable in the Amplify console.
 - **Chat backend:** `bash scripts/desplegar-chat-agentes.sh` regenerates the agents' content, packages the Lambda and deploys the CloudFormation stack in `us-east-1`. To check current spend, run `bash scripts/revisar-costos.sh`.
-
----
 
 ## Accessibility and quality
 
@@ -161,8 +184,6 @@ Without this variable, the office still works and answers with the built-in rule
 - Respects `prefers-reduced-motion`
 - `<html lang>` follows the selected language, and the choice is remembered
 - Both languages are kept in sync by tests: every English content file must have the same exports and shape as the Spanish one
-
----
 
 ## Author
 
