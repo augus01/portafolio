@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { normalize, wantsContact, isEmail, isConfirm, answer, greeting, bubbleMap, leadMailto, leadNext, isQuestion } from './officeChat.js';
-import { chat, agents } from '../content/office.js';
+import { chat, agents, themes } from '../content/office.js';
 
 const opts = (to = null) => ({ topics: chat.topics, agents, to, noMatch: chat.noMatch });
 
@@ -48,10 +48,27 @@ test('answer: el agente al que le hablaron pasa la palabra si no es su tema', ()
 });
 
 test('greeting retoma la última pregunta salvo que fuera un contacto', () => {
-  const g = { welcome: chat.welcome, welcomeBack: chat.welcomeBack, leadRx: chat.leadRx };
-  assert.equal(greeting(null, g), chat.welcome);
-  assert.match(greeting({ last: '¿Qué stack usa?' }, g), /Volviste/);
-  assert.equal(greeting({ last: 'Quiero contactarlo' }, g), chat.welcome);
+  const about = 'Esta es la oficina.';
+  const g = { welcome: chat.welcome(about), welcomeBack: (last) => chat.welcomeBack(last, about), leadRx: chat.leadRx };
+  assert.equal(greeting(null, g), chat.welcome(about));
+  assert.match(greeting({ last: '¿Qué stack usa?' }, g), /Volviste! Esta es la oficina\./);
+  assert.equal(greeting({ last: 'Quiero contactarlo' }, g), chat.welcome(about));
+});
+
+test('recepción da la bienvenida en cada oficina, la explica y nombra a arquitecto y stack', () => {
+  for (const [c, rx] of [[{ chat, themes }, /arquitecto.*stack/], [en, /architect.*stack/]]) {
+    for (const t of c.themes.items) {
+      assert.ok(t.about && t.about.length <= 110, `${t.id}: about corto`);
+      for (const w of [c.chat.welcome(t.about), c.chat.themeWelcome(t.about)]) {
+        assert.ok(w.includes(t.about), t.id);
+        assert.match(w, rx, t.id);
+      }
+    }
+    // Solo en la original se explica que se puede cambiar el estilo.
+    const [orig, ...resto] = c.themes.items;
+    assert.match(orig.about, /estilo|style/);
+    for (const t of resto) assert.doesNotMatch(t.about, /estilo|style/);
+  }
 });
 
 test('bubbleMap junta las respuestas de un mismo agente', () => {

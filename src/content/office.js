@@ -16,11 +16,16 @@ export const themes = {
   label: 'Cambia la oficina según la serie',
   nowLabel: 'Ahora',
   swapLabel: 'Cambiando de oficina',
+  // `about`: lo que recepción cuenta de cada oficina en su bienvenida (al entrar y al cambiar de oficina).
   items: [
-    { id: 'original', label: 'Original', place: 'Mi oficina de siempre' },
-    { id: 'madmen', label: 'Mad Men', place: 'Agencia de los años 60' },
-    { id: 'sopranos', label: 'Los Soprano', place: 'Trastienda de Nueva Jersey' },
-    { id: 'odisea', label: '2001 Odisea', place: 'Estación orbital, 1968' },
+    { id: 'original', label: 'Original', place: 'Mi oficina de siempre',
+      about: 'Esta es la oficina de siempre de Augusto; arriba puedes cambiarle el estilo según una serie.' },
+    { id: 'madmen', label: 'Mad Men', place: 'Agencia de los años 60',
+      about: 'Esta es una agencia de publicidad de Nueva York en los años 60, como la de Mad Men.' },
+    { id: 'sopranos', label: 'Los Soprano', place: 'Trastienda de Nueva Jersey',
+      about: 'Esta es la trastienda de una fiambrería de Nueva Jersey, como la de Los Soprano.' },
+    { id: 'odisea', label: '2001 Odisea', place: 'Estación orbital, 1968',
+      about: 'Esta es una estación orbital de 1968, como la de 2001: Odisea del espacio.' },
   ],
 };
 
@@ -79,8 +84,11 @@ export const chat = {
     talking: 'Conversando', talkTo: (name) => `Hablar con ${name}`, change: 'Cambiar de agente',
     thread: (name) => `Conversación con ${name}`, input: (name) => `Tu pregunta para ${name}`,
   },
-  welcomeBack: (last) => `¡Volviste! La última vez preguntaste “${last}”. ¿Seguimos por ahí?`,
-  welcome: '¡Bienvenido! Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. ¿Qué te trae por aquí?',
+  // Bienvenidas de recepción: `about` es la oficina en que estás (themes.items[].about).
+  welcomeBack: (last, about) => `¡Volviste! ${about} La última vez preguntaste “${last}”. ¿Seguimos por ahí?`,
+  welcome: (about) => `¡Bienvenido! ${about} Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido. ¿Qué te trae por aquí?`,
+  // Al cambiar de oficina, recepción te recibe en la nueva.
+  themeWelcome: (about) => `¡Bienvenido! ${about} Yo te cuento quién es Augusto, arquitecto qué hace cada proyecto y stack cómo está construido.`,
   noMatch: 'Esa no la tengo clara. Pregúntale a arquitecto qué hace un proyecto o a stack cómo está construido, o déjame tus datos y Augusto te responde.',
   visitorsLabel: '¿Qué te trae por aquí?',
   suggestionsLabel: 'Preguntas sugeridas',

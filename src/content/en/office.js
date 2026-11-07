@@ -16,11 +16,16 @@ export const themes = {
   label: 'Change the office to match the show',
   nowLabel: 'Now',
   swapLabel: 'Switching offices',
+  // `about`: what reception says about each office in its welcome (on arrival and when the office changes).
   items: [
-    { id: 'original', label: 'Original', place: 'My usual office' },
-    { id: 'madmen', label: 'Mad Men', place: 'A 1960s ad agency' },
-    { id: 'sopranos', label: 'The Sopranos', place: 'A New Jersey back room' },
-    { id: 'odisea', label: '2001: A Space Odyssey', place: 'Orbital station, 1968' },
+    { id: 'original', label: 'Original', place: 'My usual office',
+      about: 'This is Augusto’s usual office; up top you can change its style to match a show.' },
+    { id: 'madmen', label: 'Mad Men', place: 'A 1960s ad agency',
+      about: 'This is a 1960s New York ad agency, like the one in Mad Men.' },
+    { id: 'sopranos', label: 'The Sopranos', place: 'A New Jersey back room',
+      about: 'This is the back room of a New Jersey deli, like the one in The Sopranos.' },
+    { id: 'odisea', label: '2001: A Space Odyssey', place: 'Orbital station, 1968',
+      about: 'This is a 1968 orbital station, like the one in 2001: A Space Odyssey.' },
   ],
 };
 
@@ -74,8 +79,11 @@ export const chat = {
     talking: 'Talking', talkTo: (name) => `Talk to ${name}`, change: 'Switch agent',
     thread: (name) => `Conversation with ${name}`, input: (name) => `Your question for ${name}`,
   },
-  welcomeBack: (last) => `You’re back! Last time you asked “${last}”. Want to pick up from there?`,
-  welcome: 'Welcome! I can tell you who Augusto is, architect what each project does and stack how it’s built. What brings you here?',
+  // Reception's welcomes: `about` is the office you're in (themes.items[].about).
+  welcomeBack: (last, about) => `You’re back! ${about} Last time you asked “${last}”. Want to pick up from there?`,
+  welcome: (about) => `Welcome! ${about} I can tell you who Augusto is, architect what each project does and stack how it’s built. What brings you here?`,
+  // When the office changes, reception welcomes you to the new one.
+  themeWelcome: (about) => `Welcome! ${about} I can tell you who Augusto is, architect what each project does and stack how it’s built.`,
   noMatch: 'I’m not sure about that one. Ask architect what a project does or stack how it’s built, or leave me your details and Augusto will get back to you.',
   visitorsLabel: 'What brings you here?',
   suggestionsLabel: 'Suggested questions',

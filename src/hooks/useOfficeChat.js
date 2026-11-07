@@ -25,7 +25,9 @@ const writeStore = (patch) => { try { localStorage.setItem(STORE, JSON.stringify
  * Los agentes responden en el idioma en que les escriben (lib/detectLang), aunque el sitio esté en el otro: `alt`
  * ({ chat, agents }) es el contenido del otro idioma para las reglas locales y para reconocer un recado.
  */
-export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt }) {
+export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt, themeId, themes }) {
+  // Lo que recepción cuenta de la oficina en que estás (themes.items[].about).
+  const aboutOf = (id) => (themes.items.find((t) => t.id === id) || themes.items[0]).about;
   const sceneRef = useRef(scene);
   sceneRef.current = scene;
   const idRef = useRef(0);
@@ -43,7 +45,8 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt 
 
   const [state, setState] = useState(() => {
     const seen = readStore();
-    const text = greeting(seen, { welcome: chat.welcome, welcomeBack: chat.welcomeBack, leadRx: chat.leadRx });
+    const about = aboutOf(themeId);
+    const text = greeting(seen, { welcome: chat.welcome(about), welcomeBack: (last) => chat.welcomeBack(last, about), leadRx: chat.leadRx });
     return {
       msgs: [{ id: ++idRef.current, who: 'recepcion', text }],
       visitor: seen?.visitor || null,
@@ -89,6 +92,19 @@ export function useOfficeChat({ chat, agents, scene, leadEmail, link, lang, alt 
     if (link && link.to && link.to !== MAIN) { pick(link.to); return; }
     bubbles([{ agent: MAIN, text: state.greet }]);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // Al cambiar de oficina, recepción te da la bienvenida a la nueva y la explica en una frase (queda en su historial).
+  // Su globo sale solo si no interrumpe: no mientras conversas de cerca con arquitecto o stack, hay un recado en curso
+  // o viene una respuesta en camino.
+  const themeRef = useRef(themeId);
+  useEffect(() => {
+    if (themeRef.current === themeId) return;
+    themeRef.current = themeId;
+    const text = chat.themeWelcome(aboutOf(themeId));
+    push([msg(MAIN, text)]);
+    const busy = (focusRef.current && focusRef.current !== MAIN) || leadOpen(state.lead) || state.typing;
+    if (busy) setState((st) => ({ ...st, live: `${agents[MAIN].name}: ${text}` }));
+    else bubbles([{ agent: MAIN, text }]);
+  }, [themeId]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     vivoRef.current = true;
     return () => { vivoRef.current = false; clearTimeout(timerRef.current); clearTimeout(seqRef.current); };

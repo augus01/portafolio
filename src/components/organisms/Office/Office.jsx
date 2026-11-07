@@ -20,7 +20,7 @@ export function Office({ stageRef, themeId, themes, swap, swapLabel, swapTarget,
     stageRef, canvasRef, labelsRef, themeId, agents: agentList, deco: stage.deco,
     onPick: (id) => chatRef.current?.setTo(id, true),
   });
-  const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail, link, lang, alt });
+  const chat = useOfficeChat({ chat: texts, agents, scene, leadEmail, link, lang, alt, themeId, themes });
   chatRef.current = chat;
 
   // Esc saca el zoom del agente que habla (y su globo) y vuelve a la vista general.
