@@ -24,8 +24,8 @@ export const themes = {
       about: 'Esta es una agencia de publicidad de Nueva York en los años 60, como la de Mad Men.' },
     { id: 'sopranos', label: 'Los Soprano', place: 'Trastienda de Nueva Jersey',
       about: 'Esta es la trastienda de una fiambrería de Nueva Jersey, como la de Los Soprano.' },
-    { id: 'odisea', label: '2001 Odisea', place: 'Estación orbital, 1968',
-      about: 'Esta es una estación orbital de 1968, como la de 2001: Odisea del espacio.' },
+    { id: 'odisea', label: '2001 Odisea', place: 'Estación orbital, película de 1968',
+      about: 'Esta es una estación orbital como la de 2001: Odisea del espacio, la película de Kubrick de 1968.' },
   ],
 };
 

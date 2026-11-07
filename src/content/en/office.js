@@ -24,8 +24,8 @@ export const themes = {
       about: 'This is a 1960s New York ad agency, like the one in Mad Men.' },
     { id: 'sopranos', label: 'The Sopranos', place: 'A New Jersey back room',
       about: 'This is the back room of a New Jersey deli, like the one in The Sopranos.' },
-    { id: 'odisea', label: '2001: A Space Odyssey', place: 'Orbital station, 1968',
-      about: 'This is a 1968 orbital station, like the one in 2001: A Space Odyssey.' },
+    { id: 'odisea', label: '2001: A Space Odyssey', place: 'Orbital station, 1968 film',
+      about: 'This is an orbital station like the one in 2001: A Space Odyssey, Kubrick’s 1968 film.' },
   ],
 };
 
