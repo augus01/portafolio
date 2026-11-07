@@ -33,7 +33,13 @@ Instead of a contact form, my portfolio has an office. It's a 3D model built wit
 | **architect** | My projects and how they're built |
 | **stack** | The technologies I use and what I did with each one |
 
+Each agent also lives in its section of the landing page:
+
+![Reception in Contact, the architect in Projects and stack in Skills](docs/capturas/agentes-landing.png)
+
 When you ask the wrong agent, it hands the conversation to the right one. You can also restyle the office as one of three TV and film settings: *Mad Men*, *The Sopranos* or *2001: A Space Odyssey*.
+
+![The office in its original look and in the Mad Men, The Sopranos and 2001: A Space Odyssey themes](docs/capturas/temas.png)
 
 **How to find it.** The Contact section has a visible hint, **"Step into the office"**, plus a reception character you can double-click to go in. The office also has a link in the footer and in the Skills and Projects sections ("Continue with stack in the office").
 
