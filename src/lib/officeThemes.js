@@ -57,6 +57,31 @@ T.original = {
     box(2.6, 1.0, 0.5, mat.furn2, 2.6, 0, 2.3);
     box(2.6, 0.06, 0.7, mat.aub, 2.6, 1.0, 2.35);
     cyl(0.28, 0.45, M(0x17171c), 2.6, 0, 1.55);
+    /* Cosas sobre el mostrador, las mismas del escritorio de recepción en Contacto (contactDesk.js),
+       corridas al puesto de la oficina: x + 2.6, z + 1.55. */
+    {
+      const top = 1.06, rx = 2.6, rz = 1.55;
+      /* Notebook: base y pantalla mirando al agente */
+      box(0.62, 0.03, 0.42, silver, rx - 0.55, top, rz + 0.62);
+      const lidPivot = new api.THREE.Group();
+      lidPivot.position.set(rx - 0.55, top + 0.03, rz + 0.83);
+      const lid = api.part(new api.THREE.BoxGeometry(0.62, 0.4, 0.025), silver, 0, 0.2, 0);
+      lidPivot.add(lid);
+      const scr = api.part(new api.THREE.PlaneGeometry(0.54, 0.32), M(0x9fd3ff, { emissive: 0x6fb6ff, emissiveIntensity: 0.25, roughness: 0.4 }), 0, 0.2, -0.014);
+      scr.rotation.y = Math.PI;
+      lidPivot.add(scr);
+      lidPivot.rotation.x = 0.28;
+      api.scene.add(lidPivot);
+      /* Timbre de recepción */
+      const bellM = M(0xd9dce1, { metalness: 0.6, roughness: 0.25 });
+      cyl(0.13, 0.03, mat.dark, rx + 0.55, top, rz + 0.95);
+      api.scene.add(Object.assign(api.part(new api.THREE.SphereGeometry(0.11, 24, 12, 0, Math.PI * 2, 0, Math.PI / 2), bellM, rx + 0.55, top + 0.03, rz + 0.95), { receiveShadow: true }));
+      sphere(0.025, bellM, rx + 0.55, top + 0.15, rz + 0.95);
+      /* Taza y planta */
+      cyl(0.08, 0.16, M(0xe0621f), rx + 0.95, top, rz + 0.6);
+      cyl(0.12, 0.2, mat.furn2, rx - 1.05, top, rz + 0.95, 0.09);
+      sphere(0.2, M(0x3fa35e), rx - 1.05, top + 0.36, rz + 0.95);
+    }
     box(3.8, 0.04, 2.7, M(0xa9441d), -0.9, 0, 1.3);
     box(3.4, 0.045, 2.3, M(0xefe0bd), -0.9, 0, 1.3);
     box(3.0, 0.05, 1.9, M(0xd1561f), -0.9, 0, 1.3);
