@@ -185,8 +185,7 @@
 /* Las tres tarjetas a la misma altura: el botón va al pie. */
 .ap-ofc.is-pickable .ap-ofc__head{align-items:flex-start}
 .ap-ofc.is-pickable .ap-ofc__go.label{margin-top:auto}
-.ap-ofc.is-pickable{cursor:pointer;transition:border-color var(--dur-press) var(--ease-out)}
-@media (hover: hover){.ap-ofc.is-pickable:hover{border-color:var(--off-line)}}
+.ap-ofc.is-pickable{cursor:pointer}
 /* Vista cercana: solo la tarjeta del agente con quien conversas, al medio; la cámara centra al agente a lo ancho y lo
    sube sobre la tarjeta (--off-focus-lift, fracción del alto; --off-focus-shift lo correría a lo ancho). Lo lee officeEngine.js. */
 .ap-off__stage{--off-focus-lift:.22;--off-focus-shift:0}
@@ -195,7 +194,6 @@
 /* La maqueta sube y se aleja para quedar entera sobre las tarjetas (lo lee officeEngine.js). */
 .ap-off__stage{--off-room-lift:.2;--off-room-zoom:1.3}
 .ap-ofc{display:flex;flex-direction:column;gap:var(--space-3);min-width:0;box-sizing:border-box;padding:var(--space-4);border:1.5px solid var(--off-q-line);border-radius:20px;background:var(--off-panel-bg);color:var(--off-panel-ink);box-shadow:var(--off-panel-shadow)}
-.ap-ofc.is-open{border:var(--off-stroke) solid var(--off-line)}
 .ap-ofc__head{display:flex;align-items:center;gap:var(--space-2)}
 .ap-ofc__av.ap-agent{flex:none;width:36px;height:46px}
 .ap-ofc__av .ap-agent__body{stroke:var(--ink-primary);stroke-width:2}
