@@ -6,3 +6,8 @@ infra/.empaquetado.yaml
 
 # Documentación sensible (capturas, publicación de Builder Center, chat-agentes y perfil)
 docs/sensible/
+
+# Carpetas locales de herramientas (worktrees, cachés)
+.claude/
+.impeccable/
+.superpowers/
